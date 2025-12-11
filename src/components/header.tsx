@@ -33,7 +33,7 @@ export const Header = () => {
           )}
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="/sushiaki-logo.svg"
+              src="/sushiaki-logo.png" // Atualizado para o novo logo PNG
               alt="Sushiaki Logo"
               width={32}
               height={32}

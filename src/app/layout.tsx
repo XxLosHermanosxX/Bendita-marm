@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Sushiaki Delivery",
   description: "O melhor sushi da cidade, entregue na sua porta!",
+  icons: {
+    icon: "/icon.png", // Apontando para o novo favicon
+  },
 };
 
 export default function RootLayout({

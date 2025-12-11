@@ -90,7 +90,7 @@ export const Sidebar = () => {
             </div>
           </div>
           <Button variant="outline" className="w-full">
-            Limpar Filtão
+            Limpar Filtros
           </Button>
         </div>
       </div>
