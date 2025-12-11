@@ -15,9 +15,8 @@ export default function Home() {
     <MainLayout>
       {/* Banner de Boas-vindas (Agora Carrossel) */}
       <section className="mb-8">
-        <div className="container mx-auto p-4 md:p-6">
-          <HeroCarousel />
-        </div>
+        {/* Removendo container mx-auto p-4 md:p-6 para que o carrossel ocupe a largura total */}
+        <HeroCarousel />
       </section>
 
       <div className="container mx-auto p-4 md:p-6 pt-0">
