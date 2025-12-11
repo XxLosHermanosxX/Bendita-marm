@@ -149,6 +149,9 @@ importers:
       zod:
         specifier: ^3.25.28
         version: 3.25.28
+      zustand:
+        specifier: ^5.0.9
+        version: 5.0.9(@types/react@19.1.5)(react@19.2.1)(use-sync-external-store@1.5.0(react@19.2.1))
     devDependencies:
       '@dyad-sh/nextjs-webpack-component-tagger':
         specifier: ^0.8.0
@@ -2097,6 +2100,24 @@ packages:
   zod@3.25.28:
     resolution: {integrity: sha512-/nt/67WYKnr5by3YS7LroZJbtcCBurDKKPBPWWzaxvVCGuG/NOsiKkrjoOhI8mJ+SQUXEbUzeB3S+6XDUEEj7Q==}
 
+  zustand@5.0.9:
+    resolution: {integrity: sha512-ALBtUj0AfjJt3uNRQoL1tL2tMvj6Gp/6e39dnfT6uzpelGru8v1tPOGBzayOWbPJvujM8JojDk3E1LxeFisBNg==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=18.0.0'
+      immer: '>=9.0.6'
+      react: '>=18.0.0'
+      use-sync-external-store: '>=1.2.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+      use-sync-external-store:
+        optional: true
+
 snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
@@ -4018,3 +4039,9 @@ snapshots:
   yaml@2.8.0: {}
 
   zod@3.25.28: {}
+
+  zustand@5.0.9(@types/react@19.1.5)(react@19.2.1)(use-sync-external-store@1.5.0(react@19.2.1)):
+    optionalDependencies:
+      '@types/react': 19.1.5
+      react: 19.2.1
+      use-sync-external-store: 1.5.0(react@19.2.1)

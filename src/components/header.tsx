@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Search, ShoppingCart, User, Menu } from "lucide-react";
@@ -9,10 +9,13 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Sidebar } from "@/components/sidebar";
+import { CartDrawer } from "@/components/cart-drawer"; // Importar CartDrawer
+import { useCartStore } from "@/store/use-cart-store"; // Importar o store do carrinho
 
 export const Header = () => {
   const isMobile = useIsMobile();
-  const cartItemCount = 0; // Placeholder for cart item count
+  const totalCartItems = useCartStore((state) => state.getTotalItems()); // Obter total de itens do store
+  const [isCartOpen, setIsCartOpen] = useState(false); // Estado para controlar o CartDrawer
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background shadow-sm">
@@ -33,7 +36,7 @@ export const Header = () => {
           )}
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="/sushiaki-logo.png" // Atualizado para o novo logo PNG
+              src="/sushiaki-logo.png"
               alt="Sushiaki Logo"
               width={32}
               height={32}
@@ -57,11 +60,11 @@ export const Header = () => {
 
         {/* Right section: Cart, Profile (Desktop only) */}
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="relative">
+          <Button variant="ghost" size="icon" className="relative" onClick={() => setIsCartOpen(true)}>
             <ShoppingCart className="h-5 w-5" />
-            {cartItemCount > 0 && (
+            {totalCartItems > 0 && (
               <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
-                {cartItemCount}
+                {totalCartItems}
               </span>
             )}
           </Button>
@@ -72,6 +75,7 @@ export const Header = () => {
           )}
         </div>
       </div>
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </header>
   );
 };

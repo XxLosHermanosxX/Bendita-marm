@@ -6,16 +6,18 @@ import { Product } from "@/types";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 import { Star } from "lucide-react";
-import { toast } from "sonner";
+import { useCartStore } from "@/store/use-cart-store"; // Importar o store do carrinho
 
 interface ProductCardProps {
   product: Product;
 }
 
 export const ProductCard = ({ product }: ProductCardProps) => {
+  const addItem = useCartStore((state) => state.addItem);
+
   const handleAddToCart = () => {
-    // Placeholder for add to cart logic
-    toast.success(`${product.name} adicionado ao carrinho!`);
+    // Por enquanto, adicionamos o produto base. Variações e notas serão tratadas no ProductModal.
+    addItem(product);
   };
 
   return (
