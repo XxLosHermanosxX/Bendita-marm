@@ -1,8 +1,10 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import useEmblaCarousel from 'embla-carousel-react';
+import Autoplay from 'embla-carousel-autoplay';
 import {
   Carousel,
   CarouselContent,
@@ -18,7 +20,7 @@ interface Banner {
   link: string;
 }
 
-// Hardcoded banner data (using the uploaded image)
+// Hardcoded banner data
 const banners: Banner[] = [
   {
     id: 1,
@@ -35,20 +37,39 @@ const banners: Banner[] = [
 ];
 
 export const HeroCarousel = () => {
+  // Configuração do Autoplay
+  const autoplayOptions = {
+    delay: 10000, // 10 segundos
+    stopOnInteraction: false,
+    stopOnMouseEnter: true,
+  };
+
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
+    Autoplay(autoplayOptions),
+  ]);
+
+  // O componente Carousel do Shadcn já usa o useEmblaCarousel internamente,
+  // mas precisamos garantir que o Autoplay seja aplicado.
+  // Vamos usar a estrutura padrão do Shadcn e injetar o plugin Autoplay.
+
   return (
-    <Carousel className="w-full">
+    <Carousel 
+      className="w-full"
+      opts={{ loop: true }}
+      plugins={[Autoplay(autoplayOptions)]} // Injetando o plugin Autoplay
+    >
       {/* Overriding default Shadcn carousel padding/margins for full width */}
       <CarouselContent className="-ml-0">
         {banners.map((banner) => (
           <CarouselItem key={banner.id} className="pl-0">
             <Link href={banner.link} className="block">
-              {/* Usando aspect-video (16:9) para manter a proporção e garantir que a imagem não seja cortada */}
-              <div className="relative w-full aspect-video">
+              {/* Ajustando a proporção: 16:9 no mobile, 3:1 no desktop */}
+              <div className="relative w-full aspect-video md:aspect-[3/1]">
                 <Image
                   src={banner.imageUrl}
                   alt={banner.alt}
                   layout="fill"
-                  objectFit="contain" 
+                  objectFit="cover" // Usando cover para preencher o novo aspect-ratio
                   className="object-center"
                   priority
                 />
