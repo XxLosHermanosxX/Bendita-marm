@@ -35,12 +35,13 @@ export const HeroCarousel = () => {
         {banners.map((banner) => (
           <CarouselItem key={banner.id}>
             <Link href={banner.link} className="block">
-              <div className="relative w-full h-[200px] md:h-[300px] overflow-hidden rounded-lg shadow-lg">
+              {/* Usando aspect-video (16:9) para manter a proporção e garantir que a imagem não seja cortada */}
+              <div className="relative w-full aspect-video overflow-hidden rounded-lg shadow-lg">
                 <Image
                   src={banner.imageUrl}
                   alt={banner.alt}
                   layout="fill"
-                  objectFit="cover"
+                  objectFit="contain" // Alterado para 'contain' para evitar cortes
                   className="object-center"
                   priority
                 />
