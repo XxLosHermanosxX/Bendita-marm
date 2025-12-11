@@ -4,22 +4,22 @@ import Link from "next/link";
 import { 
   Star, Sparkles, Flame, ScrollText, 
   Leaf, Gift, Utensils, Fish, Coffee, 
-  Package, Drumstick, GlassWater // Adicionando GlassWater para Bebidas
+  Package, Drumstick, GlassWater
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { categories } from "@/data/products";
 import { Button } from "@/components/ui/button";
-import { useSearchParams } from "next/navigation"; // Importando useSearchParams
+import { useSearchParams } from "next/navigation";
 
 // Map categories to Lucide icons (using available icons)
 const categoryIcons: { [key: string]: React.ElementType } = {
   "Exclusivos do App": Star,
   "Prato do Dia": Sparkles,
-  "Pokes": Utensils, // Using Utensils instead of non-existent Bowl
+  "Pokes": Utensils,
   "Pratos Quentes": Utensils,
   "Niguiri": Fish,
   "Temaki": ScrollText,
-  "Yakisoba": Utensils, // Using Utensils instead of non-existent Noodle
+  "Yakisoba": Utensils,
   "Vegetarianos": Leaf,
   "Especiais": Sparkles,
   "Novidades": Gift,
@@ -31,7 +31,7 @@ const categoryIcons: { [key: string]: React.ElementType } = {
   "Hot Sushis": Flame,
   "Tilápia Sushiaki": Fish,
   "Street Food": Drumstick,
-  "Bebidas": GlassWater, // Novo ícone para Bebidas
+  "Bebidas": GlassWater,
 };
 
 export const Sidebar = () => {
