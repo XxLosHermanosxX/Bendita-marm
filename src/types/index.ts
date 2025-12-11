@@ -16,7 +16,8 @@ export type Category =
   | "Sashimi" // Added based on images
   | "Hot Sushis" // Added based on images
   | "Tilápia Sushiaki" // Added based on images
-  | "Street Food"; // Added based on images
+  | "Street Food" // Added based on images
+  | "Acompanhamento"; // Nova categoria adicionada
 
 
 export interface Product {

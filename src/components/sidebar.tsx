@@ -7,7 +7,7 @@ import {
   Sparkles,
   Flame, // Usado para Hot Sushis
   ScrollText,
-  Noodles, // Corrigido para Noodles
+  Noodle, // Corrigido para Noodle (singular)
   Leaf,
   Gift,
   Utensils,
@@ -15,7 +15,7 @@ import {
   Fish, // Usado para Niguiri, Sashimi, Tilápia Sushiaki
   Coffee,
   Package,
-  RiceBowl, // Corrigido para RiceBowl
+  BowlFood, // Corrigido para BowlFood
   Drumstick, // Usado para Street Food
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -26,11 +26,11 @@ import { Button } from "@/components/ui/button"; // Importando o componente Butt
 const categoryIcons: { [key: string]: React.ElementType } = {
   "Exclusivos do App": Star,
   "Prato do Dia": Sparkles,
-  "Pokes": RiceBowl, // Alterado para RiceBowl
+  "Pokes": BowlFood, // Alterado para BowlFood
   "Pratos Quentes": Utensils,
   "Niguiri": Fish, // Alterado para Fish
   "Temaki": ScrollText,
-  "Yakisoba": Noodles, // Alterado para Noodles
+  "Yakisoba": Noodle, // Alterado para Noodle
   "Vegetarianos": Leaf,
   "Especiais": Sparkles,
   "Novidades": Gift,
