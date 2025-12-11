@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Search, ShoppingCart, User, Menu } from "lucide-react";
@@ -18,12 +18,85 @@ export const Header = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchTerm.trim()) {
       router.push(`/products?search=${encodeURIComponent(searchTerm.trim())}`);
     }
   };
+
+  // Don't render cart button until client-side hydration is complete
+  if (!isClient) {
+    return (
+      <header className="sticky top-0 z-50 w-full border-b bg-background shadow-sm">
+        <div className="container flex h-16 items-center justify-between px-4 md:px-6">
+          <div className="flex items-center gap-2">
+            {isMobile && (
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="p-0 w-64 pt-16">
+                  <Sidebar />
+                </SheetContent>
+              </Sheet>
+            )}
+            <Link href="/" className="flex items-center gap-2">
+              <Image 
+                src="/sushiaki-logo.png" 
+                alt="Sushiaki Logo" 
+                width={32} 
+                height={32} 
+                className="h-8 w-8" 
+              />
+              <span className="text-lg font-bold text-primary">SUSHIAKI</span>
+            </Link>
+          </div>
+
+          {!isMobile && (
+            <div className="relative flex-1 max-w-md mx-4">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Buscar no cardápio"
+                className="w-full pl-9 pr-4 py-2 rounded-md border border-input bg-background focus-visible:ring-primary"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={handleSearch}
+              />
+            </div>
+          )}
+
+          <div className="flex items-center gap-4">
+            {isMobile && (
+              <Button variant="ghost" size="icon" className="relative">
+                <Search className="h-5 w-5" />
+              </Button>
+            )}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="relative"
+            >
+              <ShoppingCart className="h-5 w-5" />
+            </Button>
+            {!isMobile && (
+              <Button variant="ghost" size="icon">
+                <User className="h-5 w-5" />
+              </Button>
+            )}
+          </div>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background shadow-sm">
