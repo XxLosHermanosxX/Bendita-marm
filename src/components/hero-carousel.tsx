@@ -22,9 +22,15 @@ interface Banner {
 const banners: Banner[] = [
   {
     id: 1,
-    imageUrl: '/images/banner-principal.png',
+    imageUrl: '/images/banner-1.png',
     alt: 'Bem-vindo ao melhor sushi de Curitiba! 20% OFF na primeira compra. Cupom: BEMVINDO20',
     link: '/products?coupon=BEMVINDO20',
+  },
+  {
+    id: 2,
+    imageUrl: '/images/banner-2.png',
+    alt: 'Combo Família 80 Peças por R$49,90. Cupom: BEMVINDO49',
+    link: '/products?coupon=BEMVINDO49',
   },
 ];
 
