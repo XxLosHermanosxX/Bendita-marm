@@ -252,7 +252,7 @@ export const products: Product[] = [
     description: "Sushi de salmão no maçarico prensado coberto com chilli sauce, crispy de couve e raspas de limão. (8 unidades)",
     price: 45.30,
     category: "Especiais",
-    imageUrl: "/images/salmao-batera.png",
+    imageUrl: "/images/salmao_batera.jpg", // Atualizado
   },
   {
     id: "p29",
@@ -260,7 +260,7 @@ export const products: Product[] = [
     description: "Sashimi no maçarico com geleia de pimenta chilli e crispy de couve. (8 unidades)",
     price: 46.50,
     category: "Especiais",
-    imageUrl: "/images/flor-de-salmao.png",
+    imageUrl: "/images/flor_salmao.jpg", // Atualizado
   },
 
   // Novos/Exclusivos
@@ -275,14 +275,14 @@ export const products: Product[] = [
     isExclusive: true,
   },
   
-  // BEBIDAS (Incluindo Sodas e novos itens)
+  // BEBIDAS
   {
     id: "p95",
     name: "Refrigerante Lata (Vários Sabores)",
     description: "Coca-Cola, Coca-Cola Zero, Fanta Laranja, Guaraná Kuat, Sprite.",
     price: 7.90,
     category: "Bebidas",
-    imageUrl: "/images/refrigerantes-lata.jpg",
+    imageUrl: "/images/refrigerantes-lata.jpg", // Atualizado
     variations: [
         {
             name: "Sabor",
@@ -302,14 +302,14 @@ export const products: Product[] = [
     description: "Água mineral sem gás.",
     price: 4.50,
     category: "Bebidas",
-    imageUrl: "/images/agua__1_.jpg",
+    imageUrl: "/images/agua__1_.jpg", // Atualizado
   },
   {
     id: "p31",
     name: "Soda Ichigo",
     description: "Morango e limão siciliano.",
     price: 13.50,
-    category: "Bebidas", // Alterado de Soda para Bebidas
+    category: "Bebidas",
     imageUrl: "/images/soda-ichigo.png",
   },
   {
@@ -317,7 +317,7 @@ export const products: Product[] = [
     name: "Soda Pink Lemonade",
     description: "Cranberry, morango e limão.",
     price: 13.50,
-    category: "Bebidas", // Alterado de Soda para Bebidas
+    category: "Bebidas",
     imageUrl: "/images/soda-pink-lemonade.png",
   },
   {
@@ -325,16 +325,16 @@ export const products: Product[] = [
     name: "Akai Soda",
     description: "Melancia com limão.",
     price: 13.50,
-    category: "Bebidas", // Alterado de Soda para Bebidas
-    imageUrl: "/images/soda_akai.jpg", // Usando a nova imagem
+    category: "Bebidas",
+    imageUrl: "/images/soda_akai.jpg", // Atualizado
   },
   {
     id: "p34",
     name: "Midori Soda",
     description: "Maçã verde com limão siciliano.",
     price: 13.50,
-    category: "Bebidas", // Alterado de Soda para Bebidas
-    imageUrl: "/images/soda_midori.jpg", // Usando a nova imagem
+    category: "Bebidas",
+    imageUrl: "/images/soda_midori.jpg", // Atualizado
   },
 
   // Pratos Quentes (Continuando a lista original)
@@ -392,7 +392,7 @@ export const products: Product[] = [
     description: "8 niguiri salmão, 8 niguiri skin, 8 uramaki filadélfia, 8 hot filadélfia, 8 shakemaki",
     price: 136.90,
     category: "Combinados",
-    imageUrl: "/images/combinado-casal-40un.png",
+    imageUrl: "/images/CBO_CASAL_40.webp", // Atualizado
   },
   {
     id: "p42",
@@ -400,7 +400,7 @@ export const products: Product[] = [
     description: "6 sashimi de salmão, 4 niguiri de salmão, 2 gunka salmão, 8 uramaki filadélfia, 8 uramaki skin",
     price: 148.90,
     category: "Combinados",
-    imageUrl: "/images/combinado-gourmet-36un.png",
+    imageUrl: "/images/CBO_GOURMET_36.jpg", // Atualizado
   },
   {
     id: "p43",
@@ -416,7 +416,7 @@ export const products: Product[] = [
     description: "3 sashimi salmão, 2 niguiri camarão, 2 niguiri salmão, 1 niguiri kani, 8 hot topping, 8 hot filadelfia",
     price: 93.90,
     category: "Combinados",
-    imageUrl: "/images/combinado-gourmet-24un.png",
+    imageUrl: "/images/CBO_GOURMET_24.jpg", // Atualizado
   },
   {
     id: "p45",
@@ -432,7 +432,7 @@ export const products: Product[] = [
     description: "8 niguiri de salmão, 4 hossomaki de salmão, 4 hossomaki de atum, 4 uramaki california e 4 uramaki filadelfia",
     price: 89.90,
     category: "Combinados",
-    imageUrl: "/images/combinado-simples-24un.png",
+    imageUrl: "/images/CBO_SIMPLES_24.jpg", // Atualizado
   },
   {
     id: "p47",
@@ -440,7 +440,7 @@ export const products: Product[] = [
     description: "4 sashimi salmão, 2 niguiri salmão, 2 uramaki uramaki skin, 2 uramaki filadelfia especial, 4 hot furai.",
     price: 89.90,
     category: "Combinados",
-    imageUrl: "/images/combinado-gourmet-16un.png",
+    imageUrl: "/images/CBO_GOURMET_16.jpg", // Atualizado
   },
   {
     id: "p48",
@@ -456,7 +456,7 @@ export const products: Product[] = [
     description: "4 uramaki filadelfia, 4 uramaki california, 4 tarê skin, 4 shakemaki",
     price: 45.50,
     category: "Combinados",
-    imageUrl: "/images/combinado-simples-16un.png",
+    imageUrl: "/images/CBO_SIMPLES_16.jpg", // Atualizado
   },
   {
     id: "p50",
@@ -464,7 +464,7 @@ export const products: Product[] = [
     description: "4 sashimi de salmão, 2 niguiri salmão, 2 hossomaki salmão",
     price: 47.80,
     category: "Combinados",
-    imageUrl: "/images/combinado-simples-12un.png",
+    imageUrl: "/images/CBO_SIMPLES_12.jpg", // Atualizado
   },
   {
     id: "p51",
@@ -473,7 +473,7 @@ export const products: Product[] = [
     price: 119.90,
     originalPrice: 159.90,
     category: "Combinados",
-    imageUrl: "/images/combinado-especial-sushiaki.png",
+    imageUrl: "/images/af-ARTES-IFOOD-03-ESP-40P_S_Easy-Resize.com.jpg", // Atualizado
   },
   {
     id: "p52",
@@ -497,7 +497,7 @@ export const products: Product[] = [
     description: "Hot com salmão, sashimi maçaricado, kani picado e maionese, uramaki gergelim com atum ao molho chilli e gunka pepino com...",
     price: 67.50,
     category: "Combinados",
-    imageUrl: "/images/combinado-nami.png",
+    imageUrl: "/images/combinado_NAMI2.jpg", // Atualizado
   },
   {
     id: "p55",
@@ -761,7 +761,7 @@ export const products: Product[] = [
     description: "Cubos de peixe cru, cebola, milho, molho azeite e limão.",
     price: 34.50,
     category: "Tilápia Sushiaki",
-    imageUrl: "/images/ceviche-tilapia.png",
+    imageUrl: "/images/CEVICHE_TILAPIA.jpg", // Atualizado
   },
   {
     id: "p88",
@@ -801,7 +801,7 @@ export const products: Product[] = [
     description: "Salmão picado com cebolinha envolto em sashimi. (4 unidades ou 8 unidades)",
     price: 25.80,
     category: "Especiais",
-    imageUrl: "/images/gunka-salmao.png",
+    imageUrl: "/images/gunka_samao.jpg", // Atualizado
   },
   {
     id: "p93",
@@ -809,7 +809,7 @@ export const products: Product[] = [
     description: "Cones de salmão, atum, cebola roxa, pimenta e kani ao suco de limão.",
     price: 46.50,
     category: "Especiais",
-    imageUrl: "/images/ceviche-sushiaki.png",
+    imageUrl: "/images/ceviche.jpg", // Atualizado
   },
   {
     id: "p94",
@@ -839,5 +839,5 @@ export const categories = [
   "Hot Sushis",
   "Tilápia Sushiaki",
   "Street Food",
-  "Bebidas", // Adicionado no final
+  "Bebidas",
 ];
