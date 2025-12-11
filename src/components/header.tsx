@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -38,18 +37,19 @@ export const Header = () => {
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="p-0 w-64 pt-16"> {/* pt-16 to clear header */}
+              <SheetContent side="left" className="p-0 w-64 pt-16">
+                {/* pt-16 to clear header */}
                 <Sidebar />
               </SheetContent>
             </Sheet>
           )}
           <Link href="/" className="flex items-center gap-2">
-            <Image
-              src="/sushiaki-logo.png"
-              alt="Sushiaki Logo"
-              width={32}
-              height={32}
-              className="h-8 w-8"
+            <Image 
+              src="/sushiaki-logo.png" 
+              alt="Sushiaki Logo" 
+              width={32} 
+              height={32} 
+              className="h-8 w-8" 
             />
             <span className="text-lg font-bold text-primary">SUSHIAKI</span>
           </Link>
@@ -74,10 +74,16 @@ export const Header = () => {
         <div className="flex items-center gap-4">
           {isMobile && (
             <Button variant="ghost" size="icon" className="relative">
-              <Search className="h-5 w-5" /> {/* Mobile search icon (no input) */}
+              <Search className="h-5 w-5" />
+              {/* Mobile search icon (no input) */}
             </Button>
           )}
-          <Button variant="ghost" size="icon" className="relative" onClick={() => setIsCartOpen(true)}>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="relative"
+            onClick={() => setIsCartOpen(true)}
+          >
             <ShoppingCart className="h-5 w-5" />
             {totalCartItems > 0 && (
               <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
@@ -92,6 +98,19 @@ export const Header = () => {
           )}
         </div>
       </div>
+      
+      {/* Persistent Cart Button for Mobile */}
+      {isMobile && totalCartItems > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 bg-primary p-4 z-40">
+          <Button 
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6"
+            onClick={() => setIsCartOpen(true)}
+          >
+            Ver Carrinho ({totalCartItems} {totalCartItems === 1 ? 'item' : 'itens'})
+          </Button>
+        </div>
+      )}
+      
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </header>
   );

@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import Image from "next/image";
 import { ShoppingCart, X, Minus, Plus } from "lucide-react";
@@ -9,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { useCartStore } from "@/store/use-cart-store";
 import { formatCurrency } from "@/lib/utils";
 import Link from "next/link";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -17,20 +17,26 @@ interface CartDrawerProps {
 
 export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
   const { items, removeItem, updateQuantity, getSubtotal } = useCartStore();
+  const isMobile = useIsMobile();
+  
   const subtotal = getSubtotal();
   const deliveryFee = 0; // Placeholder for delivery fee
   const total = subtotal + deliveryFee;
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent side="right" className="flex flex-col w-full sm:max-w-md">
-        <SheetHeader>
+      <SheetContent 
+        side={isMobile ? "bottom" : "right"} 
+        className={`flex flex-col ${isMobile ? "h-[90vh] rounded-t-xl" : "w-full sm:max-w-md"}`}
+      >
+        <SheetHeader className={isMobile ? "pb-4" : ""}>
           <SheetTitle className="flex items-center gap-2">
             <ShoppingCart className="h-6 w-6 text-primary" />
             Seu Carrinho
           </SheetTitle>
         </SheetHeader>
         <Separator />
+        
         <div className="flex-1 overflow-y-auto py-4">
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
@@ -41,13 +47,16 @@ export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
           ) : (
             <ul className="space-y-4">
               {items.map((item) => (
-                <li key={`${item.id}-${item.selectedVariation?.option.label || ''}`} className="flex items-center gap-4">
+                <li 
+                  key={`${item.id}-${item.selectedVariation?.option.label || ''}`} 
+                  className="flex items-center gap-4"
+                >
                   <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-border">
-                    <Image
-                      src={item.imageUrl}
-                      alt={item.name}
-                      layout="fill"
-                      objectFit="cover"
+                    <Image 
+                      src={item.imageUrl} 
+                      alt={item.name} 
+                      layout="fill" 
+                      objectFit="cover" 
                     />
                   </div>
                   <div className="flex flex-1 flex-col">
@@ -60,11 +69,15 @@ export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                           </span>
                         )}
                       </h3>
-                      <Button
-                        variant="ghost"
-                        size="icon"
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
                         className="h-6 w-6 text-muted-foreground hover:text-destructive"
-                        onClick={() => removeItem(item.id, item.selectedVariation?.name, item.selectedVariation?.option.label)}
+                        onClick={() => removeItem(
+                          item.id, 
+                          item.selectedVariation?.name, 
+                          item.selectedVariation?.option.label
+                        )}
                       >
                         <X className="h-4 w-4" />
                       </Button>
@@ -74,21 +87,31 @@ export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                     </p>
                     <div className="flex items-center justify-between mt-2">
                       <div className="flex items-center gap-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
                           className="h-7 w-7"
-                          onClick={() => updateQuantity(item.id, item.quantity - 1, item.selectedVariation?.name, item.selectedVariation?.option.label)}
+                          onClick={() => updateQuantity(
+                            item.id, 
+                            item.quantity - 1,
+                            item.selectedVariation?.name,
+                            item.selectedVariation?.option.label
+                          )}
                           disabled={item.quantity === 1}
                         >
                           <Minus className="h-4 w-4" />
                         </Button>
                         <span className="text-sm font-medium">{item.quantity}</span>
-                        <Button
-                          variant="outline"
-                          size="icon"
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
                           className="h-7 w-7"
-                          onClick={() => updateQuantity(item.id, item.quantity + 1, item.selectedVariation?.name, item.selectedVariation?.option.label)}
+                          onClick={() => updateQuantity(
+                            item.id, 
+                            item.quantity + 1,
+                            item.selectedVariation?.name,
+                            item.selectedVariation?.option.label
+                          )}
                         >
                           <Plus className="h-4 w-4" />
                         </Button>
@@ -103,6 +126,7 @@ export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
             </ul>
           )}
         </div>
+        
         <SheetFooter className="flex flex-col gap-2 p-4 border-t border-border">
           <div className="flex justify-between text-sm text-muted-foreground">
             <span>Subtotal:</span>
@@ -117,7 +141,11 @@ export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
             <span>{formatCurrency(total)}</span>
           </div>
           <Link href="/checkout" passHref>
-            <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6" disabled={items.length === 0} onClick={onClose}>
+            <Button 
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6"
+              disabled={items.length === 0}
+              onClick={onClose}
+            >
               Ir para Checkout
             </Button>
           </Link>
