@@ -26,11 +26,11 @@ import { Button } from "@/components/ui/button"; // Importando o componente Butt
 const categoryIcons: { [key: string]: React.ElementType } = {
   "Exclusivos do App": Star,
   "Prato do Dia": Sparkles,
-  "Pokes": BowlFood,
+  "Pokes": BowlFood, // Alterado para BowlFood
   "Pratos Quentes": Utensils,
   "Niguiri": Fish, // Alterado para Fish
   "Temaki": ScrollText,
-  "Yakisoba": Noodle,
+  "Yakisoba": Noodle, // Alterado para Noodle
   "Vegetarianos": Leaf,
   "Especiais": Sparkles,
   "Novidades": Gift,

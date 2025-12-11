@@ -7,6 +7,8 @@ import { Search, ShoppingCart, User, Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sidebar } from "@/components/sidebar";
 
 export const Header = () => {
   const isMobile = useIsMobile();
@@ -15,17 +17,31 @@ export const Header = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background shadow-sm">
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <Image
-            src="/sushiaki-logo.svg" // Placeholder logo image
-            alt="Sushiaki Logo"
-            width={32}
-            height={32}
-            className="h-8 w-8"
-          />
-          <span className="text-lg font-bold text-primary">SUSHIAKI</span>
-        </Link>
+        {/* Left section: Mobile Menu Trigger (Hamburger) and Logo */}
+        <div className="flex items-center gap-2">
+          {isMobile && (
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="p-0 w-64 pt-16"> {/* pt-16 to clear header */}
+                <Sidebar />
+              </SheetContent>
+            </Sheet>
+          )}
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src="/sushiaki-logo.svg"
+              alt="Sushiaki Logo"
+              width={32}
+              height={32}
+              className="h-8 w-8"
+            />
+            <span className="text-lg font-bold text-primary">SUSHIAKI</span>
+          </Link>
+        </div>
 
         {/* Search Input (Desktop only) */}
         {!isMobile && (
@@ -39,13 +55,8 @@ export const Header = () => {
           </div>
         )}
 
-        {/* Right section: Cart, Profile/Menu */}
+        {/* Right section: Cart, Profile (Desktop only) */}
         <div className="flex items-center gap-4">
-          {isMobile && (
-            <Button variant="ghost" size="icon" className="relative">
-              <Search className="h-5 w-5" />
-            </Button>
-          )}
           <Button variant="ghost" size="icon" className="relative">
             <ShoppingCart className="h-5 w-5" />
             {cartItemCount > 0 && (
@@ -54,11 +65,7 @@ export const Header = () => {
               </span>
             )}
           </Button>
-          {isMobile ? (
-            <Button variant="ghost" size="icon">
-              <Menu className="h-5 w-5" />
-            </Button>
-          ) : (
+          {!isMobile && (
             <Button variant="ghost" size="icon">
               <User className="h-5 w-5" />
             </Button>
