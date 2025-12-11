@@ -3,24 +3,22 @@ import React from "react";
 import Link from "next/link";
 import { 
   Star, Sparkles, Flame, ScrollText, 
-  Noodle, // Correct import for 'Noodle' (singular)
-  Leaf, Gift, Utensils, Shrimp, Fish, Coffee, 
-  Package, Bowl, // Correct import for 'Bowl'
-  Drumstick 
+  Leaf, Gift, Utensils, Fish, Coffee, 
+  Package, Drumstick 
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { categories } from "@/data/products";
 import { Button } from "@/components/ui/button";
 
-// Map categories to Lucide icons
+// Map categories to Lucide icons (using available icons)
 const categoryIcons: { [key: string]: React.ElementType } = {
   "Exclusivos do App": Star,
   "Prato do Dia": Sparkles,
-  "Pokes": Bowl, // Using 'Bowl' instead of 'RiceBowl'
+  "Pokes": Utensils, // Using Utensils instead of non-existent Bowl
   "Pratos Quentes": Utensils,
   "Niguiri": Fish,
   "Temaki": ScrollText,
-  "Yakisoba": Noodle, // Using 'Noodle' instead of 'Noodles'
+  "Yakisoba": Utensils, // Using Utensils instead of non-existent Noodle
   "Vegetarianos": Leaf,
   "Especiais": Sparkles,
   "Novidades": Gift,

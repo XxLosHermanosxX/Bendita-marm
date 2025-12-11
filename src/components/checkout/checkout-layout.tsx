@@ -1,13 +1,12 @@
 "use client";
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn, formatCurrency } from "@/lib/utils";
-import { AddressForm } from "@/components/checkout/address-form"; // Usando alias
-import { UserDataForm } from "@/components/checkout/user-data-form"; // Usando alias
-import { CouponForm } from "@/components/checkout/coupon-form"; // Usando alias
-import { OrderSummary } from "@/components/checkout/order-summary"; // Usando alias
+import { AddressForm } from "@/components/checkout/address-form";
+import { UserDataForm } from "@/components/checkout/user-data-form";
+import { CouponForm } from "@/components/checkout/coupon-form";
+import { OrderSummary } from "@/components/checkout/order-summary";
 import { Address, UserData, Coupon } from "@/types";
 import { useCartStore } from "@/store/use-cart-store";
 import { useRouter } from "next/navigation";
@@ -81,23 +80,23 @@ export const CheckoutLayout = () => {
         return <CouponForm currentCoupon={coupon} onNext={(data: Coupon | null) => handleNext("coupon", data)} onBack={handleBack} />;
       case "summary":
         if (!address || !userData) {
-            // Caso o usuário tente pular etapas
-            toast.error("Por favor, preencha o endereço e dados pessoais primeiro.");
-            setCurrentStep("address");
-            return null;
+          // Caso o usuário tente pular etapas
+          toast.error("Por favor, preencha o endereço e dados pessoais primeiro.");
+          setCurrentStep("address");
+          return null;
         }
         return (
-            <OrderSummary 
-                address={address} 
-                userData={userData} 
-                coupon={coupon} 
-                subtotal={subtotal}
-                deliveryFee={deliveryFee}
-                discount={discount}
-                total={total}
-                onFinalize={() => handleNext("summary", null)}
-                onBack={handleBack}
-            />
+          <OrderSummary 
+            address={address} 
+            userData={userData} 
+            coupon={coupon} 
+            subtotal={subtotal} 
+            deliveryFee={deliveryFee} 
+            discount={discount} 
+            total={total} 
+            onFinalize={() => handleNext("summary", null)} 
+            onBack={handleBack} 
+          />
         );
       default:
         return null;
@@ -113,14 +112,12 @@ export const CheckoutLayout = () => {
           {steps.map((step) => (
             <React.Fragment key={step.id}>
               <div className="flex flex-col items-center">
-                <div
-                  className={cn(
-                    "h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors",
-                    currentStep === step.id
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground"
-                  )}
-                >
+                <div className={cn(
+                  "h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors",
+                  currentStep === step.id 
+                    ? "bg-primary text-primary-foreground" 
+                    : "bg-muted text-muted-foreground"
+                )}>
                   {step.name.split('.')[0]}
                 </div>
                 <span className="text-xs mt-1 hidden sm:block text-center">
@@ -129,26 +126,27 @@ export const CheckoutLayout = () => {
               </div>
               {step.id !== "summary" && (
                 <Separator className={cn(
-                    "flex-1 mx-2 h-0.5",
-                    steps.findIndex(s => s.id === currentStep) > steps.findIndex(s => s.id === step.id) ? "bg-primary" : "bg-border"
+                  "flex-1 mx-2 h-0.5",
+                  steps.findIndex(s => s.id === currentStep) > steps.findIndex(s => s.id === step.id)
+                    ? "bg-primary"
+                    : "bg-border"
                 )} />
               )}
             </React.Fragment>
           ))}
         </div>
-
+        
         {/* Conteúdo do Passo Atual */}
         <div className="bg-card p-6 rounded-lg shadow-md border border-border">
           {renderStepContent()}
         </div>
       </div>
-
+      
       {/* Coluna Lateral (Resumo Fixo do Pedido) */}
       <div className="lg:col-span-1">
         <div className="sticky top-20 bg-secondary/50 p-6 rounded-lg shadow-md border border-border">
           <h2 className="text-xl font-bold mb-4 text-foreground">Seu Pedido</h2>
           <Separator className="mb-4" />
-          
           {items.length === 0 ? (
             <p className="text-muted-foreground">Seu carrinho está vazio.</p>
           ) : (
