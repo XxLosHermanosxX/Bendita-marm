@@ -10,16 +10,17 @@ import { useSearchParams } from "next/navigation";
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();
-  const initialCategory = searchParams.get('category');
+  
+  // Derivar a categoria ativa diretamente dos searchParams para garantir reatividade
+  const activeCategory = searchParams.get('category') || "Todos";
   
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeCategory, setActiveCategory] = useState(initialCategory || "Todos");
 
   // Lógica de Filtragem e Busca
   const filteredProducts = useMemo(() => {
     let filtered = products;
 
-    // 1. Filtrar por Categoria (usando o parâmetro de URL ou estado local)
+    // 1. Filtrar por Categoria (usando o parâmetro de URL)
     if (activeCategory && activeCategory !== "Todos") {
       filtered = filtered.filter(p => p.category === activeCategory);
     }
