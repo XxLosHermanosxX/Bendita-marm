@@ -37,7 +37,7 @@ export const HeroCarousel = () => {
           <CarouselItem key={banner.id} className="pl-0">
             <Link href={banner.link} className="block">
               {/* Usando aspect-video (16:9) para manter a proporção e garantir que a imagem não seja cortada */}
-              <div className="relative w-full aspect-video overflow-hidden">
+              <div className="relative w-full aspect-video">
                 <Image
                   src={banner.imageUrl}
                   alt={banner.alt}

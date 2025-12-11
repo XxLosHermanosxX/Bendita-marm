@@ -144,7 +144,7 @@ export const Header = () => {
         >
             <div className={cn(
               "relative",
-              isMobile ? "h-12 w-12" : "h-12 w-12" // Aumentado para h-12 w-12 no mobile
+              isMobile ? "h-12 w-12" : "h-12 w-12"
             )}>
               <Image 
                 src="/sushiaki-logo.png" 

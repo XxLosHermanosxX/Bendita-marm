@@ -9,6 +9,7 @@ import {
 import { cn } from "@/lib/utils";
 import { categories } from "@/data/products";
 import { Button } from "@/components/ui/button";
+import { useSearchParams } from "next/navigation"; // Importando useSearchParams
 
 // Map categories to Lucide icons (using available icons)
 const categoryIcons: { [key: string]: React.ElementType } = {
@@ -34,7 +35,10 @@ const categoryIcons: { [key: string]: React.ElementType } = {
 };
 
 export const Sidebar = () => {
-  const activeCategory = "Exclusivos do App";
+  const searchParams = useSearchParams();
+  // Lê a categoria da URL. Se não houver, assume 'Exclusivos do App' como padrão.
+  const activeCategory = searchParams.get('category') || "Exclusivos do App"; 
+  
   return (
     <div className="h-full flex flex-col p-4 bg-secondary/50">
       <h2 className="text-lg font-semibold mb-4 text-foreground">Categorias</h2>
