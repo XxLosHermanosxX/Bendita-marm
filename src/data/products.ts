@@ -274,13 +274,42 @@ export const products: Product[] = [
     isNew: true,
     isExclusive: true,
   },
-  // Additional products from images
+  
+  // BEBIDAS (Incluindo Sodas e novos itens)
+  {
+    id: "p95",
+    name: "Refrigerante Lata (Vários Sabores)",
+    description: "Coca-Cola, Coca-Cola Zero, Fanta Laranja, Guaraná Kuat, Sprite.",
+    price: 7.90,
+    category: "Bebidas",
+    imageUrl: "/images/refrigerantes-lata.jpg",
+    variations: [
+        {
+            name: "Sabor",
+            options: [
+                { label: "Coca-Cola Classic", price: 7.90 },
+                { label: "Coca-Cola Zero", price: 7.90 },
+                { label: "Fanta Laranja", price: 7.90 },
+                { label: "Guaraná Kuat", price: 7.90 },
+                { label: "Sprite", price: 7.90 },
+            ]
+        }
+    ]
+  },
+  {
+    id: "p96",
+    name: "Água Mineral Crystal 500ml",
+    description: "Água mineral sem gás.",
+    price: 4.50,
+    category: "Bebidas",
+    imageUrl: "/images/agua__1_.jpg",
+  },
   {
     id: "p31",
     name: "Soda Ichigo",
     description: "Morango e limão siciliano.",
     price: 13.50,
-    category: "Soda",
+    category: "Bebidas", // Alterado de Soda para Bebidas
     imageUrl: "/images/soda-ichigo.png",
   },
   {
@@ -288,7 +317,7 @@ export const products: Product[] = [
     name: "Soda Pink Lemonade",
     description: "Cranberry, morango e limão.",
     price: 13.50,
-    category: "Soda",
+    category: "Bebidas", // Alterado de Soda para Bebidas
     imageUrl: "/images/soda-pink-lemonade.png",
   },
   {
@@ -296,17 +325,19 @@ export const products: Product[] = [
     name: "Akai Soda",
     description: "Melancia com limão.",
     price: 13.50,
-    category: "Soda",
-    imageUrl: "/images/akai-soda.png",
+    category: "Bebidas", // Alterado de Soda para Bebidas
+    imageUrl: "/images/soda_akai.jpg", // Usando a nova imagem
   },
   {
     id: "p34",
     name: "Midori Soda",
     description: "Maçã verde com limão siciliano.",
     price: 13.50,
-    category: "Soda",
-    imageUrl: "/images/midori-soda.png",
+    category: "Bebidas", // Alterado de Soda para Bebidas
+    imageUrl: "/images/soda_midori.jpg", // Usando a nova imagem
   },
+
+  // Pratos Quentes (Continuando a lista original)
   {
     id: "p35",
     name: "Tempura Udon",
@@ -801,7 +832,6 @@ export const categories = [
   "Vegetarianos",
   "Especiais",
   "Novidades",
-  "Soda",
   "Combinados",
   "Hossomaki",
   "Uramaki",
@@ -809,4 +839,5 @@ export const categories = [
   "Hot Sushis",
   "Tilápia Sushiaki",
   "Street Food",
+  "Bebidas", // Adicionado no final
 ];

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { 
   Star, Sparkles, Flame, ScrollText, 
   Leaf, Gift, Utensils, Fish, Coffee, 
-  Package, Drumstick 
+  Package, Drumstick, GlassWater // Adicionando GlassWater para Bebidas
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { categories } from "@/data/products";
@@ -30,6 +30,7 @@ const categoryIcons: { [key: string]: React.ElementType } = {
   "Hot Sushis": Flame,
   "Tilápia Sushiaki": Fish,
   "Street Food": Drumstick,
+  "Bebidas": GlassWater, // Novo ícone para Bebidas
 };
 
 export const Sidebar = () => {
