@@ -1,8 +1,13 @@
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { MainLayout } from "@/components/layout/main-layout";
+import { ProductCard } from "@/components/product-card";
 import Image from "next/image";
+import { products } from "@/data/products";
 
 export default function Home() {
+  const exclusiveProducts = products.filter(p => p.isExclusive);
+  const newProducts = products.filter(p => p.isNew);
+
   return (
     <MainLayout>
       {/* Banner de Boas-vindas */}
@@ -23,7 +28,35 @@ export default function Home() {
         <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
           Bem-vindo ao Sushiaki Delivery!
         </h1>
-        {/* Seção de produtos em destaque, etc. virá aqui */}
+        
+        {/* Seção de Produtos Exclusivos do App */}
+        {exclusiveProducts.length > 0 && (
+          <section className="mb-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-foreground mb-4">
+              Exclusivos do App
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {exclusiveProducts.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Seção de Novidades */}
+        {newProducts.length > 0 && (
+          <section className="mb-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-foreground mb-4">
+              Novidades
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {newProducts.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </section>
+        )}
+
         <p className="text-muted-foreground">
           Comece a explorar nosso delicioso cardápio.
         </p>
