@@ -1,0 +1,99 @@
+"use client";
+
+import React from "react";
+import Link from "next/link";
+import {
+  Star,
+  Sparkles,
+  Flame, // Usado para Hot Sushis
+  ScrollText,
+  Noodle, // Corrigido para Noodle (singular)
+  Leaf,
+  Gift,
+  Utensils,
+  Shrimp,
+  Fish, // Usado para Niguiri, Sashimi, Tilápia Sushiaki
+  Coffee,
+  Package,
+  BowlFood, // Corrigido para BowlFood
+  Drumstick, // Usado para Street Food
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { categories } from "@/data/products";
+import { Button } from "@/components/ui/button"; // Importando o componente Button
+
+// Map categories to Lucide icons
+const categoryIcons: { [key: string]: React.ElementType } = {
+  "Exclusivos do App": Star,
+  "Prato do Dia": Sparkles,
+  "Pokes": BowlFood,
+  "Pratos Quentes": Utensils,
+  "Niguiri": Fish, // Alterado para Fish
+  "Temaki": ScrollText,
+  "Yakisoba": Noodle,
+  "Vegetarianos": Leaf,
+  "Especiais": Sparkles,
+  "Novidades": Gift,
+  "Soda": Coffee,
+  "Combinados": Package,
+  "Hossomaki": Fish, // Alterado para Fish
+  "Uramaki": Fish, // Alterado para Fish
+  "Sashimi": Fish,
+  "Hot Sushis": Flame,
+  "Tilápia Sushiaki": Fish,
+  "Street Food": Drumstick,
+};
+
+export const Sidebar = () => {
+  // Placeholder for active category state
+  const activeCategory = "Exclusivos do App"; 
+
+  return (
+    <div className="h-full flex flex-col p-4 bg-secondary/50">
+      <h2 className="text-lg font-semibold mb-4 text-foreground">Categorias</h2>
+      <nav className="flex-1 space-y-1">
+        {categories.map((category) => {
+          const Icon = categoryIcons[category] || Utensils; // Default icon
+          return (
+            <Link
+              key={category}
+              href={`/products?category=${encodeURIComponent(category)}`}
+              className={cn(
+                "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
+                activeCategory === category
+                  ? "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
+                  : "text-muted-foreground"
+              )}
+            >
+              <Icon className="h-5 w-5" />
+              {category}
+            </Link>
+          );
+        })}
+      </nav>
+      {/* Placeholder for filters */}
+      <div className="mt-8 pt-4 border-t border-border">
+        <h3 className="text-md font-semibold mb-3 text-foreground">Filtros</h3>
+        <div className="space-y-4">
+          {/* Price Slider Placeholder */}
+          <div>
+            <p className="text-sm font-medium text-muted-foreground mb-2">Preço</p>
+            <div className="h-8 w-full bg-muted rounded-md flex items-center justify-center text-xs text-muted-foreground">
+              Slider de Preço
+            </div>
+          </div>
+          {/* Rating Filter Placeholder */}
+          <div>
+            <p className="text-sm font-medium text-muted-foreground mb-2">Avaliação</p>
+            <div className="h-8 w-full bg-muted rounded-md flex items-center justify-center text-xs text-muted-foreground">
+              Filtro de Estrelas
+            </div>
+          </div>
+          <Button variant="outline" className="w-full">
+            Limpar Filtros
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
