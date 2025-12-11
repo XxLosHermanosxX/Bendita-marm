@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, ShoppingCart, User, Menu } from "lucide-react";
+import { Search, ShoppingCart, User, Menu, Clock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -19,9 +19,23 @@ export const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
+  const [isOpen, setIsOpen] = useState(true); // Placeholder for business hours status
 
   useEffect(() => {
     setIsClient(true);
+    
+    // Placeholder logic for business hours
+    const checkBusinessHours = () => {
+      const now = new Date();
+      const hours = now.getHours();
+      // Example: Open from 10:00 to 22:00
+      setIsOpen(hours >= 10 && hours < 22);
+    };
+    
+    checkBusinessHours();
+    // Check every minute
+    const interval = setInterval(checkBusinessHours, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -49,14 +63,15 @@ export const Header = () => {
               </Sheet>
             )}
             <Link href="/" className="flex items-center gap-2">
-              <Image 
-                src="/sushiaki-logo.png" 
-                alt="Sushiaki Logo" 
-                width={32} 
-                height={32} 
-                className="h-8 w-8" 
-              />
-              <span className="text-lg font-bold text-primary">SUSHIAKI</span>
+              <div className="relative h-10 w-10">
+                <Image 
+                  src="/sushiaki-logo.png" 
+                  alt="Sushiaki Logo" 
+                  layout="fill"
+                  objectFit="contain"
+                  className="h-10 w-10"
+                />
+              </div>
             </Link>
           </div>
 
@@ -117,15 +132,26 @@ export const Header = () => {
             </Sheet>
           )}
           <Link href="/" className="flex items-center gap-2">
-            <Image 
-              src="/sushiaki-logo.png" 
-              alt="Sushiaki Logo" 
-              width={32} 
-              height={32} 
-              className="h-8 w-8" 
-            />
-            <span className="text-lg font-bold text-primary">SUSHIAKI</span>
+            <div className="relative h-10 w-10">
+              <Image 
+                src="/sushiaki-logo.png" 
+                alt="Sushiaki Logo" 
+                layout="fill"
+                objectFit="contain"
+                className="h-10 w-10"
+              />
+            </div>
           </Link>
+        </div>
+
+        {/* Business hours status */}
+        <div className="flex items-center gap-1">
+          <span className={`text-xs font-medium ${isOpen ? 'text-success' : 'text-destructive'}`}>
+            {isOpen ? 'Aberto agora' : 'Fechado'}
+          </span>
+          <Button variant="ghost" size="icon" className="h-6 w-6">
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </Button>
         </div>
 
         {/* Search Input (Desktop only) */}
