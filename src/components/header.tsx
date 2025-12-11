@@ -9,13 +9,22 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Sidebar } from "@/components/sidebar";
-import { CartDrawer } from "@/components/cart-drawer"; // Importar CartDrawer
-import { useCartStore } from "@/store/use-cart-store"; // Importar o store do carrinho
+import { CartDrawer } from "@/components/cart-drawer";
+import { useCartStore } from "@/store/use-cart-store";
+import { useRouter } from "next/navigation";
 
 export const Header = () => {
   const isMobile = useIsMobile();
-  const totalCartItems = useCartStore((state) => state.getTotalItems()); // Obter total de itens do store
-  const [isCartOpen, setIsCartOpen] = useState(false); // Estado para controlar o CartDrawer
+  const totalCartItems = useCartStore((state) => state.getTotalItems());
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
+
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && searchTerm.trim()) {
+      router.push(`/products?search=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background shadow-sm">
@@ -54,12 +63,20 @@ export const Header = () => {
               type="text"
               placeholder="Buscar no cardápio"
               className="w-full pl-9 pr-4 py-2 rounded-md border border-input bg-background focus-visible:ring-primary"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={handleSearch}
             />
           </div>
         )}
 
         {/* Right section: Cart, Profile (Desktop only) */}
         <div className="flex items-center gap-4">
+          {isMobile && (
+            <Button variant="ghost" size="icon" className="relative">
+              <Search className="h-5 w-5" /> {/* Mobile search icon (no input) */}
+            </Button>
+          )}
           <Button variant="ghost" size="icon" className="relative" onClick={() => setIsCartOpen(true)}>
             <ShoppingCart className="h-5 w-5" />
             {totalCartItems > 0 && (
