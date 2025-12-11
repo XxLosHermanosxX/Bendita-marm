@@ -31,17 +31,18 @@ const banners: Banner[] = [
 export const HeroCarousel = () => {
   return (
     <Carousel className="w-full">
-      <CarouselContent>
+      {/* Overriding default Shadcn carousel padding/margins for full width */}
+      <CarouselContent className="-ml-0">
         {banners.map((banner) => (
-          <CarouselItem key={banner.id}>
+          <CarouselItem key={banner.id} className="pl-0">
             <Link href={banner.link} className="block">
               {/* Usando aspect-video (16:9) para manter a proporção e garantir que a imagem não seja cortada */}
-              <div className="relative w-full aspect-video overflow-hidden rounded-lg shadow-lg">
+              <div className="relative w-full aspect-video overflow-hidden">
                 <Image
                   src={banner.imageUrl}
                   alt={banner.alt}
                   layout="fill"
-                  objectFit="contain" // Alterado para 'contain' para evitar cortes
+                  objectFit="contain" 
                   className="object-center"
                   priority
                 />
