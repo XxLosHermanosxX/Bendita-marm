@@ -3,8 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import { SplashScreen } from "@/components/splash-screen"; // Importando SplashScreen
-import { Suspense } from "react"; // Necessário para use-sound/use-is-mobile
+import { SplashScreen } from "@/components/splash-screen";
+import React, { Suspense } from "react"; // Importando React e Suspense
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
