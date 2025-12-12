@@ -8,6 +8,7 @@ import { AddressForm } from "./address-form";
 import { UserDataForm } from "./user-data-form";
 import { PaymentForm } from "./payment-form";
 import { OrderSummaryDrawer } from "./order-summary-drawer"; // New import
+import { ReviewOrderSummary } from "./review-order-summary"; // New import
 import { Address, UserData, PaymentMethod, Order } from "@/types";
 import { useCartStore } from "@/store/use-cart-store";
 import { formatCurrency } from "@/lib/utils";
@@ -25,7 +26,8 @@ export const CheckoutLayout = () => {
   
   const subtotal = getTotalPrice();
   const deliveryFee = 10.00; // Exemplo de taxa de entrega
-  const total = subtotal + deliveryFee; // Preço final sem descontos
+  const discount = 0; // Sem descontos por enquanto
+  const total = subtotal + deliveryFee - discount; // Preço final
 
   useEffect(() => {
     if (items.length === 0) {
@@ -59,7 +61,7 @@ export const CheckoutLayout = () => {
         notes: item.notes
       })),
       subtotal: subtotal,
-      discount: 0, // Sem descontos
+      discount: discount, // Usando o desconto calculado
       deliveryFee: deliveryFee,
       total: total, // Preço final
       status: "pending",
@@ -238,6 +240,10 @@ export const CheckoutLayout = () => {
                   <h3 className="text-xl font-semibold flex items-center gap-2 text-primary">
                     <CheckCircle2 className="h-5 w-5" /> 4. Revisar e Finalizar
                   </h3>
+                  
+                  {/* NOVO: Resumo do Pedido Colapsável */}
+                  <ReviewOrderSummary deliveryFee={deliveryFee} discount={discount} />
+
                   <div className="rounded-lg border bg-card p-6 shadow-sm space-y-4">
                     <div>
                       <h4 className="font-semibold text-lg mb-2">
@@ -335,7 +341,7 @@ export const CheckoutLayout = () => {
         isOpen={showSummaryDrawer}
         onClose={() => setShowSummaryDrawer(false)}
         deliveryFee={deliveryFee}
-        discount={0}
+        discount={discount}
       />
     </div>
   );

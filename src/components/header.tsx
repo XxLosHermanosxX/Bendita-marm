@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { CartDrawer } from "@/components/cart-drawer";
 import { useCartStore } from "@/store/use-cart-store";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation"; // Importando usePathname
 import { BusinessHoursStatus } from "./business-hours-status";
 import { cn, formatCurrency } from "@/lib/utils";
 import { useSidebarToggle } from "@/hooks/use-sidebar-toggle"; // Importando o novo hook
@@ -46,6 +46,7 @@ export const Header = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Mantido para o mobile search
   const router = useRouter();
+  const pathname = usePathname(); // Usando usePathname
   const [isClient, setIsClient] = useState(false);
   const [isOpen, setIsOpen] = useState(true); 
 
@@ -59,6 +60,9 @@ export const Header = () => {
     const interval = setInterval(updateStatus, 60000);
     return () => clearInterval(interval);
   }, []);
+
+  // Verifica se estamos na página de checkout ou pagamento PIX
+  const isCheckoutPage = pathname === '/checkout' || pathname === '/pix-payment';
 
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -156,9 +160,6 @@ export const Header = () => {
             )}
         </div>
         
-        {/* Search Input (Desktop only) - REMOVED */}
-        {/* O campo de busca no desktop agora está no DesktopMenuLayout */}
-
         {/* Right section: Cart, Profile */}
         <div className="flex items-center gap-4 ml-auto">
           {/* Mobile Search Icon */}
@@ -192,8 +193,8 @@ export const Header = () => {
         </div>
       </div>
       
-      {/* Persistent Cart Button for Mobile */}
-      {isMobile && totalCartItems > 0 && (
+      {/* Persistent Cart Button for Mobile (Hidden on Checkout/PIX pages) */}
+      {isMobile && totalCartItems > 0 && !isCheckoutPage && (
         <div className="fixed bottom-0 left-0 right-0 bg-primary p-4 z-40">
           <Button 
             className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6"
