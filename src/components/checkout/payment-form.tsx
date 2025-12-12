@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form"; // Importando SubmitHandler
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { PaymentMethod } from "@/types";
@@ -43,7 +43,8 @@ export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
   const selectedPaymentType = form.watch("type");
   const changeNeeded = form.watch("changeNeeded");
 
-  const onSubmit = (data: z.infer<typeof PaymentSchema>) => {
+  // Explicitamente tipando o onSubmit para ajudar na inferência
+  const onSubmit: SubmitHandler<z.infer<typeof PaymentSchema>> = (data) => {
     onNext(data as PaymentMethod);
   };
 
@@ -101,7 +102,7 @@ export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
                     <input
                       type="checkbox"
                       checked={field.value}
-                      onChange={field.onChange} // Corrigido: onCheckedChange para onChange
+                      onChange={field.onChange}
                       className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                     />
                   </FormControl>
