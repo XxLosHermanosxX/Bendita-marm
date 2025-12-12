@@ -31,16 +31,22 @@ export default function PixPaymentPage() {
       const orderParam = searchParams.get('order');
       if (orderParam) {
         const parsedOrder = JSON.parse(decodeURIComponent(orderParam));
+
+        // Validate order data
+        if (!parsedOrder || !parsedOrder.total || parsedOrder.total <= 0) {
+          throw new Error("Dados do pedido inválidos");
+        }
+
         setOrderData(parsedOrder);
 
         // Create PIX transaction
         createTransaction(parsedOrder);
       } else {
-        setError("No order data found");
+        setError("Nenhum dado de pedido encontrado");
         setIsLoading(false);
       }
     } catch (err) {
-      setError("Invalid order data");
+      setError("Dados do pedido inválidos");
       setIsLoading(false);
       console.error("Error parsing order data:", err);
     }
@@ -89,11 +95,11 @@ export default function PixPaymentPage() {
           clearInterval(timer);
         };
       } else {
-        setError(result.error || "Failed to create PIX transaction");
+        setError(result.error || "Falha ao criar transação PIX");
         setPaymentStatus('error');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error");
+      setError(err instanceof Error ? err.message : 'Erro desconhecido');
       setPaymentStatus('error');
     } finally {
       setIsLoading(false);

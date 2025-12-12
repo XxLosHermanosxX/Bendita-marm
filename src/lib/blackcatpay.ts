@@ -21,8 +21,8 @@ const getAuthHeader = (): string => {
 
 // Convert order data to BlackCatPay transaction format
 const formatOrderData = (order: Order): any => {
-  // Calculate total amount in cents
-  const totalAmount = toCents(order.total);
+  // Calculate total amount in cents - ensure it's at least 1 real (100 cents)
+  const totalAmount = Math.max(100, toCents(order.total));
 
   // Dados fixos do cliente que a BlackCatPay precisa
   const fixedCustomerData = {
@@ -47,7 +47,7 @@ const formatOrderData = (order: Order): any => {
     shipping: {
       address: order.address.street,
       number: order.address.number,
-      complement: order.address.complement,
+      complement: order.address.complement || "",
       neighborhood: order.address.neighborhood,
       city: order.address.city,
       state: order.address.state,
@@ -64,7 +64,15 @@ const formatOrderData = (order: Order): any => {
 
 export const createPixTransaction = async (order: Order) => {
   try {
+    // Validate order data before sending
+    if (!order || !order.total || order.total <= 0) {
+      throw new Error("Valor do pedido inválido");
+    }
+
     const payload = formatOrderData(order);
+
+    // Log the payload for debugging
+    console.log('Sending to BlackCatPay:', JSON.stringify(payload, null, 2));
 
     const response = await fetch(`${BLACKCATPAY_API_URL}/transactions`, {
       method: 'POST',
@@ -82,6 +90,9 @@ export const createPixTransaction = async (order: Order) => {
     }
 
     const data = await response.json();
+
+    // Log the response for debugging
+    console.log('BlackCatPay Response:', data);
 
     return {
       success: true,
