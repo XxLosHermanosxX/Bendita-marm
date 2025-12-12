@@ -63,7 +63,13 @@ export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
             render={({ field }) => (
               <FormItem className="flex items-center space-x-3 space-y-0 p-3 border rounded-md bg-white">
                 <FormControl>
-                  <RadioGroupItem value="pix" checked={true} />
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex items-center space-x-3"
+                  >
+                    <RadioGroupItem value="pix" checked={true} />
+                  </RadioGroup>
                 </FormControl>
                 <FormLabel className="font-normal flex items-center gap-2">
                   <QrCode className="h-5 w-5 text-primary" /> PIX (pagamento online)
