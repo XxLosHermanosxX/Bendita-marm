@@ -2,7 +2,6 @@ import { Order } from "@/types";
 
 // Chaves fornecidas pelo usuário
 const SECRET_KEY = 'sk_jatFTlsz-CMluRfzHixO_ax-b5l9gTH2ulxu8-pujt5piFu8';
-const PUBLIC_KEY = 'pk_QeH6GwZYP3KPXMdRPDIC9VzFo8CDqLATI7f764w1KQxkYRtB'; // Não usado na autenticação, mas mantido por contexto
 const API_BASE_URL = 'https://api.blackcatpagamentos.com/v1';
 
 // Helper function to convert amount to cents with proper rounding
@@ -28,17 +27,6 @@ const TEST_CUSTOMER = {
   document: "12345678901" // CPF de teste válido (apenas números)
 };
 
-const TEST_ADDRESS = {
-  street: "Rua Teste da Entrega",
-  number: "100",
-  complement: "Apto 1",
-  neighborhood: "Centro",
-  city: "Curitiba",
-  state: "PR",
-  cep: "80000000"
-};
-
-
 // Helper function to validate required fields (local validation remains)
 function validateOrderData(order: Order): { valid: boolean; error?: string } {
   if (!order || !order.total || order.total <= 0) {
@@ -57,7 +45,7 @@ function buildPayload(order: Order) {
     throw new Error(validation.error);
   }
 
-  // Calculate total amount
+  // Calculate total amount (using order.total which includes delivery fee)
   const totalAmount = order.total; 
   const amountInCents = Math.round(totalAmount * 100);
 
@@ -67,6 +55,7 @@ function buildPayload(order: Order) {
     amount: amountInCents, // Total amount in cents (including delivery fee)
     currency: "BRL",
     paymentMethod: "pix",
+    installments: 1, // Adicionado installments: 1 (visto na resposta de sucesso)
     pix: {
       expiresIn: 600 // 10 minutes
     },
@@ -76,36 +65,28 @@ function buildPayload(order: Order) {
       console.log(`Item ${item.name}: R$${itemPrice.toFixed(2)} = ${itemPriceInCents} cents, quantity: ${item.quantity}`);
 
       return {
-        title: item.name, // ✅ Campo correto
-        quantity: item.quantity, // ✅ Obrigatório
-        unitPrice: itemPriceInCents, // ✅ Campo correto em centavos
-        tangible: true, // ✅ Obrigatório (sushi é físico)
-        fee: 0, // ✅ Obrigatório (taxa/comissão do item)
-        metadata: JSON.stringify({ // ✅ Obrigatório (string)
-          productId: item.id,
-          productName: item.name,
-        })
+        title: item.name,
+        quantity: item.quantity,
+        unitPrice: itemPriceInCents,
+        tangible: true, // Mantendo true, pois sushi é físico
+        // Removendo fee e metadata do item para replicar a estrutura de sucesso
       };
     }),
     customer: {
       name: TEST_CUSTOMER.name,
       email: TEST_CUSTOMER.email,
       phone: cleanPhone(TEST_CUSTOMER.phone),
-      document: cleanPhone(TEST_CUSTOMER.document) // ✅ Garantindo que o documento seja enviado
+      // ✅ CORREÇÃO: Documento como sub-objeto
+      document: {
+        type: "cpf",
+        number: cleanPhone(TEST_CUSTOMER.document)
+      }
     },
-    // ✅ SHIPPING CORRIGIDO: Usando dados de teste completos
-    shipping: {
-      fee: amountToCents(order.deliveryFee || 0), // ✅ Taxa de entrega em centavos
-      address: TEST_ADDRESS.street, // ✅ Nome da rua
-      number: TEST_ADDRESS.number, // ✅ Número
-      complement: TEST_ADDRESS.complement || "", // ✅ Garantindo que seja string vazia se nulo
-      neighborhood: TEST_ADDRESS.neighborhood, // ✅ Bairro
-      city: TEST_ADDRESS.city, // ✅ Cidade
-      state: TEST_ADDRESS.state, // ✅ Estado
-      zipCode: cleanCEP(TEST_ADDRESS.cep), // ✅ CEP
-    },
+    // ✅ CORREÇÃO: Removendo o objeto shipping, pois a transação de sucesso o retorna como null
+    // Se a adquirente não processa o frete, não devemos enviar o objeto shipping.
+    
     externalRef: `PEDIDO-${Date.now()}`,
-    metadata: JSON.stringify({ // ✅ Metadados da transação (string)
+    metadata: JSON.stringify({ // Mantendo metadados da transação principal
       orderId: `ORDER-${Date.now()}`,
       userId: TEST_CUSTOMER.email,
       timestamp: new Date().toISOString()
