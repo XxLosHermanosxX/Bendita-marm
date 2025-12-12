@@ -67,6 +67,8 @@ function buildPayload(order: Order) {
   // Convert total to cents with proper rounding
   const amountInCents = Math.round(totalAmount * 100);
 
+  console.log(`Calculated total amount: R$${totalAmount.toFixed(2)} = ${amountInCents} cents`);
+
   return {
     amount: amountInCents, // Total amount in cents
     currency: "BRL",
@@ -76,10 +78,13 @@ function buildPayload(order: Order) {
     },
     items: order.items.map(item => {
       const itemPrice = item.details?.selectedVariation?.option.price || item.price;
+      const itemPriceInCents = Math.round(itemPrice * 100);
+      console.log(`Item ${item.name}: R$${itemPrice.toFixed(2)} = ${itemPriceInCents} cents, quantity: ${item.quantity}`);
+
       return {
         name: item.name,
         quantity: item.quantity,
-        price: Math.round(itemPrice * 100), // Convert each item price to cents
+        price: itemPriceInCents, // Convert each item price to cents
         description: item.description || `${item.name} - ${item.quantity}x`
       };
     }),
@@ -109,11 +114,11 @@ function buildPayload(order: Order) {
 
 export async function createPixTransaction(order: Order) {
   try {
-    console.log("Creating PIX transaction with order:", order);
+    console.log("Creating PIX transaction with order:", JSON.stringify(order, null, 2));
 
     // Validate and build payload
     const payload = buildPayload(order);
-    console.log("Payload to send:", JSON.stringify(payload, null, 2));
+    console.log("Final payload to send:", JSON.stringify(payload, null, 2));
 
     const auth = btoa(SECRET_KEY + ':');
 
@@ -127,22 +132,47 @@ export async function createPixTransaction(order: Order) {
     });
 
     console.log("API Response status:", response.status);
+    const responseText = await response.text();
+    console.log("API Response text:", responseText);
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error('BlackCatPay API Error:', errorData);
+      try {
+        const errorData = JSON.parse(responseText);
+        console.error('BlackCatPay API Error:', errorData);
 
-      let errorMessage = "Erro ao criar transação PIX";
-      if (errorData.message) {
-        errorMessage = errorData.message;
-      } else if (errorData.error) {
-        errorMessage = errorData.error;
+        let errorMessage = "Erro ao criar transação PIX";
+        if (errorData.message) {
+          errorMessage = errorData.message;
+        } else if (errorData.error) {
+          errorMessage = errorData.error;
+        } else if (errorData.detail) {
+          errorMessage = errorData.detail;
+        }
+
+        // Try to extract field-specific errors
+        if (errorData.errors) {
+          const fieldErrors = Object.entries(errorData.errors)
+            .map(([field, errors]) => `${field}: ${(errors as string[]).join(', ')}`)
+            .join('; ');
+          errorMessage += ` (${fieldErrors})`;
+        }
+
+        return {
+          success: false,
+          error: errorMessage,
+          status: response.status,
+          response: errorData
+        };
+      } catch (e) {
+        return {
+          success: false,
+          error: `HTTP error! status: ${response.status}, response: ${responseText}`,
+          status: response.status
+        };
       }
-
-      throw new Error(errorMessage);
     }
 
-    const data = await response.json();
+    const data = JSON.parse(responseText);
     console.log("Transaction created successfully:", data);
 
     return {

@@ -6,7 +6,7 @@ import { MainLayout } from "@/components/layout/main-layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { CheckCircle2, Clock, Copy, QrCode, XCircle } from "lucide-react";
+import { CheckCircle2, Clock, Copy, QrCode, XCircle, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import { formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/store/use-cart-store";
@@ -23,7 +23,7 @@ export default function PixPaymentPage() {
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'approved' | 'declined' | 'expired' | 'error'>('pending');
   const [timeRemaining, setTimeRemaining] = useState<string>("10:00");
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<{ message: string; details?: any; status?: number } | null>(null);
 
   useEffect(() => {
     // Parse order data from URL search params
@@ -36,11 +36,11 @@ export default function PixPaymentPage() {
         // Create PIX transaction
         createTransaction(parsedOrder);
       } else {
-        setError("Nenhum dado de pedido encontrado");
+        setError({ message: "Nenhum dado de pedido encontrado" });
         setIsLoading(false);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Dados do pedido inválidos");
+      setError({ message: err instanceof Error ? err.message : "Dados do pedido inválidos" });
       setIsLoading(false);
       console.error("Error parsing order data:", err);
     }
@@ -66,7 +66,7 @@ export default function PixPaymentPage() {
           },
           (err) => {
             setPaymentStatus('error');
-            setError(err);
+            setError({ message: err });
           },
           () => {
             setPaymentStatus('expired');
@@ -91,12 +91,19 @@ export default function PixPaymentPage() {
           clearInterval(timer);
         };
       } else {
-        setError(result.error || "Falha ao criar transação PIX");
+        setError({
+          message: result.error || "Falha ao criar transação PIX",
+          details: result.response,
+          status: result.status
+        });
         setPaymentStatus('error');
         console.error("Transaction creation failed:", result.error);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro desconhecido');
+      setError({
+        message: err instanceof Error ? err.message : 'Erro desconhecido',
+        details: err
+      });
       setPaymentStatus('error');
       console.error("Unexpected error in createTransaction:", err);
     } finally {
@@ -143,7 +150,18 @@ export default function PixPaymentPage() {
               <XCircle className="h-12 w-12 text-destructive" />
             </div>
             <h2 className="text-2xl font-bold text-destructive">Erro no Pagamento</h2>
-            <p className="text-muted-foreground">{error}</p>
+            <p className="text-muted-foreground">{error.message}</p>
+
+            {error.details && (
+              <div className="text-left text-sm text-muted-foreground bg-destructive/5 p-4 rounded-lg mt-4">
+                <h3 className="font-semibold text-destructive mb-2">Detalhes do erro:</h3>
+                <pre className="overflow-x-auto">{JSON.stringify(error.details, null, 2)}</pre>
+                {error.status && (
+                  <p className="mt-2">Código de status: {error.status}</p>
+                )}
+              </div>
+            )}
+
             <div className="space-y-2">
               <Button onClick={handleBackToCheckout} className="w-full">
                 Tentar novamente
