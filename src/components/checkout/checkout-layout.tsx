@@ -140,6 +140,7 @@ export const CheckoutLayout = () => {
             <ChevronLeft className="h-5 w-5 mr-2" /> Voltar
           </Button>
 
+          {/* Título único e ajustado */}
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8">
             Finalizar Pedido
           </h1>
@@ -217,7 +218,8 @@ export const CheckoutLayout = () => {
 
               {renderStepContent()}
 
-              {currentStep > 1 && currentStep <= 3 && (
+              {/* REMOVENDO BOTÃO VOLTAR DUPLICADO */}
+              {/* {currentStep > 1 && currentStep <= 3 && (
                 <Button
                   variant="outline"
                   onClick={handlePreviousStep}
@@ -225,7 +227,7 @@ export const CheckoutLayout = () => {
                 >
                   <ChevronLeft className="h-5 w-5 mr-2" /> Voltar
                 </Button>
-              )}
+              )} */}
 
               {currentStep === 4 && (
                 <div className="space-y-6">
@@ -268,8 +270,7 @@ export const CheckoutLayout = () => {
                         <p className="text-muted-foreground">
                           Nome: {userData.name}
                           <br />
-                          Email: {userData.email}
-                          <br />
+                          {/* Email removido */}
                           Telefone: {userData.phone}
                         </p>
                       ) : (

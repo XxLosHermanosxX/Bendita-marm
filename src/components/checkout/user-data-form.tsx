@@ -10,12 +10,23 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { User, ChevronLeft } from "lucide-react";
 
-// Esquema de validação com Zod
+// Função de formatação de telefone (para (99) 99999-9999)
+const formatPhone = (value: string) => {
+  if (!value) return value;
+  const numbers = value.replace(/\D/g, '');
+  
+  if (numbers.length <= 2) return `(${numbers}`;
+  if (numbers.length <= 7) return `(${numbers.substring(0, 2)}) ${numbers.substring(2)}`;
+  if (numbers.length <= 11) return `(${numbers.substring(0, 2)}) ${numbers.substring(2, 7)}-${numbers.substring(7, 11)}`;
+  
+  return `(${numbers.substring(0, 2)}) ${numbers.substring(2, 7)}-${numbers.substring(7, 11)}`;
+};
+
+// Esquema de validação simplificado com Zod
 const UserDataSchema = z.object({
   name: z.string().min(3, "Nome é obrigatório"),
-  email: z.string().email("Email inválido"),
+  // Email e CPF removidos
   phone: z.string().min(10, "Telefone inválido").max(15, "Telefone inválido"),
-  cpf: z.string().optional(), // Simplificado, sem validação de CPF por enquanto
 });
 
 interface UserDataFormProps {
@@ -29,14 +40,19 @@ export const UserDataForm = ({ initialData, onNext, onBack }: UserDataFormProps)
     resolver: zodResolver(UserDataSchema),
     defaultValues: initialData || {
       name: "",
-      email: "",
       phone: "",
-      cpf: "",
+      // email e cpf removidos
     },
   });
 
   const onSubmit = (data: z.infer<typeof UserDataSchema>) => {
-    onNext(data as UserData);
+    // A API espera email, então vamos adicionar um placeholder se não existir
+    const fullData: UserData = {
+      ...data,
+      email: initialData?.email || "cliente@sushiaki.com", // Usando um placeholder ou dado anterior
+      cpf: initialData?.cpf || "",
+    };
+    onNext(fullData);
   };
 
   return (
@@ -60,48 +76,29 @@ export const UserDataForm = ({ initialData, onNext, onBack }: UserDataFormProps)
           )}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="email@exemplo.com" {...field} type="email" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Telefone</FormLabel>
-                <FormControl>
-                  <Input placeholder="(99) 99999-9999" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
+        {/* Apenas Telefone */}
         <FormField
           control={form.control}
-          name="cpf"
+          name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>CPF (Opcional)</FormLabel>
+              <FormLabel>Telefone</FormLabel>
               <FormControl>
-                <Input placeholder="000.000.000-00" {...field} />
+                <Input 
+                  placeholder="(99) 99999-9999" 
+                  {...field} 
+                  onChange={(e) => {
+                    const formattedValue = formatPhone(e.target.value);
+                    field.onChange(formattedValue);
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        
+        {/* Email e CPF removidos */}
 
         <div className="flex justify-between pt-4">
           <Button type="button" variant="outline" onClick={onBack}>
