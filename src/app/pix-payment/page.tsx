@@ -13,6 +13,13 @@ import { useCartStore } from "@/store/use-cart-store";
 import { createPixTransaction, pollPaymentStatus, formatTimeRemaining } from "@/lib/blackcatpay";
 import { Order } from "@/types";
 
+// Helper function to format seconds into MM:SS
+const formatSecondsToTime = (totalSeconds: number): string => {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+};
+
 export default function PixPaymentPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -21,13 +28,20 @@ export default function PixPaymentPage() {
   const [orderData, setOrderData] = useState<Order | null>(null);
   const [transaction, setTransaction] = useState<any>(null);
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'approved' | 'declined' | 'expired' | 'error'>('pending');
-  const [timeRemaining, setTimeRemaining] = useState<string>("10:00");
+  
+  // State for the visual countdown timer (starts at 10 minutes = 600 seconds)
+  const INITIAL_TIME_SECONDS = 600;
+  const [secondsRemaining, setSecondsRemaining] = useState(INITIAL_TIME_SECONDS);
+  
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<{ message: string; details?: any; status?: number } | null>(null);
   const [showOrderSummary, setShowOrderSummary] = useState(false);
   
   // Ref para a seção de instruções
   const instructionsRef = React.useRef<HTMLDivElement>(null);
+
+  // Calculate time string from secondsRemaining
+  const timeRemainingString = formatSecondsToTime(secondsRemaining);
 
   useEffect(() => {
     // Parse order data from URL search params
@@ -50,6 +64,29 @@ export default function PixPaymentPage() {
     }
   }, [searchParams]);
 
+  // Effect for the visual countdown timer
+  useEffect(() => {
+    if (paymentStatus !== 'pending' || secondsRemaining <= 0) {
+      if (secondsRemaining <= 0 && paymentStatus === 'pending') {
+        setPaymentStatus('expired');
+      }
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setSecondsRemaining(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [paymentStatus, secondsRemaining]);
+
+
   const createTransaction = async (order: Order) => {
     try {
       setIsLoading(true);
@@ -60,6 +97,7 @@ export default function PixPaymentPage() {
       if (result.success) {
         setTransaction(result);
         setPaymentStatus('pending');
+        setSecondsRemaining(INITIAL_TIME_SECONDS); // Reset timer on successful creation
 
         // Start polling for payment status
         const stopPolling = pollPaymentStatus(
@@ -73,26 +111,13 @@ export default function PixPaymentPage() {
             setError({ message: err });
           },
           () => {
-            setPaymentStatus('expired');
+            // This callback is usually for expiration based on API time, 
+            // but we rely on the visual timer for the 'expired' status change.
           }
         );
 
-        // Start countdown timer
-        const timer = setInterval(() => {
-          if (result.expiresAt) {
-            const remaining = formatTimeRemaining(result.expiresAt);
-            setTimeRemaining(remaining);
-
-            if (remaining === "00:00") {
-              clearInterval(timer);
-              setPaymentStatus('expired');
-            }
-          }
-        }, 1000);
-
         return () => {
           stopPolling();
-          clearInterval(timer);
         };
       } else {
         setError({
@@ -139,10 +164,8 @@ export default function PixPaymentPage() {
 
   // Calculate progress bar width based on time remaining
   const calculateProgress = () => {
-    const [minutes, seconds] = timeRemaining.split(':').map(Number);
-    const totalSeconds = minutes * 60 + seconds;
-    const maxSeconds = 10 * 60; // 10 minutes
-    return (totalSeconds / maxSeconds) * 100;
+    // Max seconds is 600 (10 minutes)
+    return (secondsRemaining / INITIAL_TIME_SECONDS) * 100;
   };
 
   if (isLoading) {
@@ -254,7 +277,7 @@ export default function PixPaymentPage() {
                 <div className="inline-flex items-center gap-2 bg-muted p-2 rounded-lg">
                   <Clock className="h-4 w-4 text-muted-foreground" />
                   <span className="font-mono text-lg font-semibold text-foreground">
-                    {timeRemaining}
+                    {timeRemainingString}
                   </span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
