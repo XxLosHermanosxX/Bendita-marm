@@ -3,7 +3,7 @@ import { Order } from "@/types";
 const SECRET_KEY = 'sk_jatFTlsz-CMluRfzHixO_ax-b5l9gTH2ulxu8-pujt5piFu8';
 const API_BASE_URL = 'https://api.blackcatpagamentos.com/v1';
 
-// Helper function to convert amount to cents
+// Helper function to convert amount to cents with proper rounding
 function amountToCents(amount: number): number {
   return Math.round(amount * 100);
 }
@@ -58,19 +58,31 @@ function buildPayload(order: Order) {
     throw new Error(validation.error);
   }
 
+  // Calculate total amount by summing up all items (price × quantity)
+  const totalAmount = order.items.reduce((sum, item) => {
+    const itemPrice = item.details?.selectedVariation?.option.price || item.price;
+    return sum + (itemPrice * item.quantity);
+  }, 0);
+
+  // Convert total to cents with proper rounding
+  const amountInCents = Math.round(totalAmount * 100);
+
   return {
-    amount: amountToCents(order.total),
+    amount: amountInCents, // Total amount in cents
     currency: "BRL",
     paymentMethod: "pix",
     pix: {
       expiresIn: 600 // 10 minutes
     },
-    items: order.items.map(item => ({
-      name: item.name,
-      quantity: item.quantity,
-      price: amountToCents(item.details?.selectedVariation?.option.price || item.price),
-      description: item.description || `${item.name} - ${item.quantity}x`
-    })),
+    items: order.items.map(item => {
+      const itemPrice = item.details?.selectedVariation?.option.price || item.price;
+      return {
+        name: item.name,
+        quantity: item.quantity,
+        price: Math.round(itemPrice * 100), // Convert each item price to cents
+        description: item.description || `${item.name} - ${item.quantity}x`
+      };
+    }),
     customer: {
       name: order.customer.name,
       email: order.customer.email,
