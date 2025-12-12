@@ -93,8 +93,8 @@ export default function PixPaymentPage() {
       } else {
         setError({
           message: result.error || "Falha ao criar transação PIX",
-          details: result.response,
-          status: result.status
+          details: 'response' in result ? result.response : undefined,
+          status: 'status' in result ? Number(result.status) : undefined
         });
         setPaymentStatus('error');
         console.error("Transaction creation failed:", result.error);

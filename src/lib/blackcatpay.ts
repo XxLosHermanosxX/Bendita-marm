@@ -122,7 +122,7 @@ export async function createPixTransaction(order: Order) {
 
     // Validate and build payload
     const payload = buildPayload(order);
-    console.log("Final payload to send:", JSON.stringify(payload, null, 2));
+    console.log("Enviando payload para Blackcat Pay:", JSON.stringify(payload, null, 2));
 
     const auth = btoa(SECRET_KEY + ':');
 
@@ -140,40 +140,36 @@ export async function createPixTransaction(order: Order) {
     console.log("API Response text:", responseText);
 
     if (!response.ok) {
-      try {
-        const errorData = JSON.parse(responseText);
-        console.error('BlackCatPay API Error:', errorData);
+      let errorMessage = `Erro na API Blackcat Pay: ${response.status} ${response.statusText}`;
 
-        let errorMessage = "Erro ao criar transação PIX";
-        if (errorData.message) {
-          errorMessage = errorData.message;
-        } else if (errorData.error) {
-          errorMessage = errorData.error;
-        } else if (errorData.detail) {
-          errorMessage = errorData.detail;
+      if (responseText) {
+        try {
+          const errorData = JSON.parse(responseText);
+          console.error('BlackCatPay API Error:', errorData);
+
+          if (errorData.message) {
+            errorMessage += `. Mensagem: ${errorData.message}`;
+          } else if (errorData.error) {
+            errorMessage += `. Erro: ${errorData.error}`;
+          } else if (errorData.detail) {
+            errorMessage += `. Detalhe: ${errorData.detail}`;
+          }
+
+          // Try to extract field-specific errors
+          if (errorData.errors) {
+            const fieldErrors = Object.entries(errorData.errors)
+              .map(([field, errors]) => `${field}: ${(errors as string[]).join(', ')}`)
+              .join('; ');
+            errorMessage += ` (${fieldErrors})`;
+          }
+        } catch (e) {
+          // If response is not JSON, include the raw text
+          errorMessage += `. Resposta do servidor: ${responseText}`;
         }
-
-        // Try to extract field-specific errors
-        if (errorData.errors) {
-          const fieldErrors = Object.entries(errorData.errors)
-            .map(([field, errors]) => `${field}: ${(errors as string[]).join(', ')}`)
-            .join('; ');
-          errorMessage += ` (${fieldErrors})`;
-        }
-
-        return {
-          success: false,
-          error: errorMessage,
-          status: response.status,
-          response: errorData
-        };
-      } catch (e) {
-        return {
-          success: false,
-          error: `HTTP error! status: ${response.status}, response: ${responseText}`,
-          status: response.status
-        };
       }
+
+      console.error(errorMessage);
+      throw new Error(errorMessage);
     }
 
     const data = JSON.parse(responseText);
