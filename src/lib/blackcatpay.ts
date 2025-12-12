@@ -82,10 +82,10 @@ function buildPayload(order: Order) {
       console.log(`Item ${item.name}: R$${itemPrice.toFixed(2)} = ${itemPriceInCents} cents, quantity: ${item.quantity}`);
 
       return {
-        name: item.name,
+        title: item.name, // Corrected field name
         quantity: item.quantity,
-        price: itemPriceInCents, // Convert each item price to cents
-        description: item.description || `${item.name} - ${item.quantity}x`
+        unitPrice: itemPriceInCents, // Corrected field name and converted to cents
+        tangible: true // Required boolean field
       };
     }),
     customer: {
@@ -95,26 +95,29 @@ function buildPayload(order: Order) {
       document: order.customer.cpf?.replace(/\D/g, '') || undefined
     },
     shipping: {
-      address: order.address.street,
-      number: order.address.number || "SN",
-      complement: order.address.complement || undefined,
-      neighborhood: order.address.neighborhood || "Centro",
-      city: order.address.city,
-      state: order.address.state,
-      zipCode: cleanCEP(order.address.cep)
+      fee: 0, // Required field, assuming 0 if not provided
+      address: { // Corrected structure - now an object
+        street: order.address.street,
+        number: order.address.number || "SN",
+        complement: order.address.complement || undefined,
+        neighborhood: order.address.neighborhood || "Centro",
+        city: order.address.city,
+        state: order.address.state,
+        zipCode: cleanCEP(order.address.cep)
+      }
     },
     externalRef: `PEDIDO-${Date.now()}`,
-    metadata: {
+    metadata: JSON.stringify({ // Corrected - now a stringified JSON object
       orderId: `ORDER-${Date.now()}`,
       userId: order.customer.email,
       timestamp: new Date().toISOString()
-    }
+    })
   };
 }
 
 export async function createPixTransaction(order: Order) {
   try {
-    console.log("Creating PIX transaction with order:", JSON.stringify(order, null, 2));
+    console.log("Creating PIX transaction with order:", order);
 
     // Validate and build payload
     const payload = buildPayload(order);
