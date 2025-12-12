@@ -1,0 +1,148 @@
+"use client";
+
+import React, { useRef, useMemo, useState, useEffect } from "react";
+import { products, categories } from "@/data/products";
+import { ProductCard } from "@/components/product-card";
+import { cn } from "@/lib/utils";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { Product } from "@/types";
+
+// Helper component for category section
+const ProductCategorySection = React.forwardRef<HTMLDivElement, { category: string, products: Product[] }>(({ category, products }, ref) => {
+  return (
+    <section ref={ref} id={`category-${category.replace(/\s/g, '-')}`} className="mb-8 pt-4">
+      {/* Título da categoria que se sobrepõe ao rolar */}
+      <h2 className="text-2xl font-bold text-foreground mb-4 sticky top-[64px] bg-background z-10 py-2 border-b border-border/50">
+        {category}
+      </h2>
+      <div className="grid grid-cols-2 gap-4">
+        {products.map(product => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+    </section>
+  );
+});
+ProductCategorySection.displayName = 'ProductCategorySection';
+
+
+export const MobileMenuLayout = () => {
+  const [activeCategory, setActiveCategory] = useState(categories[0]);
+  const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Group products by category
+  const groupedProducts = useMemo(() => {
+    return categories.reduce((acc, category) => {
+      acc[category] = products.filter(p => p.category === category);
+      return acc;
+    }, {} as Record<string, Product[]>);
+  }, []);
+
+  // Filter categories that actually have products
+  const visibleCategories = useMemo(() => {
+    return categories.filter(c => groupedProducts[c] && groupedProducts[c].length > 0);
+  }, [groupedProducts]);
+
+  // Handle scrolling to category section
+  const scrollToCategory = (category: string) => {
+    const ref = sectionRefs.current[`category-${category.replace(/\s/g, '-')}`];
+    if (ref) {
+      // 64px is the height of the sticky header
+      const headerHeight = 64; 
+      const offset = ref.offsetTop - headerHeight;
+      
+      window.scrollTo({
+        top: offset,
+        behavior: 'smooth',
+      });
+      setActiveCategory(category);
+    }
+  };
+
+  // Handle scroll observation to update active category
+  useEffect(() => {
+    const handleScroll = () => {
+      const headerHeight = 64;
+      let currentActiveCategory = visibleCategories[0];
+
+      for (const category of visibleCategories) {
+        const id = `category-${category.replace(/\s/g, '-')}`;
+        const ref = sectionRefs.current[id];
+        if (ref) {
+          const rect = ref.getBoundingClientRect();
+          // Check if the section top is near the header (e.g., within 100px below the header)
+          if (rect.top <= headerHeight + 100 && rect.bottom > headerHeight) {
+            currentActiveCategory = category;
+            break;
+          }
+        }
+      }
+      setActiveCategory(currentActiveCategory);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [visibleCategories]);
+
+
+  // Ensure the active tab is visible in the horizontal scroll area
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      const activeElement = scrollContainerRef.current.querySelector(`[data-category="${activeCategory}"]`) as HTMLElement;
+      if (activeElement) {
+        // Scroll the horizontal bar to center the active element
+        const containerWidth = scrollContainerRef.current.offsetWidth;
+        const elementOffset = activeElement.offsetLeft;
+        const elementWidth = activeElement.offsetWidth;
+        
+        scrollContainerRef.current.scrollTo({
+          left: elementOffset - containerWidth / 2 + elementWidth / 2,
+          behavior: 'smooth',
+        });
+      }
+    }
+  }, [activeCategory]);
+
+
+  return (
+    <div className="w-full">
+      {/* Sticky Category Navigation Bar */}
+      <div className="sticky top-16 z-20 bg-background border-b border-border shadow-sm">
+        <ScrollArea className="w-full whitespace-nowrap">
+          <div ref={scrollContainerRef} className="flex space-x-2 p-2">
+            {visibleCategories.map((category) => (
+              <Button
+                key={category}
+                data-category={category}
+                variant={activeCategory === category ? "default" : "outline"}
+                size="sm"
+                className={cn(
+                  "flex-shrink-0 rounded-full transition-colors",
+                  activeCategory === category ? "bg-primary hover:bg-primary/90 text-primary-foreground" : "bg-secondary/50 hover:bg-secondary text-muted-foreground"
+                )}
+                onClick={() => scrollToCategory(category)}
+              >
+                {category}
+              </Button>
+            ))}
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+      </div>
+
+      {/* Product Sections */}
+      <div className="p-4">
+        {visibleCategories.map((category) => (
+          <ProductCategorySection 
+            key={category}
+            ref={el => { sectionRefs.current[`category-${category.replace(/\s/g, '-')}`] = el; }}
+            category={category} 
+            products={groupedProducts[category]} 
+          />
+        ))}
+      </div>
+    </div>
+  );
+};

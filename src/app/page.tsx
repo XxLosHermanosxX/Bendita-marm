@@ -1,3 +1,5 @@
+"use client";
+
 import { MainLayout } from "@/components/layout/main-layout";
 import { ProductCard } from "@/components/product-card";
 import Image from "next/image";
@@ -5,12 +7,32 @@ import { products } from "@/data/products";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { HeroCarousel } from "@/components/hero-carousel";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { MobileMenuLayout } from "@/components/mobile-menu-layout";
 
 export default function Home() {
+  const isMobile = useIsMobile();
+  
   // Pegamos os 3 primeiros produtos exclusivos para destaque
   const exclusiveProducts = products.filter(p => p.category === "Exclusivos do App").slice(0, 3); 
   const newProducts = products.filter(p => p.isNew && p.category !== "Exclusivos do App").slice(0, 3); // Novidades que não são exclusivos
 
+  // Se for mobile, renderiza o layout completo do menu
+  if (isMobile) {
+    return (
+      <MainLayout>
+        {/* Banner de Boas-vindas (Carrossel) */}
+        <section className="mb-4">
+          <HeroCarousel />
+        </section>
+        
+        {/* Full Menu for Mobile */}
+        <MobileMenuLayout />
+      </MainLayout>
+    );
+  }
+
+  // Desktop Layout (Existente)
   return (
     <MainLayout>
       {/* Banner de Boas-vindas (Agora Carrossel) */}
