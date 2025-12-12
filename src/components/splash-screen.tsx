@@ -11,7 +11,8 @@ interface SplashScreenProps {
 
 export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
   const [isVisible, setIsVisible] = useState(true);
-  const [play] = useSound('/sounds/samurai-sword.mp3', { volume: 0.5 });
+  // Atualizando o caminho do som para o novo arquivo
+  const [play] = useSound('/sounds/sword-slice-2.mp3', { volume: 0.5 });
 
   useEffect(() => {
     // 1. Toca o som imediatamente
