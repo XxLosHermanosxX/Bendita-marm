@@ -29,8 +29,6 @@ const INITIAL_COMBINED_ITEMS = {
   "Hossomaki Salmão": 0,
 };
 
-// Removendo ITEM_LIMITS, pois o único limite é o total de 80.
-
 export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
   const addItem = useCartStore((state) => state.addItem);
   const [quantity, setQuantity] = useState(1);
@@ -122,7 +120,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] p-0 overflow-y-auto max-h-[90vh]"> {/* Alterado para overflow-y-auto e adicionado max-h */}
+      <DialogContent className="sm:max-w-[600px] p-0 overflow-y-auto max-h-[90vh]">
         <div className="relative h-64 w-full">
           <Image
             src={product.imageUrl}
@@ -133,16 +131,17 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
           />
         </div>
         
-        <div className="p-6 pt-0 space-y-4">
-          <DialogHeader className="text-left">
-            <DialogTitle className="text-2xl font-bold text-foreground">
-              {product.name}
-            </DialogTitle>
-            <p className="text-sm text-muted-foreground">
-              {product.description}
-            </p>
-          </DialogHeader>
+        {/* DialogHeader moved here, right after the image, to be a direct child of DialogContent */}
+        <DialogHeader className="text-left p-6 pb-0">
+          <DialogTitle className="text-2xl font-bold text-foreground">
+            {product.name}
+          </DialogTitle>
+          <p className="text-sm text-muted-foreground">
+            {product.description}
+          </p>
+        </DialogHeader>
 
+        <div className="p-6 pt-4 space-y-4">
           {/* Seção de Seleção de Itens para Combinado Personalizado */}
           {isCustomCombined && (
             <div className="space-y-4 border p-4 rounded-lg bg-secondary/50">
