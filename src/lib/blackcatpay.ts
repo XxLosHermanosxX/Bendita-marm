@@ -57,9 +57,6 @@ function buildPayload(order: Order) {
   }
 
   // Calculate total amount by summing up all items (price × quantity)
-  // NOTE: We must use the item price + delivery fee (if applicable) to calculate the total.
-  // Since delivery fee is 10.00, we need to adjust the total amount sent to the API.
-  // The order.total already includes the delivery fee (10.00).
   const totalAmount = order.total; 
 
   // Convert total to cents with proper rounding
@@ -84,8 +81,8 @@ function buildPayload(order: Order) {
         quantity: item.quantity, // ✅ Obrigatório
         unitPrice: itemPriceInCents, // ✅ Campo correto em centavos
         tangible: true, // ✅ Obrigatório (sushi é físico)
-        fee: 0, // ✅ Obrigatório (taxa/comissão do item, não a taxa de entrega)
-        metadata: JSON.stringify({ // ✅ Obrigatório (string)
+        fee: 0, // ✅ Obrigatório (taxa/comissão do item)
+        metadata: JSON.stringify({ // ✅ Obrigatório (string) - Simplificado
           productId: item.id,
           productName: item.name,
         })
@@ -102,7 +99,7 @@ function buildPayload(order: Order) {
       fee: amountToCents(order.deliveryFee || 0), // ✅ Taxa de entrega em centavos
       address: TEST_ADDRESS.street, // ✅ Nome da rua
       number: TEST_ADDRESS.number, // ✅ Número
-      complement: TEST_ADDRESS.complement,
+      complement: TEST_ADDRESS.complement || "", // ✅ Garantindo que seja string vazia se nulo
       neighborhood: TEST_ADDRESS.neighborhood, // ✅ Bairro
       city: TEST_ADDRESS.city, // ✅ Cidade
       state: TEST_ADDRESS.state, // ✅ Estado
