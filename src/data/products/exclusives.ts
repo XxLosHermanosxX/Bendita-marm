@@ -1,7 +1,41 @@
 import { Product } from "@/types";
 
 export const exclusiveProducts: Product[] = [
-  // Exclusivos do App
+  // 1. PROMOÇÃO PRINCIPAL: 80 PEÇAS (Movida de Novidades)
+  {
+    id: "p30",
+    name: "Combinado Exclusivo 80 Peças",
+    description: "O maior combinado da casa por um preço imbatível. Escolha seus 80 sushis favoritos!",
+    price: 49.90,
+    category: "Exclusivos do App",
+    imageUrl: "/images/barca-80-pecas.png", // Mantendo o placeholder até o novo upload
+    isExclusive: true,
+    isNew: true,
+    // Adicionando variações para permitir a escolha dos 80 itens (simplificado)
+    variations: [
+      {
+        name: "Itens (80 peças)",
+        options: [
+          { label: "Sashimi Salmão (Max 10)", price: 0 },
+          { label: "Niguiri Salmão (Max 10)", price: 0 },
+          { label: "Uramaki Filadélfia (Max 20)", price: 0 },
+          { label: "Hot Filadélfia (Max 20)", price: 0 },
+          { label: "Hossomaki Salmão (Max 20)", price: 0 },
+        ],
+      },
+    ],
+  },
+  // 2. PROMOÇÃO TEMAKI DUPLO
+  {
+    id: "p110", // Novo ID para Temaki Duplo
+    name: "Temaki Duplo (2 Unidades)",
+    description: "1 Temaki Salmão Grelhado + 1 Temaki Salmão Skin.",
+    price: 24.90,
+    category: "Exclusivos do App",
+    imageUrl: "/images/temaki-duplo.png", // Placeholder
+    isExclusive: true,
+  },
+  // 3. COMBINADO EXCLUSIVO 38 (Mantido como terceiro destaque)
   {
     id: "p1",
     name: "COMBINADO EXCLUSIVO 38",
@@ -12,6 +46,7 @@ export const exclusiveProducts: Product[] = [
     imageUrl: "/images/AF-APP-PROMO-EXCLUSIVA_1.jpg",
     isExclusive: true,
   },
+  // Outros exclusivos (reordenados)
   {
     id: "p2",
     name: "COMBINADO EXCLUSIVO 32",
@@ -60,17 +95,6 @@ export const exclusiveProducts: Product[] = [
     originalPrice: 142.80,
     category: "Exclusivos do App",
     imageUrl: "/images/AF-APP-PROMO-EXCLUSIVA_6.jpg",
-    isExclusive: true,
-  },
-  // Novidades
-  {
-    id: "p30",
-    name: "Barca com 80 peças",
-    description: "Barca com 80 peças de sushi variado.",
-    price: 49.90,
-    category: "Novidades",
-    imageUrl: "/images/barca-80-pecas.png",
-    isNew: true,
     isExclusive: true,
   },
 ];
