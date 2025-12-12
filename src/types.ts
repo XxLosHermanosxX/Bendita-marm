@@ -10,6 +10,9 @@ export interface Product {
     name: string;
     options: { label: string; price: number }[];
   }[];
+  originalPrice?: number; // For discounted items
+  isNew?: boolean; // Adicionado
+  isExclusive?: boolean; // Adicionado
 }
 
 export interface Address {
@@ -30,8 +33,10 @@ export interface UserData {
 
 export interface Coupon {
   code: string;
-  discountPercentage: number; // Adicionado
-  // Adicione outras propriedades do cupom se necessário
+  discount: number; // percentage or fixed amount - Adicionado
+  type: "percentage" | "fixed"; // Adicionado
+  minOrderValue?: number;
+  appliesTo?: "first_purchase" | "all";
 }
 
 // Nova interface para o método de pagamento
