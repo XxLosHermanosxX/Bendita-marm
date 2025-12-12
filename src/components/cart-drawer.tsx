@@ -1,14 +1,16 @@
 "use client";
+
 import React from "react";
 import Image from "next/image";
-import { ShoppingCart, X, Minus, Plus } from "lucide-react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
+import Link from "next/link";
+import { X, Minus, Plus, ShoppingCart, Package } from "lucide-react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useCartStore } from "@/store/use-cart-store";
 import { formatCurrency } from "@/lib/utils";
-import Link from "next/link";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useRouter } from "next/navigation";
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -16,162 +18,161 @@ interface CartDrawerProps {
 }
 
 export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
-  const { items, removeItem, updateQuantity, getSubtotal } = useCartStore();
+  const { items, removeItem, updateItemQuantity, getTotalPrice } = useCartStore();
   const isMobile = useIsMobile();
-  
-  const subtotal = getSubtotal();
-  const deliveryFee = 0; // Placeholder for delivery fee
-  const total = subtotal + deliveryFee;
+  const router = useRouter();
+
+  const subtotal = getTotalPrice();
+
+  const handleCheckout = () => {
+    onClose();
+    router.push("/checkout");
+  };
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent 
-        side={isMobile ? "bottom" : "right"} 
-        className={`flex flex-col ${isMobile ? "h-[90vh] rounded-t-xl" : "w-full sm:max-w-md"}`}
-      >
-        <SheetHeader className={isMobile ? "pb-4" : ""}>
-          <SheetTitle className="flex items-center gap-2">
-            <ShoppingCart className="h-6 w-6 text-primary" />
-            Seu Carrinho
+      <SheetContent side={isMobile ? "bottom" : "right"} className="flex flex-col p-0">
+        <SheetHeader className="p-6 pb-4 border-b">
+          <SheetTitle className="text-2xl font-bold text-foreground flex items-center gap-2">
+            <ShoppingCart className="h-6 w-6 text-primary" /> Seu Carrinho
           </SheetTitle>
         </SheetHeader>
-        <Separator />
-        
-        <div className="flex-1 overflow-y-auto py-4">
-          {items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
-              <ShoppingCart className="h-16 w-16 mb-4" />
-              <p className="text-lg">Seu carrinho está vazio.</p>
-              <p className="text-sm">Adicione alguns itens deliciosos!</p>
-            </div>
-          ) : (
-            <ul className="space-y-4">
+
+        {items.length === 0 ? (
+          <div className="flex flex-1 flex-col items-center justify-center p-6 text-muted-foreground">
+            <ShoppingCart className="h-16 w-16 mb-4" />
+            <p className="text-lg font-semibold">Seu carrinho está vazio.</p>
+            <p className="text-sm text-center mt-2">
+              Adicione alguns itens deliciosos para fazer seu pedido!
+            </p>
+            <Button onClick={onClose} className="mt-6 bg-primary hover:bg-primary/90 text-primary-foreground">
+              Ver Cardápio
+            </Button>
+          </div>
+        ) : (
+          <>
+            <ul className="flex-1 overflow-y-auto p-6 space-y-6">
               {items.map((item) => (
                 <li 
-                  key={`${item.id}-${item.selectedVariation?.option.label || ''}-${item.customItems?.map(c => c.name).join('-') || ''}`} 
+                  key={`${item.product.id}-${item.details?.selectedVariation?.option.label || ''}-${item.details?.customItems?.map((c: { name: string }) => c.name).join('-') || ''}`}
                   className="flex items-center gap-4"
                 >
-                  <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-border">
+                  <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border bg-secondary">
                     <Image 
-                      src={item.imageUrl} 
-                      alt={item.name} 
-                      layout="fill" 
-                      objectFit="cover" 
+                      src={item.product.imageUrl}
+                      alt={item.product.name}
+                      layout="fill"
+                      objectFit="cover"
+                      className="object-center"
                     />
                   </div>
                   <div className="flex flex-1 flex-col">
-                    <div className="flex justify-between items-start">
-                      <h3 className="text-sm font-medium text-foreground">
-                        {item.name}
-                        {item.selectedVariation && (
-                          <span className="block text-xs text-muted-foreground">
-                            ({item.selectedVariation.option.label})
-                          </span>
+                    <div className="flex justify-between">
+                      <div className="flex flex-col">
+                        <h3 className="text-sm font-medium text-foreground">
+                          {item.product.name}
+                          {item.details?.selectedVariation && (
+                            <span className="block text-xs text-muted-foreground">
+                              ({item.details.selectedVariation.option.label})
+                            </span>
+                          )}
+                        </h3>
+                        {item.notes && (
+                          <p className="text-xs text-muted-foreground italic mt-1">Obs: {item.notes}</p>
                         )}
-                      </h3>
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         className="h-6 w-6 text-muted-foreground hover:text-destructive"
                         onClick={() => removeItem(
-                          item.id, 
-                          item.selectedVariation?.name, 
-                          item.selectedVariation?.option.label
+                          item.product.id,
+                          item.details
                         )}
                       >
                         <X className="h-4 w-4" />
                       </Button>
                     </div>
-                    
+
                     {/* Detalhes dos Itens Personalizados (para o combinado de 80 peças) */}
-                    {item.customItems && item.customItems.length > 0 && (
+                    {item.details?.customItems && item.details.customItems.length > 0 && (
                         <div className="mt-1 space-y-0.5">
-                            {item.customItems.map((customItem, index) => (
+                            <p className="text-xs font-semibold text-primary flex items-center gap-1">
+                                <Package className="h-3 w-3" /> Itens do Combinado:
+                            </p>
+                            {item.details.customItems.map((customItem: { name: string; count: number }, index: number) => (
                                 <p key={index} className="text-xs text-muted-foreground italic">
-                                    {customItem.count}x {customItem.name}
+                                    - {customItem.count}x {customItem.name}
                                 </p>
                             ))}
                         </div>
                     )}
 
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {formatCurrency(item.selectedVariation?.option.price || item.price)}
-                    </p>
                     <div className="flex items-center justify-between mt-2">
-                      <div className="flex items-center gap-2">
-                        {/* O controle de quantidade só faz sentido para produtos não personalizados */}
-                        {!(item.customItems && item.customItems.length > 0) && (
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {formatCurrency(item.details?.selectedVariation?.option.price || item.product.price)}
+                      </p>
+                      {/* O controle de quantidade só faz sentido para produtos não personalizados */}
+                        {!(item.details?.customItems && item.details.customItems.length > 0) && (
                             <>
-                                <Button 
-                                  variant="outline" 
-                                  size="icon" 
-                                  className="h-7 w-7"
-                                  onClick={() => updateQuantity(
-                                    item.id, 
-                                    item.quantity - 1,
-                                    item.selectedVariation?.name,
-                                    item.selectedVariation?.option.label
-                                  )}
-                                  disabled={item.quantity === 1}
-                                >
-                                  <Minus className="h-4 w-4" />
-                                </Button>
-                                <span className="text-sm font-medium">{item.quantity}</span>
-                                <Button 
-                                  variant="outline" 
-                                  size="icon" 
-                                  className="h-7 w-7"
-                                  onClick={() => updateQuantity(
-                                    item.id, 
-                                    item.quantity + 1,
-                                    item.selectedVariation?.name,
-                                    item.selectedVariation?.option.label
-                                  )}
-                                >
-                                  <Plus className="h-4 w-4" />
-                                </Button>
+                                <div className="flex items-center gap-2">
+                                    <Button
+                                        variant="outline"
+                                        size="icon"
+                                        className="h-7 w-7"
+                                        onClick={() => updateItemQuantity(
+                                            item.product.id,
+                                            item.quantity - 1,
+                                            item.details
+                                        )}
+                                        disabled={item.quantity === 1}
+                                    >
+                                        <Minus className="h-4 w-4" />
+                                    </Button>
+                                    <span className="text-sm font-medium">{item.quantity}</span>
+                                    <Button
+                                        variant="outline"
+                                        size="icon"
+                                        className="h-7 w-7"
+                                        onClick={() => updateItemQuantity(
+                                            item.product.id,
+                                            item.quantity + 1,
+                                            item.details
+                                        )}
+                                    >
+                                        <Plus className="h-4 w-4" />
+                                    </Button>
+                                </div>
                             </>
                         )}
-                        {item.customItems && item.customItems.length > 0 && (
+                        {item.details?.customItems && item.details.customItems.length > 0 && (
                             <span className="text-sm font-medium text-primary">
-                                {item.quantity}x (80 Peças)
+                                {item.quantity}x Combinado
                             </span>
                         )}
-                      </div>
                       <p className="text-sm font-semibold text-foreground">
-                        {formatCurrency(item.quantity * (item.selectedVariation?.option.price || item.price))}
+                        {formatCurrency(item.quantity * (item.details?.selectedVariation?.option.price || item.product.price))}
                       </p>
                     </div>
                   </div>
                 </li>
               ))}
             </ul>
-          )}
-        </div>
-        
-        <SheetFooter className="flex flex-col gap-2 p-4 border-t border-border">
-          <div className="flex justify-between text-sm text-muted-foreground">
-            <span>Subtotal:</span>
-            <span>{formatCurrency(subtotal)}</span>
-          </div>
-          <div className="flex justify-between text-sm text-muted-foreground">
-            <span>Taxa de Entrega:</span>
-            <span>{formatCurrency(deliveryFee)}</span>
-          </div>
-          <div className="flex justify-between text-lg font-bold text-primary mt-2">
-            <span>Total:</span>
-            <span>{formatCurrency(total)}</span>
-          </div>
-          <Link href="/checkout" passHref>
-            <Button 
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6"
-              disabled={items.length === 0}
-              onClick={onClose}
-            >
-              Ir para Checkout
-            </Button>
-          </Link>
-        </SheetFooter>
+
+            <div className="p-6 border-t space-y-4">
+              <div className="flex justify-between text-lg font-semibold">
+                <span>Subtotal:</span>
+                <span>{formatCurrency(subtotal)}</span>
+              </div>
+              <Button 
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6"
+                onClick={handleCheckout}
+              >
+                Finalizar Pedido
+              </Button>
+            </div>
+          </>
+        )}
       </SheetContent>
     </Sheet>
   );

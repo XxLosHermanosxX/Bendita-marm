@@ -12,7 +12,7 @@ import { CartDrawer } from "@/components/cart-drawer";
 import { useCartStore } from "@/store/use-cart-store";
 import { useRouter } from "next/navigation";
 import { BusinessHoursStatus } from "./business-hours-status";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils"; // Importando formatCurrency
 
 // Hardcoded business hours check (duplicated from BusinessHoursStatus for conditional rendering logic)
 const checkIsOpen = () => {
@@ -42,6 +42,7 @@ const checkIsOpen = () => {
 export const Header = () => {
   const isMobile = useIsMobile();
   const totalCartItems = useCartStore((state) => state.getTotalItems());
+  const totalCartPrice = useCartStore((state) => state.getTotalPrice()); // Obtendo o preço total
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
@@ -219,7 +220,7 @@ export const Header = () => {
             className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6"
             onClick={() => setIsCartOpen(true)}
           >
-            Ver Carrinho ({totalCartItems} {totalCartItems === 1 ? 'item' : 'itens'})
+            Ver Carrinho ({totalCartItems} {totalCartItems === 1 ? 'item' : 'itens'}) - {formatCurrency(totalCartPrice)}
           </Button>
         </div>
       )}
