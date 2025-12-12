@@ -9,15 +9,14 @@ export type Category =
   | "Vegetarianos"
   | "Especiais"
   | "Novidades"
-  | "Soda"
-  | "Combinados"
-  | "Hossomaki"
-  | "Uramaki"
-  | "Sashimi"
-  | "Hot Sushis"
-  | "Tilápia Sushiaki"
-  | "Street Food"
-  | "Bebidas"; // Nova categoria
+  | "Soda" // Added based on images
+  | "Combinados" // Added based on images
+  | "Hossomaki" // Added based on images
+  | "Uramaki" // Added based on images
+  | "Sashimi" // Added based on images
+  | "Hot Sushis" // Added based on images
+  | "Tilápia Sushiaki" // Added based on images
+  | "Street Food"; // Added based on images
 
 
 export interface Product {

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, ShoppingCart, User, Menu } from "lucide-react";
+import { Search, ShoppingCart, User, Menu, Clock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -11,33 +11,6 @@ import { Sidebar } from "@/components/sidebar";
 import { CartDrawer } from "@/components/cart-drawer";
 import { useCartStore } from "@/store/use-cart-store";
 import { useRouter } from "next/navigation";
-import { BusinessHoursStatus } from "./business-hours-status";
-import { cn } from "@/lib/utils";
-
-// Hardcoded business hours check (duplicated from BusinessHoursStatus for conditional rendering logic)
-const checkIsOpen = () => {
-  const now = new Date();
-  const dayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-  const currentHour = now.getHours();
-
-  const BUSINESS_HOURS = [
-    { day: "Segunda-feira", start: 10, end: 22 },
-    { day: "Terça-feira", start: 10, end: 22 },
-    { day: "Quarta-feira", start: 10, end: 22 },
-    { day: "Quinta-feira", start: 10, end: 22 },
-    { day: "Sexta-feira", start: 10, end: 22 },
-    { day: "Sábado", start: 11, end: 23 },
-    { day: "Domingo", start: 11, end: 23 },
-  ];
-  
-  const todayIndex = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-  const todayHours = BUSINESS_HOURS[todayIndex];
-
-  if (!todayHours) return false;
-
-  return currentHour >= todayHours.start && currentHour < todayHours.end;
-};
-
 
 export const Header = () => {
   const isMobile = useIsMobile();
@@ -46,19 +19,24 @@ export const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
-  const [isOpen, setIsOpen] = useState(true); 
+  const [isOpen, setIsOpen] = useState(true); // Placeholder for business hours status
 
   useEffect(() => {
     setIsClient(true);
-    const updateStatus = () => {
-      setIsOpen(checkIsOpen());
+    
+    // Placeholder logic for business hours
+    const checkBusinessHours = () => {
+      const now = new Date();
+      const hours = now.getHours();
+      // Example: Open from 10:00 to 22:00
+      setIsOpen(hours >= 10 && hours < 22);
     };
     
-    updateStatus();
-    const interval = setInterval(updateStatus, 60000);
+    checkBusinessHours();
+    // Check every minute
+    const interval = setInterval(checkBusinessHours, 60000);
     return () => clearInterval(interval);
   }, []);
-
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchTerm.trim()) {
@@ -66,16 +44,23 @@ export const Header = () => {
     }
   };
 
-  // If not client, render a basic header structure to avoid hydration mismatch
+  // Don't render cart button until client-side hydration is complete
   if (!isClient) {
     return (
       <header className="sticky top-0 z-50 w-full border-b bg-background shadow-sm">
         <div className="container flex h-16 items-center justify-between px-4 md:px-6">
           <div className="flex items-center gap-2">
             {isMobile && (
-              <Button variant="ghost" size="icon">
-                <Menu className="h-5 w-5" />
-              </Button>
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="p-0 w-64 pt-16">
+                  <Sidebar />
+                </SheetContent>
+              </Sheet>
             )}
             <Link href="/" className="flex items-center gap-2">
               <div className="relative h-10 w-10">
@@ -84,14 +69,44 @@ export const Header = () => {
                   alt="Sushiaki Logo" 
                   layout="fill"
                   objectFit="contain"
+                  className="h-10 w-10"
                 />
               </div>
             </Link>
           </div>
+
+          {!isMobile && (
+            <div className="relative flex-1 max-w-md mx-4">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Buscar no cardápio"
+                className="w-full pl-9 pr-4 py-2 rounded-md border border-input bg-background focus-visible:ring-primary"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={handleSearch}
+              />
+            </div>
+          )}
+
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon">
+            {isMobile && (
+              <Button variant="ghost" size="icon" className="relative">
+                <Search className="h-5 w-5" />
+              </Button>
+            )}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="relative"
+            >
               <ShoppingCart className="h-5 w-5" />
             </Button>
+            {!isMobile && (
+              <Button variant="ghost" size="icon">
+                <User className="h-5 w-5" />
+              </Button>
+            )}
           </div>
         </div>
       </header>
@@ -100,19 +115,8 @@ export const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background shadow-sm">
-      {/* Mobile: Prominent Closed Status Banner (if closed) */}
-      {isMobile && !isOpen && (
-        <div className="w-full bg-destructive/10 border-b border-destructive/30 p-2 text-center">
-            <BusinessHoursStatus variant="mobile-closed" />
-        </div>
-      )}
-
-      <div className={cn(
-        "container flex h-16 items-center px-4 md:px-6 relative",
-        isMobile ? "justify-between" : "justify-start gap-8"
-      )}>
-        
-        {/* Left section: Mobile Menu Trigger (Hamburger) */}
+      <div className="container flex h-16 items-center justify-between px-4 md:px-6">
+        {/* Left section: Mobile Menu Trigger (Hamburger) and Logo */}
         <div className="flex items-center gap-2">
           {isMobile && (
             <Sheet>
@@ -122,46 +126,37 @@ export const Header = () => {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="p-0 w-64 pt-16">
+                {/* pt-16 to clear header */}
                 <Sidebar />
-                {/* Add status inside sidebar for mobile */}
-                <div className="p-4 border-t border-border mt-auto">
-                    <BusinessHoursStatus variant="mobile-sidebar" />
-                </div>
               </SheetContent>
             </Sheet>
           )}
-        </div>
-
-        {/* Center/Left section: Logo and Desktop Status */}
-        <Link 
-            href="/" 
-            className={cn(
-                "flex items-center",
-                isMobile 
-                    ? "absolute left-1/2 transform -translate-x-1/2" // Center logo on mobile
-                    : "flex-col items-start gap-0.5" // Group logo and status on desktop
-            )}
-        >
-            <div className={cn(
-              "relative",
-              isMobile ? "h-12 w-12" : "h-12 w-12"
-            )}>
+          <Link href="/" className="flex items-center gap-2">
+            <div className="relative h-10 w-10">
               <Image 
                 src="/sushiaki-logo.png" 
                 alt="Sushiaki Logo" 
                 layout="fill"
                 objectFit="contain"
+                className="h-10 w-10"
               />
             </div>
-            {/* Desktop Status below logo */}
-            {!isMobile && (
-                <BusinessHoursStatus variant="desktop" />
-            )}
-        </Link>
-        
+          </Link>
+        </div>
+
+        {/* Business hours status */}
+        <div className="flex items-center gap-1">
+          <span className={`text-xs font-medium ${isOpen ? 'text-success' : 'text-destructive'}`}>
+            {isOpen ? 'Aberto agora' : 'Fechado'}
+          </span>
+          <Button variant="ghost" size="icon" className="h-6 w-6">
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </Button>
+        </div>
+
         {/* Search Input (Desktop only) */}
         {!isMobile && (
-          <div className="relative flex-1 max-w-md">
+          <div className="relative flex-1 max-w-md mx-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               type="text"
@@ -174,16 +169,14 @@ export const Header = () => {
           </div>
         )}
 
-        {/* Right section: Cart, Profile */}
-        <div className="flex items-center gap-4 ml-auto">
-          {/* Mobile Search Icon */}
+        {/* Right section: Cart, Profile (Desktop only) */}
+        <div className="flex items-center gap-4">
           {isMobile && (
             <Button variant="ghost" size="icon" className="relative">
               <Search className="h-5 w-5" />
+              {/* Mobile search icon (no input) */}
             </Button>
           )}
-          
-          {/* Cart Button */}
           <Button 
             variant="ghost" 
             size="icon" 
@@ -197,8 +190,6 @@ export const Header = () => {
               </span>
             )}
           </Button>
-          
-          {/* Profile Button (Desktop only) */}
           {!isMobile && (
             <Button variant="ghost" size="icon">
               <User className="h-5 w-5" />

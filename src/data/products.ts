@@ -9,7 +9,7 @@ export const products: Product[] = [
     price: 105.90,
     originalPrice: 119.50,
     category: "Exclusivos do App",
-    imageUrl: "/images/AF-APP-PROMO-EXCLUSIVA_1.jpg",
+    imageUrl: "/images/combinado-exclusivo-38.png",
     isExclusive: true,
   },
   {
@@ -19,7 +19,7 @@ export const products: Product[] = [
     price: 98.90,
     originalPrice: 104.50,
     category: "Exclusivos do App",
-    imageUrl: "/images/AF-APP-PROMO-EXCLUSIVA_2.jpg",
+    imageUrl: "/images/combinado-exclusivo-32.png",
     isExclusive: true,
   },
   {
@@ -29,7 +29,7 @@ export const products: Product[] = [
     price: 80.90,
     originalPrice: 90.48,
     category: "Exclusivos do App",
-    imageUrl: "/images/AF-APP-PROMO-EXCLUSIVA_3.jpg",
+    imageUrl: "/images/combinado-exclusivo-24.png",
     isExclusive: true,
   },
   {
@@ -39,7 +39,7 @@ export const products: Product[] = [
     price: 119.90,
     originalPrice: 134.70,
     category: "Exclusivos do App",
-    imageUrl: "/images/AF-APP-PROMO-EXCLUSIVA_4.jpg",
+    imageUrl: "/images/happy-hour-compartilhar.png",
     isExclusive: true,
   },
   {
@@ -49,7 +49,7 @@ export const products: Product[] = [
     price: 108.90,
     originalPrice: 114.50,
     category: "Exclusivos do App",
-    imageUrl: "/images/AF-APP-PROMO-EXCLUSIVA_5.jpg",
+    imageUrl: "/images/combo-family-or-friends.png",
     isExclusive: true,
   },
   {
@@ -59,7 +59,7 @@ export const products: Product[] = [
     price: 134.90,
     originalPrice: 142.80,
     category: "Exclusivos do App",
-    imageUrl: "/images/AF-APP-PROMO-EXCLUSIVA_6.jpg",
+    imageUrl: "/images/camarao-lovers-casal.png",
     isExclusive: true,
   },
 
@@ -190,25 +190,7 @@ export const products: Product[] = [
     description: "Cortes de salmão e arroz.",
     price: 31.90,
     category: "Temaki",
-    imageUrl: "/images/temaki_salmao.jpg", // Atualizado
-  },
-  // NOVO PRODUTO
-  {
-    id: "p97",
-    name: "Temaki Filadélfia",
-    description: "Salmão, cream cheese e arroz.",
-    price: 32.90,
-    category: "Temaki",
-    imageUrl: "/images/temaki_filadelfia.jpg", // Novo
-  },
-  // NOVO PRODUTO
-  {
-    id: "p98",
-    name: "Temaki Atum",
-    description: "Cortes de atum e arroz.",
-    price: 31.90,
-    category: "Temaki",
-    imageUrl: "/images/temaki_atum.jpg", // Novo
+    imageUrl: "/images/temaki-salmao.png",
   },
 
   // Yakisoba
@@ -218,7 +200,7 @@ export const products: Product[] = [
     description: "Macarrão, carne, frango e legumes.",
     price: 59.90,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba_tradicional.jpg", // Atualizado
+    imageUrl: "/images/yakisoba-tradicional-g.png",
   },
   {
     id: "p23",
@@ -226,7 +208,7 @@ export const products: Product[] = [
     description: "Macarrão, carne, frango, camarão e legumes.",
     price: 65.50,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba_especial.jpg", // Atualizado
+    imageUrl: "/images/yakisoba-especial-g.png",
   },
 
   // Vegetarianos
@@ -270,7 +252,7 @@ export const products: Product[] = [
     description: "Sushi de salmão no maçarico prensado coberto com chilli sauce, crispy de couve e raspas de limão. (8 unidades)",
     price: 45.30,
     category: "Especiais",
-    imageUrl: "/images/salmao_batera.jpg",
+    imageUrl: "/images/salmao-batera.png",
   },
   {
     id: "p29",
@@ -278,7 +260,7 @@ export const products: Product[] = [
     description: "Sashimi no maçarico com geleia de pimenta chilli e crispy de couve. (8 unidades)",
     price: 46.50,
     category: "Especiais",
-    imageUrl: "/images/flor_salmao.jpg",
+    imageUrl: "/images/flor-de-salmao.png",
   },
 
   // Novos/Exclusivos
@@ -292,42 +274,13 @@ export const products: Product[] = [
     isNew: true,
     isExclusive: true,
   },
-  
-  // BEBIDAS
-  {
-    id: "p95",
-    name: "Refrigerante Lata (Vários Sabores)",
-    description: "Coca-Cola, Coca-Cola Zero, Fanta Laranja, Guaraná Kuat, Sprite.",
-    price: 7.90,
-    category: "Bebidas",
-    imageUrl: "/images/refrigerantes-lata.jpg",
-    variations: [
-        {
-            name: "Sabor",
-            options: [
-                { label: "Coca-Cola Classic", price: 7.90 },
-                { label: "Coca-Cola Zero", price: 7.90 },
-                { label: "Fanta Laranja", price: 7.90 },
-                { label: "Guaraná Kuat", price: 7.90 },
-                { label: "Sprite", price: 7.90 },
-            ]
-        }
-    ]
-  },
-  {
-    id: "p96",
-    name: "Água Mineral Crystal 500ml",
-    description: "Água mineral sem gás.",
-    price: 4.50,
-    category: "Bebidas",
-    imageUrl: "/images/agua__1_.jpg",
-  },
+  // Additional products from images
   {
     id: "p31",
     name: "Soda Ichigo",
     description: "Morango e limão siciliano.",
     price: 13.50,
-    category: "Bebidas",
+    category: "Soda",
     imageUrl: "/images/soda-ichigo.png",
   },
   {
@@ -335,7 +288,7 @@ export const products: Product[] = [
     name: "Soda Pink Lemonade",
     description: "Cranberry, morango e limão.",
     price: 13.50,
-    category: "Bebidas",
+    category: "Soda",
     imageUrl: "/images/soda-pink-lemonade.png",
   },
   {
@@ -343,19 +296,17 @@ export const products: Product[] = [
     name: "Akai Soda",
     description: "Melancia com limão.",
     price: 13.50,
-    category: "Bebidas",
-    imageUrl: "/images/soda_akai.jpg",
+    category: "Soda",
+    imageUrl: "/images/akai-soda.png",
   },
   {
     id: "p34",
     name: "Midori Soda",
     description: "Maçã verde com limão siciliano.",
     price: 13.50,
-    category: "Bebidas",
-    imageUrl: "/images/soda_midori.jpg",
+    category: "Soda",
+    imageUrl: "/images/midori-soda.png",
   },
-
-  // Pratos Quentes (Continuando a lista original)
   {
     id: "p35",
     name: "Tempura Udon",
@@ -410,7 +361,7 @@ export const products: Product[] = [
     description: "8 niguiri salmão, 8 niguiri skin, 8 uramaki filadélfia, 8 hot filadélfia, 8 shakemaki",
     price: 136.90,
     category: "Combinados",
-    imageUrl: "/images/CBO_CASAL_40.webp",
+    imageUrl: "/images/combinado-casal-40un.png",
   },
   {
     id: "p42",
@@ -418,7 +369,7 @@ export const products: Product[] = [
     description: "6 sashimi de salmão, 4 niguiri de salmão, 2 gunka salmão, 8 uramaki filadélfia, 8 uramaki skin",
     price: 148.90,
     category: "Combinados",
-    imageUrl: "/images/CBO_GOURMET_36.jpg",
+    imageUrl: "/images/combinado-gourmet-36un.png",
   },
   {
     id: "p43",
@@ -434,7 +385,7 @@ export const products: Product[] = [
     description: "3 sashimi salmão, 2 niguiri camarão, 2 niguiri salmão, 1 niguiri kani, 8 hot topping, 8 hot filadelfia",
     price: 93.90,
     category: "Combinados",
-    imageUrl: "/images/CBO_GOURMET_24.jpg",
+    imageUrl: "/images/combinado-gourmet-24un.png",
   },
   {
     id: "p45",
@@ -450,7 +401,7 @@ export const products: Product[] = [
     description: "8 niguiri de salmão, 4 hossomaki de salmão, 4 hossomaki de atum, 4 uramaki california e 4 uramaki filadelfia",
     price: 89.90,
     category: "Combinados",
-    imageUrl: "/images/CBO_SIMPLES_24.jpg",
+    imageUrl: "/images/combinado-simples-24un.png",
   },
   {
     id: "p47",
@@ -458,7 +409,7 @@ export const products: Product[] = [
     description: "4 sashimi salmão, 2 niguiri salmão, 2 uramaki uramaki skin, 2 uramaki filadelfia especial, 4 hot furai.",
     price: 89.90,
     category: "Combinados",
-    imageUrl: "/images/CBO_GOURMET_16.jpg",
+    imageUrl: "/images/combinado-gourmet-16un.png",
   },
   {
     id: "p48",
@@ -474,7 +425,7 @@ export const products: Product[] = [
     description: "4 uramaki filadelfia, 4 uramaki california, 4 tarê skin, 4 shakemaki",
     price: 45.50,
     category: "Combinados",
-    imageUrl: "/images/CBO_SIMPLES_16.jpg",
+    imageUrl: "/images/combinado-simples-16un.png",
   },
   {
     id: "p50",
@@ -482,7 +433,7 @@ export const products: Product[] = [
     description: "4 sashimi de salmão, 2 niguiri salmão, 2 hossomaki salmão",
     price: 47.80,
     category: "Combinados",
-    imageUrl: "/images/CBO_SIMPLES_12.jpg",
+    imageUrl: "/images/combinado-simples-12un.png",
   },
   {
     id: "p51",
@@ -491,7 +442,7 @@ export const products: Product[] = [
     price: 119.90,
     originalPrice: 159.90,
     category: "Combinados",
-    imageUrl: "/images/af-ARTES-IFOOD-03-ESP-40P_S_Easy-Resize.com.jpg",
+    imageUrl: "/images/combinado-especial-sushiaki.png",
   },
   {
     id: "p52",
@@ -499,7 +450,7 @@ export const products: Product[] = [
     description: "1 temaki salmão, 2 gunka salmão, 2 uramaki filadelfia, 2 niguiri salmão, 2 niguiri skin",
     price: 67.50,
     category: "Combinados",
-    imageUrl: "/images/combinado10-temakiapp.jpg", // Atualizado
+    imageUrl: "/images/combo-temaki-10.png",
   },
   {
     id: "p53",
@@ -507,7 +458,7 @@ export const products: Product[] = [
     description: "1 temaki salmão, 2 gunka salmão, 2 uramaki filadelfia especial, 4 sashimi salmão, 2 uramaki filadelfia, 2 niguiri salmão",
     price: 81.90,
     category: "Combinados",
-    imageUrl: "/images/combinado14-temakiapp.jpg", // Atualizado
+    imageUrl: "/images/combo-temaki-14.png",
   },
   {
     id: "p54",
@@ -515,7 +466,7 @@ export const products: Product[] = [
     description: "Hot com salmão, sashimi maçaricado, kani picado e maionese, uramaki gergelim com atum ao molho chilli e gunka pepino com...",
     price: 67.50,
     category: "Combinados",
-    imageUrl: "/images/combinado_NAMI2.jpg",
+    imageUrl: "/images/combinado-nami.png",
   },
   {
     id: "p55",
@@ -547,7 +498,7 @@ export const products: Product[] = [
     description: "Manga, kani, pepino e gergelim.",
     price: 16.10,
     category: "Uramaki",
-    imageUrl: "/images/uramaki_california.jpg", // Atualizado
+    imageUrl: "/images/uramaki-california.png",
   },
   {
     id: "p59",
@@ -563,7 +514,7 @@ export const products: Product[] = [
     description: "Morango, goiabada, cream cheese e gergelim.",
     price: 13.90,
     category: "Uramaki",
-    imageUrl: "/images/uramaki_romeu_julieta.jpg", // Atualizado
+    imageUrl: "/images/uramaki-romeu-julieta.png",
   },
   {
     id: "p61",
@@ -571,7 +522,7 @@ export const products: Product[] = [
     description: "Salmão, cream cheese e gergelim.",
     price: 16.10,
     category: "Uramaki",
-    imageUrl: "/images/uramaki_filadelfia.jpg", // Atualizado
+    imageUrl: "/images/uramaki-filadelfia.png",
   },
   {
     id: "p62",
@@ -643,7 +594,7 @@ export const products: Product[] = [
     description: "Salmão e cream cheese no recheio com casquinha crocante na Panko.",
     price: 32.50,
     category: "Temaki",
-    imageUrl: "/images/TEMAKI_HOT_FURAI.jpg", // Atualizado
+    imageUrl: "/images/temaki-hot-furai.png",
   },
   {
     id: "p71",
@@ -651,7 +602,7 @@ export const products: Product[] = [
     description: "Salmão skin e cream cheese ao molho tarê.",
     price: 30.90,
     category: "Temaki",
-    imageUrl: "/images/temaki_skin2.jpg", // Atualizado
+    imageUrl: "/images/temaki-tare-skin.png",
   },
   {
     id: "p72",
@@ -659,7 +610,7 @@ export const products: Product[] = [
     description: "Ceviche (cortes de salmão, atum, cebola roxa, pimenta e kani ao suco de limão) com arroz.",
     price: 30.90,
     category: "Temaki",
-    imageUrl: "/images/temaki_sunomono.jpg", // Atualizado
+    imageUrl: "/images/temaki-salmao-sunomono.png",
   },
   {
     id: "p73",
@@ -667,7 +618,7 @@ export const products: Product[] = [
     description: "Ceviche (cortes de salmão, atum, cebola roxa, pimenta e kani ao suco de limão) com arroz.",
     price: 30.90,
     category: "Temaki",
-    imageUrl: "/images/temaki_ceviche.jpg", // Atualizado
+    imageUrl: "/images/temaki-ceviche.png",
   },
   {
     id: "p74",
@@ -675,7 +626,7 @@ export const products: Product[] = [
     description: "Temaki recheado com o famoso sushi hot filadélfia e molho tarê.",
     price: 30.90,
     category: "Temaki",
-    imageUrl: "/images/temaki_hot_filadelfia.jpg", // Atualizado
+    imageUrl: "/images/temaki-hot-filadelfia.png",
   },
   {
     id: "p75",
@@ -683,10 +634,8 @@ export const products: Product[] = [
     description: "Salmão empanado e cream cheese ao molho tonkatsu.",
     price: 30.90,
     category: "Temaki",
-    imageUrl: "/images/temaki_salmao_panko.jpg", // Atualizado
+    imageUrl: "/images/temaki-salmao-panko.png",
   },
-
-  // Yakisoba
   {
     id: "p76",
     name: "Yakisoba Salmão G",
@@ -709,7 +658,7 @@ export const products: Product[] = [
     description: "Macarrão, carne, frango, camarão e legumes.",
     price: 43.90,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba_especial.jpg", // Atualizado
+    imageUrl: "/images/yakisoba-especial-m.png",
   },
   {
     id: "p79",
@@ -717,10 +666,8 @@ export const products: Product[] = [
     description: "Macarrão, carne, frango e legumes.",
     price: 39.90,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba_tradicional.jpg", // Atualizado
+    imageUrl: "/images/yakisoba-tradicional-m.png",
   },
-
-  // Vegetarianos
   {
     id: "p80",
     name: "Harumaki Vegetariano",
@@ -751,17 +698,15 @@ export const products: Product[] = [
     description: "Macarrão com legumes ao molho oriental",
     price: 31.50,
     category: "Vegetarianos",
-    imageUrl: "/images/yakisoba_vegetariano.jpg", // Atualizado
+    imageUrl: "/images/yakisoba-vegetariano.png",
   },
-
-  // Street Food
   {
     id: "p84",
     name: "KARAGUÊ CUP",
     description: "Cubos de frango frito na panko. Ótimo para aperitivar!",
     price: 31.10,
     category: "Street Food",
-    imageUrl: "/images/APP_1_AF_POSTS_STREET-FOOD-IFOOD-1080X990_1_KARAGUE.jpg",
+    imageUrl: "/images/karague-cup.png",
   },
   {
     id: "p85",
@@ -769,7 +714,7 @@ export const products: Product[] = [
     description: "Saboroso macarrão temperado no tacho com toque cítrico, cubos de frango na panko, gengibre em conserva, gergelim e...",
     price: 26.90,
     category: "Street Food",
-    imageUrl: "/images/APP_3_AF_POSTS_STREET-FOOD-IFOOD-1080X990_3_SAPPORO.jpg",
+    imageUrl: "/images/sapporo-cup.png",
   },
   {
     id: "p86",
@@ -777,17 +722,15 @@ export const products: Product[] = [
     description: "Macarrão temperado no tacho com toque cítrico, cubos de frango na panko, gengibre em conserva, gergelim e...",
     price: 26.90,
     category: "Street Food",
-    imageUrl: "/images/APP_2_AF_POSTS_STREET-FOOD-IFOOD-1080X990_2_HOKKAIDO.jpg",
+    imageUrl: "/images/hokkaido-cup.png",
   },
-
-  // Tilápia Sushiaki
   {
     id: "p87",
     name: "CEVICHE TILÁPIA",
     description: "Cubos de peixe cru, cebola, milho, molho azeite e limão.",
     price: 34.50,
     category: "Tilápia Sushiaki",
-    imageUrl: "/images/CEVICHE_TILAPIA.jpg",
+    imageUrl: "/images/ceviche-tilapia.png",
   },
   {
     id: "p88",
@@ -795,7 +738,7 @@ export const products: Product[] = [
     description: "Tilápia panko, maionese, cream cheese e cebolinha.",
     price: 22.50,
     category: "Tilápia Sushiaki",
-    imageUrl: "/images/URAMAKI_FRY.jpg", // Atualizado
+    imageUrl: "/images/uramaki-fry-bun.png",
   },
   {
     id: "p89",
@@ -821,15 +764,13 @@ export const products: Product[] = [
     category: "Tilápia Sushiaki",
     imageUrl: "/images/hot-pot-peixe-crispy.png",
   },
-
-  // Especiais (Continuando)
   {
     id: "p92",
     name: "Gunka Salmão",
     description: "Salmão picado com cebolinha envolto em sashimi. (4 unidades ou 8 unidades)",
     price: 25.80,
     category: "Especiais",
-    imageUrl: "/images/gunka_samao.jpg",
+    imageUrl: "/images/gunka-salmao.png",
   },
   {
     id: "p93",
@@ -837,7 +778,7 @@ export const products: Product[] = [
     description: "Cones de salmão, atum, cebola roxa, pimenta e kani ao suco de limão.",
     price: 46.50,
     category: "Especiais",
-    imageUrl: "/images/ceviche.jpg",
+    imageUrl: "/images/ceviche-sushiaki.png",
   },
   {
     id: "p94",
@@ -860,6 +801,7 @@ export const categories = [
   "Vegetarianos",
   "Especiais",
   "Novidades",
+  "Soda",
   "Combinados",
   "Hossomaki",
   "Uramaki",
@@ -867,5 +809,4 @@ export const categories = [
   "Hot Sushis",
   "Tilápia Sushiaki",
   "Street Food",
-  "Bebidas",
 ];
