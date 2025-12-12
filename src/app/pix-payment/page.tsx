@@ -128,12 +128,26 @@ export default function PixPaymentPage() {
     router.push("/");
   };
 
+  const handleScrollToInstructions = () => {
+    const instructionsSection = document.getElementById('payment-instructions');
+    if (instructionsSection) {
+      instructionsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   // Calculate progress bar width based on time remaining
   const calculateProgress = () => {
     const [minutes, seconds] = timeRemaining.split(':').map(Number);
     const totalSeconds = minutes * 60 + seconds;
     const maxSeconds = 10 * 60; // 10 minutes
     return (totalSeconds / maxSeconds) * 100;
+  };
+
+  // Format PIX key to show only part of it
+  const formatPixKeyDisplay = (key: string) => {
+    if (!key) return '';
+    if (key.length <= 20) return key;
+    return `${key.substring(0, 15)}...${key.substring(key.length - 5)}`;
   };
 
   if (isLoading) {
@@ -250,17 +264,20 @@ export default function PixPaymentPage() {
                 </p>
               </div>
 
-              {/* Progress Bar */}
-              <div className="w-full bg-gray-200 rounded-full h-2.5">
+              {/* Animated Progress Bar */}
+              <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
                 <div
                   className="bg-primary h-2.5 rounded-full transition-all duration-1000 ease-linear"
-                  style={{ width: `${calculateProgress()}%` }}
+                  style={{
+                    width: `${calculateProgress()}%`,
+                    animation: 'progressAnimation 1s linear infinite'
+                  }}
                 ></div>
               </div>
             </div>
           )}
 
-          {/* PIX Key Display - Simplified */}
+          {/* PIX Key Display - Partial with copy button */}
           <Card className="bg-white shadow-lg">
             <CardHeader>
               <CardTitle className="text-xl font-semibold flex items-center justify-between">
@@ -277,10 +294,22 @@ export default function PixPaymentPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2">
+              <div className="space-y-4">
+                <div className="bg-muted p-3 rounded-lg border">
+                  <code className="text-sm font-mono break-all">
+                    {formatPixKeyDisplay(transaction.pixKey)}
+                  </code>
+                </div>
                 <p className="text-sm text-muted-foreground">
                   Copie esta chave e cole na área PIX Copia e Cola do aplicativo do seu banco para pagar.
                 </p>
+                <Button
+                  variant="link"
+                  className="text-primary p-0 h-auto"
+                  onClick={handleScrollToInstructions}
+                >
+                  Como pagar?
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -344,7 +373,7 @@ export default function PixPaymentPage() {
           )}
 
           {/* Payment Instructions */}
-          <Card className="bg-white shadow-lg">
+          <Card id="payment-instructions" className="bg-white shadow-lg">
             <CardHeader>
               <CardTitle className="text-xl font-semibold">Como pagar</CardTitle>
             </CardHeader>
