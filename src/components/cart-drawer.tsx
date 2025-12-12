@@ -48,7 +48,7 @@ export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
             <ul className="space-y-4">
               {items.map((item) => (
                 <li 
-                  key={`${item.id}-${item.selectedVariation?.option.label || ''}`} 
+                  key={`${item.id}-${item.selectedVariation?.option.label || ''}-${item.customItems?.map(c => c.name).join('-') || ''}`} 
                   className="flex items-center gap-4"
                 >
                   <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-border">
@@ -82,39 +82,61 @@ export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                         <X className="h-4 w-4" />
                       </Button>
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    
+                    {/* Detalhes dos Itens Personalizados (para o combinado de 80 peças) */}
+                    {item.customItems && item.customItems.length > 0 && (
+                        <div className="mt-1 space-y-0.5">
+                            {item.customItems.map((customItem, index) => (
+                                <p key={index} className="text-xs text-muted-foreground italic">
+                                    {customItem.count}x {customItem.name}
+                                </p>
+                            ))}
+                        </div>
+                    )}
+
+                    <p className="text-sm text-muted-foreground mt-1">
                       {formatCurrency(item.selectedVariation?.option.price || item.price)}
                     </p>
                     <div className="flex items-center justify-between mt-2">
                       <div className="flex items-center gap-2">
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          className="h-7 w-7"
-                          onClick={() => updateQuantity(
-                            item.id, 
-                            item.quantity - 1,
-                            item.selectedVariation?.name,
-                            item.selectedVariation?.option.label
-                          )}
-                          disabled={item.quantity === 1}
-                        >
-                          <Minus className="h-4 w-4" />
-                        </Button>
-                        <span className="text-sm font-medium">{item.quantity}</span>
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          className="h-7 w-7"
-                          onClick={() => updateQuantity(
-                            item.id, 
-                            item.quantity + 1,
-                            item.selectedVariation?.name,
-                            item.selectedVariation?.option.label
-                          )}
-                        >
-                          <Plus className="h-4 w-4" />
-                        </Button>
+                        {/* O controle de quantidade só faz sentido para produtos não personalizados */}
+                        {!(item.customItems && item.customItems.length > 0) && (
+                            <>
+                                <Button 
+                                  variant="outline" 
+                                  size="icon" 
+                                  className="h-7 w-7"
+                                  onClick={() => updateQuantity(
+                                    item.id, 
+                                    item.quantity - 1,
+                                    item.selectedVariation?.name,
+                                    item.selectedVariation?.option.label
+                                  )}
+                                  disabled={item.quantity === 1}
+                                >
+                                  <Minus className="h-4 w-4" />
+                                </Button>
+                                <span className="text-sm font-medium">{item.quantity}</span>
+                                <Button 
+                                  variant="outline" 
+                                  size="icon" 
+                                  className="h-7 w-7"
+                                  onClick={() => updateQuantity(
+                                    item.id, 
+                                    item.quantity + 1,
+                                    item.selectedVariation?.name,
+                                    item.selectedVariation?.option.label
+                                  )}
+                                >
+                                  <Plus className="h-4 w-4" />
+                                </Button>
+                            </>
+                        )}
+                        {item.customItems && item.customItems.length > 0 && (
+                            <span className="text-sm font-medium text-primary">
+                                {item.quantity}x (80 Peças)
+                            </span>
+                        )}
                       </div>
                       <p className="text-sm font-semibold text-foreground">
                         {formatCurrency(item.quantity * (item.selectedVariation?.option.price || item.price))}

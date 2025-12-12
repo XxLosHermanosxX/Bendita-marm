@@ -73,16 +73,29 @@ export const OrderSummary = ({
         <h4 className="font-semibold text-foreground">Itens ({items.length})</h4>
         <ul className="space-y-2 max-h-60 overflow-y-auto pr-2">
           {items.map((item) => (
-            <li key={item.id} className="flex justify-between text-sm">
-              <span className="text-muted-foreground">
-                {item.quantity}x {item.name}
-                {item.selectedVariation && (
-                    <span className="text-xs"> ({item.selectedVariation.option.label})</span>
-                )}
-              </span>
-              <span className="font-medium">
-                {formatCurrency(item.quantity * (item.selectedVariation?.option.price || item.price))}
-              </span>
+            <li key={item.id} className="flex flex-col justify-between text-sm border-b border-border/50 pb-2 last:border-b-0">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground font-medium">
+                  {item.quantity}x {item.name}
+                  {item.selectedVariation && (
+                      <span className="text-xs"> ({item.selectedVariation.option.label})</span>
+                  )}
+                </span>
+                <span className="font-medium text-foreground">
+                  {formatCurrency(item.quantity * (item.selectedVariation?.option.price || item.price))}
+                </span>
+              </div>
+              
+              {/* Detalhes dos Itens Personalizados */}
+              {item.customItems && item.customItems.length > 0 && (
+                  <div className="mt-1 pl-4 text-xs text-muted-foreground italic">
+                      {item.customItems.map((customItem, index) => (
+                          <p key={index}>
+                              {customItem.count}x {customItem.name}
+                          </p>
+                      ))}
+                  </div>
+              )}
             </li>
           ))}
         </ul>
