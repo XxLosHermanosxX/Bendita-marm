@@ -31,21 +31,6 @@ export default function PixPaymentPage() {
       const orderParam = searchParams.get('order');
       if (orderParam) {
         const parsedOrder = JSON.parse(decodeURIComponent(orderParam));
-
-        // Validate order data
-        if (!parsedOrder || !parsedOrder.total || parsedOrder.total <= 0) {
-          throw new Error("Dados do pedido inválidos");
-        }
-
-        // Validate required fields
-        if (!parsedOrder.customer || !parsedOrder.customer.name) {
-          throw new Error("Nome do cliente é obrigatório");
-        }
-
-        if (!parsedOrder.address || !parsedOrder.address.street || !parsedOrder.address.cep) {
-          throw new Error("Endereço completo é obrigatório");
-        }
-
         setOrderData(parsedOrder);
 
         // Create PIX transaction
@@ -64,6 +49,8 @@ export default function PixPaymentPage() {
   const createTransaction = async (order: Order) => {
     try {
       setIsLoading(true);
+      console.log("Creating transaction with order:", order);
+
       const result = await createPixTransaction(order);
 
       if (result.success) {
@@ -106,10 +93,12 @@ export default function PixPaymentPage() {
       } else {
         setError(result.error || "Falha ao criar transação PIX");
         setPaymentStatus('error');
+        console.error("Transaction creation failed:", result.error);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro desconhecido');
       setPaymentStatus('error');
+      console.error("Unexpected error in createTransaction:", err);
     } finally {
       setIsLoading(false);
     }

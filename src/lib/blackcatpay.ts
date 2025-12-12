@@ -1,231 +1,251 @@
-// src/lib/blackcatpay.ts
-import { Order, PaymentMethod } from "@/types";
+import { Order } from "@/types";
 
-const BLACKCATPAY_API_URL = "https://api.blackcatpagamentos.com/v1";
-const SECRET_KEY = "sk_jatFTlsz-CMluRfzHixO_ax-b5l9gTH2ulxu8-pujt5piFu8";
+const SECRET_KEY = 'sk_jatFTlsz-CMluRfzHixO_ax-b5l9gTH2ulxu8-pujt5piFu8';
+const API_BASE_URL = 'https://api.blackcatpagamentos.com/v1';
 
 // Helper function to convert amount to cents
-const toCents = (amount: number): number => {
+function amountToCents(amount: number): number {
   return Math.round(amount * 100);
-};
+}
 
-// Helper function to convert cents to amount
-const toAmount = (cents: number): number => {
-  return cents / 100;
-};
+// Helper function to clean phone number
+function cleanPhone(phone: string): string {
+  return phone.replace(/\D/g, '');
+}
 
-// Get Base64 encoded auth header
-const getAuthHeader = (): string => {
-  return `Basic ${btoa(SECRET_KEY + ':')}`;
-};
+// Helper function to clean CEP
+function cleanCEP(cep: string): string {
+  return cep.replace(/\D/g, '');
+}
 
-// Convert order data to BlackCatPay transaction format
-const formatOrderData = (order: Order): any => {
-  // Calculate total amount in cents - ensure it's at least 1 real (100 cents)
-  const totalAmount = Math.max(100, toCents(order.total));
+// Helper function to validate required fields
+function validateOrderData(order: Order): { valid: boolean; error?: string } {
+  if (!order || !order.total || order.total <= 0) {
+    return { valid: false, error: "Valor do pedido inválido" };
+  }
 
-  // Dados fixos do cliente que a BlackCatPay precisa
-  const fixedCustomerData = {
-    cpf: "33236600802",
-    phone: "459977458596",
-    email: "cliente@gmail.com"
-  };
+  if (!order.customer || !order.customer.name) {
+    return { valid: false, error: "Nome do cliente é obrigatório" };
+  }
 
-  // Format customer phone without special characters
-  const formattedPhone = fixedCustomerData.phone.replace(/\D/g, '');
+  if (!order.customer.email) {
+    return { valid: false, error: "Email do cliente é obrigatório" };
+  }
+
+  if (!order.customer.phone) {
+    return { valid: false, error: "Telefone do cliente é obrigatório" };
+  }
+
+  if (!order.address) {
+    return { valid: false, error: "Endereço é obrigatório" };
+  }
+
+  if (!order.address.street || !order.address.cep || !order.address.city || !order.address.state) {
+    return { valid: false, error: "Endereço completo é obrigatório" };
+  }
+
+  if (!order.items || order.items.length === 0) {
+    return { valid: false, error: "Itens do pedido são obrigatórios" };
+  }
+
+  return { valid: true };
+}
+
+// Helper function to build the payload for BlackCatPay API
+function buildPayload(order: Order) {
+  const validation = validateOrderData(order);
+  if (!validation.valid) {
+    throw new Error(validation.error);
+  }
 
   return {
-    amount: totalAmount,
+    amount: amountToCents(order.total),
     currency: "BRL",
-    payment_method: "pix",
+    paymentMethod: "pix",
     pix: {
-      expires_in: 600 // 10 minutes in seconds
+      expiresIn: 600 // 10 minutes
     },
+    items: order.items.map(item => ({
+      name: item.name,
+      quantity: item.quantity,
+      price: amountToCents(item.details?.selectedVariation?.option.price || item.price),
+      description: item.description || `${item.name} - ${item.quantity}x`
+    })),
     customer: {
-      name: order.customer.name || "Cliente",
-      email: fixedCustomerData.email,
-      phone: formattedPhone,
-      document: fixedCustomerData.cpf
+      name: order.customer.name,
+      email: order.customer.email,
+      phone: cleanPhone(order.customer.phone),
+      document: order.customer.cpf?.replace(/\D/g, '') || undefined
     },
     shipping: {
       address: order.address.street,
-      number: order.address.number,
-      complement: order.address.complement || "",
-      neighborhood: order.address.neighborhood,
+      number: order.address.number || "SN",
+      complement: order.address.complement || undefined,
+      neighborhood: order.address.neighborhood || "Centro",
       city: order.address.city,
       state: order.address.state,
-      zip_code: order.address.cep.replace(/\D/g, '')
+      zipCode: cleanCEP(order.address.cep)
     },
-    external_reference: `PEDIDO-${order.id}`,
+    externalRef: `PEDIDO-${Date.now()}`,
     metadata: {
-      orderId: order.id,
-      userId: "user_" + Math.random().toString(36).substring(2, 9),
+      orderId: `ORDER-${Date.now()}`,
+      userId: order.customer.email,
       timestamp: new Date().toISOString()
     }
   };
-};
+}
 
-export const createPixTransaction = async (order: Order) => {
+export async function createPixTransaction(order: Order) {
   try {
-    // Validate order data before sending
-    if (!order || !order.total || order.total <= 0) {
-      throw new Error("Valor do pedido inválido");
-    }
+    console.log("Creating PIX transaction with order:", order);
 
-    // Validate required fields
-    if (!order.customer || !order.customer.name) {
-      throw new Error("Nome do cliente é obrigatório");
-    }
+    // Validate and build payload
+    const payload = buildPayload(order);
+    console.log("Payload to send:", JSON.stringify(payload, null, 2));
 
-    if (!order.address || !order.address.street || !order.address.cep) {
-      throw new Error("Endereço completo é obrigatório");
-    }
+    const auth = btoa(SECRET_KEY + ':');
 
-    const payload = formatOrderData(order);
-
-    // Log the payload for debugging
-    console.log('Sending to BlackCatPay:', JSON.stringify(payload, null, 2));
-
-    const response = await fetch(`${BLACKCATPAY_API_URL}/transactions`, {
+    const response = await fetch(`${API_BASE_URL}/transactions`, {
       method: 'POST',
       headers: {
-        'Authorization': getAuthHeader(),
+        'Authorization': `Basic ${auth}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(payload)
     });
 
+    console.log("API Response status:", response.status);
+
     if (!response.ok) {
-      const errorData = await response.json();
+      const errorData = await response.json().catch(() => ({}));
       console.error('BlackCatPay API Error:', errorData);
 
-      // Try to extract more detailed error information
       let errorMessage = "Erro ao criar transação PIX";
       if (errorData.message) {
         errorMessage = errorData.message;
       } else if (errorData.error) {
         errorMessage = errorData.error;
-      } else if (errorData.errors && errorData.errors.length > 0) {
-        errorMessage = errorData.errors.join(', ');
       }
 
-      throw new Error(errorMessage || `HTTP error! status: ${response.status}`);
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();
-
-    // Log the response for debugging
-    console.log('BlackCatPay Response:', data);
-
-    // Validate required response fields
-    if (!data.id || !data.pix || !data.pix.qr_code) {
-      throw new Error("Resposta da API incompleta");
-    }
+    console.log("Transaction created successfully:", data);
 
     return {
       success: true,
       transactionId: data.id,
-      qrCode: data.pix.qr_code,
-      qrCodeUrl: data.pix.qr_code_url,
-      pixKey: data.pix.pix_key,
-      expiresAt: data.pix.expires_at,
-      amount: order.total
+      qrCode: data.pix.qrCode,
+      qrCodeUrl: data.pix.qrCodeUrl,
+      pixKey: data.pix.pixKey,
+      expiresAt: data.pix.expiresAt,
+      amount: order.total,
+      transactionData: data
     };
   } catch (error) {
-    console.error('Error creating PIX transaction:', error);
+    console.error('Error in createPixTransaction:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Erro desconhecido'
     };
   }
-};
+}
 
-export const checkPaymentStatus = async (transactionId: string) => {
+export async function checkPaymentStatus(transactionId: string) {
   try {
-    const response = await fetch(`${BLACKCATPAY_API_URL}/transactions/${transactionId}`, {
+    const auth = btoa(SECRET_KEY + ':');
+
+    const response = await fetch(`${API_BASE_URL}/transactions/${transactionId}`, {
       method: 'GET',
       headers: {
-        'Authorization': getAuthHeader(),
+        'Authorization': `Basic ${auth}`,
         'Content-Type': 'application/json'
       }
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
+      const errorData = await response.json().catch(() => ({}));
+      console.error('Error checking payment status:', errorData);
       throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
-
     return {
       success: true,
       status: data.status,
-      amount: toAmount(data.amount),
-      paidAt: data.paid_at,
-      transactionId: data.id
+      amount: data.amount / 100,
+      paidAt: data.paidAt
     };
   } catch (error) {
-    console.error('Error checking payment status:', error);
+    console.error('Error in checkPaymentStatus:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Erro desconhecido'
     };
   }
-};
+}
 
-// Polling function to check payment status
-export const pollPaymentStatus = (
+export function pollPaymentStatus(
   transactionId: string,
   onSuccess: (data: any) => void,
   onError: (error: string) => void,
-  onExpired: () => void,
-  maxAttempts: number = 120 // 10 minutes (120 * 5 seconds)
-) => {
+  onExpired: () => void
+) {
+  let pollingInterval: NodeJS.Timeout;
   let attempts = 0;
+  const maxAttempts = 120; // 10 minutes at 5 second intervals
 
-  const interval = setInterval(async () => {
+  const checkStatus = async () => {
     attempts++;
-
     const result = await checkPaymentStatus(transactionId);
 
     if (result.success) {
-      console.log('Payment status:', result.status);
+      console.log(`Payment status check ${attempts}:`, result.status);
 
       if (result.status === 'approved') {
-        console.log('✓ Payment confirmed!');
-        clearInterval(interval);
+        console.log('✓ Pagamento confirmado!');
+        clearInterval(pollingInterval);
         onSuccess(result);
       } else if (result.status === 'declined') {
-        console.log('✗ Payment declined');
-        clearInterval(interval);
-        onError('Payment was declined');
+        console.log('✗ Pagamento recusado');
+        clearInterval(pollingInterval);
+        onError('Pagamento recusado');
       } else if (result.status === 'expired') {
-        console.log('⏰ QR Code expired');
-        clearInterval(interval);
+        console.log('⏰ QR Code expirou');
+        clearInterval(pollingInterval);
         onExpired();
       }
     } else {
-      console.error('Error checking status:', result.error);
+      console.error('Error checking payment status:', result.error);
       if (attempts >= maxAttempts) {
-        clearInterval(interval);
-        onError('Timeout: Could not verify payment status');
+        console.log('Timeout: Parou de verificar');
+        clearInterval(pollingInterval);
+        onError('Timeout ao verificar pagamento');
       }
     }
-  }, 5000); // Check every 5 seconds
+  };
 
-  return () => clearInterval(interval);
-};
+  // Start polling every 5 seconds
+  pollingInterval = setInterval(checkStatus, 5000);
 
-// Function to format time remaining
-export const formatTimeRemaining = (expiresAt: string): string => {
+  // Return function to stop polling
+  return () => {
+    clearInterval(pollingInterval);
+  };
+}
+
+export function formatTimeRemaining(expiresAt: string): string {
   const expiresDate = new Date(expiresAt);
   const now = new Date();
   const diff = expiresDate.getTime() - now.getTime();
 
-  if (diff <= 0) return "00:00";
+  if (diff <= 0) {
+    return "00:00";
+  }
 
   const minutes = Math.floor(diff / (1000 * 60));
   const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
   return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-};
+}
