@@ -1,4 +1,3 @@
-import { MadeWithDyad } from "@/components/made-with-dyad";
 import { MainLayout } from "@/components/layout/main-layout";
 import { ProductCard } from "@/components/product-card";
 import Image from "next/image";
@@ -71,7 +70,6 @@ export default function Home() {
           </Link>
         </div>
       </div>
-      <MadeWithDyad />
     </MainLayout>
   );
 }
