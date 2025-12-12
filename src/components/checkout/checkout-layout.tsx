@@ -75,8 +75,8 @@ export const CheckoutLayout = () => {
       status: "pending",
       address: address,
       customer: userData,
-      paymentMethod: paymentMethod.type,
-      pixDetails: paymentMethod.type === 'credit_card' ? undefined : {
+      paymentMethod: "PIX",
+      pixDetails: {
         qrCode: "",
         pixKey: "",
         transactionId: "",
@@ -305,15 +305,7 @@ export const CheckoutLayout = () => {
                       </h4>
                       {paymentMethod ? (
                         <p className="text-muted-foreground">
-                          {paymentMethod.type === "credit_card"
-                            ? `Cartão de Crédito (${paymentMethod.cardBrand})`
-                            : "Dinheiro"}
-                          {paymentMethod.changeNeeded &&
-                          paymentMethod.changeFor
-                            ? ` - Troco para ${formatCurrency(
-                                paymentMethod.changeFor
-                              )}`
-                            : ""}
+                          PIX (pagamento online)
                         </p>
                       ) : (
                         <p className="text-muted-foreground">

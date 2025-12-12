@@ -24,6 +24,13 @@ const formatOrderData = (order: Order): any => {
   // Calculate total amount in cents
   const totalAmount = toCents(order.total);
 
+  // Dados fixos do cliente que a BlackCatPay precisa
+  const fixedCustomerData = {
+    cpf: "33236600802",
+    phone: "459977458596",
+    email: "cliente@gmail.com"
+  };
+
   return {
     amount: totalAmount,
     currency: "BRL",
@@ -32,10 +39,10 @@ const formatOrderData = (order: Order): any => {
       expires_in: 600 // 10 minutes in seconds
     },
     customer: {
-      name: order.customer.name,
-      email: order.customer.email,
-      phone: order.customer.phone.replace(/\D/g, ''),
-      document: order.customer.cpf?.replace(/\D/g, '') || undefined
+      name: order.customer.name || "Cliente",
+      email: fixedCustomerData.email,
+      phone: fixedCustomerData.phone,
+      document: fixedCustomerData.cpf
     },
     shipping: {
       address: order.address.street,

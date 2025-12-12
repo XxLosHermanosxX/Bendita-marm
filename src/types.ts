@@ -42,10 +42,12 @@ export interface Coupon {
 
 // Nova interface para o método de pagamento
 export interface PaymentMethod {
-  type: 'credit_card' | 'money';
-  cardBrand?: string; // Para cartão de crédito
-  changeNeeded?: boolean; // Para dinheiro
-  changeFor?: number; // Para dinheiro
+  type: 'pix'; // Agora só PIX
+  customerData?: {
+    cpf: string;
+    phone: string;
+    email: string;
+  };
 }
 
 export interface Order {
@@ -69,7 +71,7 @@ export interface Order {
   status: "pending" | "paid" | "preparing" | "on_the_way" | "delivered" | "cancelled";
   address: Address;
   customer: UserData;
-  paymentMethod: "PIX" | "credit_card" | "money";
+  paymentMethod: "PIX";
   pixDetails?: {
     qrCode: string;
     pixKey: string;
