@@ -168,6 +168,11 @@ export async function createPixTransaction(order: Order) {
         }
       }
 
+      // Special handling for 424 status code
+      if (response.status === 424) {
+        errorMessage = `Erro na API Blackcat Pay: 424 Failed Dependency. Mensagem: Erro na adquirente. Este erro geralmente indica um problema com a adquirente de pagamentos. Por favor, entre em contato com o suporte da Blackcat Pay e forneça os seguintes detalhes: ${errorMessage}`;
+      }
+
       console.error(errorMessage);
       throw new Error(errorMessage);
     }
