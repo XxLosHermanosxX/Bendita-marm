@@ -23,7 +23,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
             <Sidebar />
           </aside>
         )}
-        <main className="flex-1 pt-4 md:pt-0">{children}</main>
+        <main className="flex-1 pt-4 md:pt-0 overflow-y-auto">{children}</main> {/* Adicionado overflow-y-auto */}
       </div>
       <Footer /> {/* Adicionando o Footer */}
     </div>

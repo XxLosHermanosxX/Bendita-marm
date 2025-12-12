@@ -157,7 +157,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
                 </span>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-3 max-h-[200px] overflow-y-auto pr-2"> {/* Adicionado max-h e overflow-y-auto */}
                 {Object.entries(INITIAL_COMBINED_ITEMS).map(([item, initialCount]) => {
                   const currentCount = selectedItems[item as keyof typeof INITIAL_COMBINED_ITEMS];
                   const limit = ITEM_LIMITS[item];
