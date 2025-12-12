@@ -4,7 +4,8 @@ import React from "react";
 import { Header } from "@/components/header";
 import { Sidebar } from "@/components/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Footer } from "@/components/footer"; // Importando Footer
+import { Footer } from "@/components/footer";
+import { PromoModal } from "../promo-modal"; // Importando PromoModal
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -23,9 +24,12 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
             <Sidebar />
           </aside>
         )}
-        <main className="flex-1 pt-4 md:pt-0 overflow-y-auto">{children}</main> {/* Adicionado overflow-y-auto */}
+        <main className="flex-1 pt-4 md:pt-0 overflow-y-auto">{children}</main>
       </div>
-      <Footer /> {/* Adicionando o Footer */}
+      <Footer />
+      
+      {/* Modal de Promoção (Apenas para Mobile) */}
+      <PromoModal />
     </div>
   );
 };
