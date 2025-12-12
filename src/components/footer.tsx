@@ -7,9 +7,9 @@ import { cn } from "@/lib/utils";
 
 // Dados de pagamento e selos (usando placeholders)
 const paymentMethods = [
-  { name: "Visa", icon: "/images/visa.png" },
-  { name: "Mastercard", icon: "/images/mastercard.png" },
-  { name: "Pix", icon: "/images/pix.png" },
+  { name: "Visa", icon: "/images/visa-logo.png" },
+  { name: "Mastercard", icon: "/images/mastercard-logo.png" },
+  { name: "Pix", icon: "/images/pix-logo.png" },
 ];
 
 const securitySeals = [
@@ -43,13 +43,18 @@ export const Footer = () => {
           <div className="space-y-4">
             <div className="text-center md:text-left">
               <h4 className="font-semibold text-foreground mb-2">Formas de Pagamento</h4>
-              <div className="flex flex-wrap justify-center md:justify-start gap-2">
-                {/* Placeholder para ícones de pagamento */}
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span className="px-2 py-1 bg-card rounded border border-border">VISA</span>
-                    <span className="px-2 py-1 bg-card rounded border border-border">MASTER</span>
-                    <span className="px-2 py-1 bg-card rounded border border-border">PIX</span>
-                </div>
+              <div className="flex flex-wrap justify-center md:justify-start gap-4">
+                {/* Usando as logos reais */}
+                {paymentMethods.map((method) => (
+                    <div key={method.name} className="relative h-5 w-10">
+                        <Image
+                            src={method.icon}
+                            alt={method.name}
+                            layout="fill"
+                            objectFit="contain"
+                        />
+                    </div>
+                ))}
               </div>
             </div>
 
