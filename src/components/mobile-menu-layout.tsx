@@ -7,13 +7,15 @@ import { cn } from "@/lib/utils";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/types";
+import { LocationDeliveryInfo } from "@/components/location-delivery-info";
+import { toast } from "sonner";
 
 // Helper component for category section
 const ProductCategorySection = React.forwardRef<HTMLDivElement, { category: string, products: Product[] }>(({ category, products }, ref) => {
   return (
     <section ref={ref} id={`category-${category.replace(/\s/g, '-')}`} className="mb-8 pt-4">
-      {/* Título da categoria que se sobrepõe ao rolar */}
-      <h2 className="text-2xl font-bold text-foreground mb-4 sticky top-[64px] bg-background z-10 py-2 border-b border-border/50">
+      {/* Título da categoria que se sobrepõe ao rolar. Ajustado para 112px (64px Header + 48px Location Bar) */}
+      <h2 className="text-2xl font-bold text-foreground mb-4 sticky top-[112px] bg-background z-10 py-2 border-b border-border/50">
         {category}
       </h2>
       <div className="grid grid-cols-2 gap-4">
@@ -45,13 +47,14 @@ export const MobileMenuLayout = () => {
     return categories.filter(c => groupedProducts[c] && groupedProducts[c].length > 0);
   }, [groupedProducts]);
 
+  // Combined height of fixed header (64px) + location bar (48px) = 112px
+  const STICKY_OFFSET = 112; 
+
   // Handle scrolling to category section
   const scrollToCategory = (category: string) => {
     const ref = sectionRefs.current[`category-${category.replace(/\s/g, '-')}`];
     if (ref) {
-      // 64px is the height of the sticky header
-      const headerHeight = 64; 
-      const offset = ref.offsetTop - headerHeight;
+      const offset = ref.offsetTop - STICKY_OFFSET;
       
       window.scrollTo({
         top: offset,
@@ -64,7 +67,7 @@ export const MobileMenuLayout = () => {
   // Handle scroll observation to update active category
   useEffect(() => {
     const handleScroll = () => {
-      const headerHeight = 64;
+      const headerHeight = STICKY_OFFSET;
       let currentActiveCategory = visibleCategories[0];
 
       for (const category of visibleCategories) {
@@ -72,7 +75,7 @@ export const MobileMenuLayout = () => {
         const ref = sectionRefs.current[id];
         if (ref) {
           const rect = ref.getBoundingClientRect();
-          // Check if the section top is near the header (e.g., within 100px below the header)
+          // Check if the section top is near the combined sticky bars
           if (rect.top <= headerHeight + 100 && rect.bottom > headerHeight) {
             currentActiveCategory = category;
             break;
@@ -108,8 +111,18 @@ export const MobileMenuLayout = () => {
 
   return (
     <div className="w-full">
-      {/* Sticky Category Navigation Bar */}
-      <div className="sticky top-16 z-20 bg-background border-b border-border shadow-sm">
+      
+      {/* NEW: Sticky Location and Delivery Info Bar (top-16 = 64px) */}
+      <div className="sticky top-16 z-30">
+        <LocationDeliveryInfo 
+          currentCity="Curitiba" 
+          deliveryTime="35-45 min" 
+          onLocationChange={() => toast.info("Funcionalidade de seleção de unidade será implementada aqui.")}
+        />
+      </div>
+
+      {/* Sticky Category Navigation Bar (top-[112px] = 64px + 48px) */}
+      <div className="sticky top-[112px] z-20 bg-background border-b border-border shadow-sm">
         <ScrollArea className="w-full whitespace-nowrap">
           <div ref={scrollContainerRef} className="flex space-x-2 p-2">
             {visibleCategories.map((category) => (

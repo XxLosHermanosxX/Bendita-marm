@@ -24,8 +24,8 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
           {/* Sidebar now handled by SidebarSheet (Drawer/Hamburger Menu) */}
           <SidebarSheet />
           
-          {/* Main content is now full width */}
-          <main className="flex-1 pt-4 md:pt-0 overflow-y-auto">{children}</main>
+          {/* Main content is now full width, removing internal padding as sticky elements rely on viewport top */}
+          <main className="flex-1 overflow-y-auto">{children}</main>
         </div>
         <Footer />
         
