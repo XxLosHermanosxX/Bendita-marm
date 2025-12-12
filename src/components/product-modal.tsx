@@ -29,14 +29,7 @@ const INITIAL_COMBINED_ITEMS = {
   "Hossomaki Salmão": 0,
 };
 
-// Mapeamento de limites (opcional, mas bom para validação)
-const ITEM_LIMITS: { [key: string]: number } = {
-  "Sashimi Salmão": 10,
-  "Niguiri Salmão": 10,
-  "Uramaki Filadélfia": 20,
-  "Hot Filadélfia": 20,
-  "Hossomaki Salmão": 20,
-};
+// Removendo ITEM_LIMITS, pois o único limite é o total de 80.
 
 export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
   const addItem = useCartStore((state) => state.addItem);
@@ -70,13 +63,11 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
   const handleSetItemQuantity = (item: keyof typeof INITIAL_COMBINED_ITEMS, newCount: number) => {
     setSelectedItems(prev => {
       const currentCount = prev[item];
-      const limit = ITEM_LIMITS[item] || 80;
       
-      // 1. Apply individual limit
-      let limitedCount = Math.min(newCount, limit);
-      limitedCount = Math.max(0, limitedCount); // Ensure non-negative
+      // Ensure non-negative
+      let limitedCount = Math.max(0, newCount); 
 
-      // 2. Check total limit (80)
+      // 1. Check total limit (80)
       const currentTotalExcludingItem = totalPieces - currentCount;
       let newTotal = currentTotalExcludingItem + limitedCount;
 
@@ -88,7 +79,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
 
         // If the user tried to set a quantity higher than the limit allows, show a warning
         if (limitedCount < newCount) {
-             toast.warning(`Limite total de 80 peças atingido. Máximo para ${item}: ${limitedCount}`);
+             toast.warning(`Limite total de 80 peças atingido.`);
         }
       }
       
@@ -169,18 +160,16 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
                 {Object.entries(INITIAL_COMBINED_ITEMS).map(([item, initialCount]) => {
                   const key = item as keyof typeof INITIAL_COMBINED_ITEMS;
                   const currentCount = selectedItems[key];
-                  const limit = ITEM_LIMITS[item];
                   
-                  // Calculate max pieces that can be added to this item without exceeding the total limit
-                  const maxAddable = 80 - (totalPieces - currentCount);
-                  const effectiveLimit = Math.min(limit, maxAddable);
+                  // O limite efetivo agora é apenas o que falta para 80, mais o que já foi selecionado neste item.
+                  const effectiveLimit = 80 - (totalPieces - currentCount);
 
                   return (
                     <div key={item} className="space-y-2 border-b pb-3 last:border-b-0">
                       <Label className="text-sm font-semibold block">
                         {item} 
                         <span className="text-xs text-muted-foreground ml-2 font-normal">
-                          (Máx: {limit} | Atual: {currentCount})
+                          (Atual: {currentCount})
                         </span>
                       </Label>
                       
@@ -209,7 +198,8 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
                         <Input
                           type="number"
                           min={0}
-                          max={limit}
+                          // Max agora é 80, mas a lógica de handleSetItemQuantity garante que o total não passe de 80.
+                          max={80} 
                           placeholder="Qtd."
                           value={currentCount === 0 ? "" : currentCount}
                           onChange={(e) => {
