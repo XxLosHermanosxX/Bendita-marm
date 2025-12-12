@@ -17,7 +17,7 @@ const categoryIcons: { [key: string]: React.ElementType } = {
   "Prato do Dia": Sparkles,
   "Pokes": Utensils,
   "Pratos Quentes": Utensils,
-  "Teppan": Utensils, // Usando Utensils
+  "Teppan": Utensils,
   "Niguiri": Fish,
   "Temaki": ScrollText,
   "Yakisoba": Utensils,
@@ -40,11 +40,14 @@ export const Sidebar = () => {
   // Lê a categoria da URL. Se não houver, assume 'Exclusivos do App' como padrão.
   const activeCategory = searchParams.get('category') || "Exclusivos do App"; 
   
+  // Filtra a lista de categorias para remover 'Combinados' se não for mais usada
+  const filteredCategories = categories.filter(c => c !== "Combinados");
+
   return (
     <div className="h-full flex flex-col p-4 bg-secondary/50">
       <h2 className="text-lg font-semibold mb-4 text-foreground">Categorias</h2>
       <nav className="flex-1 space-y-1">
-        {categories.map((category) => {
+        {filteredCategories.map((category) => {
           const Icon = categoryIcons[category] || Utensils;
           return (
             <Link 
