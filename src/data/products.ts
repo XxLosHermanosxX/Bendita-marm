@@ -141,14 +141,6 @@ export const products: Product[] = [
     imageUrl: "/images/gyu_domburi.jpg",
   },
   {
-    id: "p14",
-    name: "Donburi Carne com Legumes",
-    description: "Arroz yakimeshi com carne, legumes refogados ao molho oriental.",
-    price: 40.90,
-    category: "Pratos Quentes",
-    imageUrl: "/images/donburi-carne-legumes.png",
-  },
-  {
     id: "p15",
     name: "Donburi Frango Teriyaki",
     description: "Arroz yakimeshi com sobrecoxa de frango ao molho teriyaki.",
@@ -165,14 +157,6 @@ export const products: Product[] = [
     imageUrl: "/images/donburi_frango_mandarim.jpg",
   },
   {
-    id: "p35",
-    name: "Tempura Udon",
-    description: "Macarrão especial, tempura de legumes, ovo, nori, cebolinha e caldo udon.",
-    price: 40.90,
-    category: "Pratos Quentes",
-    imageUrl: "/images/tempura-udon.png",
-  },
-  {
     id: "p36",
     name: "LAMEN",
     description: "MACARRÃO DE LÁMEN, FILÉ SUÍNO, OVO, KANI, ALGA NORI E CEBOLINHA",
@@ -187,14 +171,6 @@ export const products: Product[] = [
     price: 40.90,
     category: "Pratos Quentes",
     imageUrl: "/images/yakbeef.jpg",
-  },
-  {
-    id: "p39",
-    name: "GUIOZA UDON SOUP",
-    description: "O prato mais vendido Guioza Udon tem macarrão especial, guioza, kani kama, legumes, nori, cebolinha e o delicioso caldo...",
-    price: 39.90,
-    category: "Pratos Quentes",
-    imageUrl: "/images/guioza-udon-soup.png",
   },
   {
     id: "p40",
@@ -354,7 +330,7 @@ export const products: Product[] = [
     description: "Macarrão, carne, frango e legumes.",
     price: 59.90,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba_tradicional.jpg", // Corrigido
+    imageUrl: "/images/yakisoba_tradicional.jpg",
   },
   {
     id: "p23",
@@ -362,23 +338,7 @@ export const products: Product[] = [
     description: "Macarrão, carne, frango, camarão e legumes.",
     price: 65.50,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba_especial.jpg", // Corrigido
-  },
-  {
-    id: "p76",
-    name: "Yakisoba Salmão G",
-    description: "Macarrão, salmão e legumes.",
-    price: 65.50,
-    category: "Yakisoba",
-    imageUrl: "/images/yakisoba-salmao-g.png", // Mantido (sem nova imagem)
-  },
-  {
-    id: "p77",
-    name: "Yakisoba Salmão M",
-    description: "Macarrão, salmão e legumes.",
-    price: 43.90,
-    category: "Yakisoba",
-    imageUrl: "/images/yakisoba-salmao-m.png", // Mantido (sem nova imagem)
+    imageUrl: "/images/yakisoba_especial.jpg",
   },
   {
     id: "p78",
@@ -386,7 +346,7 @@ export const products: Product[] = [
     description: "Macarrão, carne, frango, camarão e legumes.",
     price: 43.90,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba_especial_m.webp", // Corrigido
+    imageUrl: "/images/yakisoba_especial_m.webp",
   },
   {
     id: "p79",
@@ -394,7 +354,7 @@ export const products: Product[] = [
     description: "Macarrão, carne, frango e legumes.",
     price: 39.90,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba_tradicional_m.webp", // Corrigido
+    imageUrl: "/images/yakisoba_tradicional_m.webp",
   },
   {
     id: "p83",
@@ -402,7 +362,7 @@ export const products: Product[] = [
     description: "Macarrão com legumes ao molho oriental",
     price: 31.50,
     category: "Yakisoba",
-    imageUrl: "/images/2022__SAK_YAKISOBA_VEG_IMG_1758-2__4_.jpg", // Corrigido
+    imageUrl: "/images/2022__SAK_YAKISOBA_VEG_IMG_1758-2__4_.jpg",
   },
 
   // Vegetarianos
@@ -429,14 +389,6 @@ export const products: Product[] = [
     price: 13.50,
     category: "Vegetarianos",
     imageUrl: "/images/sunomono.jpg",
-  },
-  {
-    id: "p80",
-    name: "Harumaki Vegetariano",
-    description: "Massa crocante com recheio de repolho e cenoura com molho agridoce",
-    price: 9.90,
-    category: "Vegetarianos",
-    imageUrl: "/images/harumaki-vegetariano.png",
   },
   {
     id: "p81",
@@ -517,7 +469,7 @@ export const products: Product[] = [
     isExclusive: true,
   },
   
-  // BEBIDAS (Limpando e mantendo apenas os que têm imagem clara)
+  // BEBIDAS
   {
     id: "p95",
     name: "Refrigerante Lata (Vários Sabores)",
@@ -599,22 +551,6 @@ export const products: Product[] = [
 
   // Pratos Quentes (Continuando a lista original)
   {
-    id: "p37",
-    name: "Donburi Carne com Legumes",
-    description: "Arroz yakimeshi com carne, legumes refogados ao molho oriental.",
-    price: 40.90,
-    category: "Pratos Quentes",
-    imageUrl: "/images/donburi-carne-legumes.png",
-  },
-  {
-    id: "p35",
-    name: "Tempura Udon",
-    description: "Macarrão especial, tempura de legumes, ovo, nori, cebolinha e caldo udon.",
-    price: 40.90,
-    category: "Pratos Quentes",
-    imageUrl: "/images/tempura-udon.png",
-  },
-  {
     id: "p36",
     name: "LAMEN",
     description: "MACARRÃO DE LÁMEN, FILÉ SUÍNO, OVO, KANI, ALGA NORI E CEBOLINHA",
@@ -623,12 +559,12 @@ export const products: Product[] = [
     imageUrl: "/images/Design_sem_nome.webp",
   },
   {
-    id: "p39",
-    name: "GUIOZA UDON SOUP",
-    description: "O prato mais vendido Guioza Udon tem macarrão especial, guioza, kani kama, legumes, nori, cebolinha e o delicioso caldo...",
-    price: 39.90,
+    id: "p38",
+    name: "YAKIBEEF",
+    description: "Yakibeef tem sabor tradicional mas com toque diferente. O macarrão tipo yakisoba, carne com cebola, repolho, gengibre...",
+    price: 40.90,
     category: "Pratos Quentes",
-    imageUrl: "/images/guioza-udon-soup.png",
+    imageUrl: "/images/yakbeef.jpg",
   },
   
   // Combinados

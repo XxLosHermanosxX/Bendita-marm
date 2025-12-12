@@ -17,9 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Sushiaki Delivery",
   description: "O melhor sushi da cidade, entregue na sua porta!",
-  // A propriedade 'icons' foi removida para resolver o erro de compilação.
-  // Para um favicon, coloque um arquivo favicon.ico (ou favicon.png renomeado para .ico)
-  // diretamente no diretório 'public'.
+  icons: {
+    icon: '/sushiaki-logo.png',
+  },
 };
 
 export default function RootLayout({
@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
       >
         <ThemeProvider
           attribute="class"

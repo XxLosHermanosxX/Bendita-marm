@@ -133,31 +133,36 @@ export const Header = () => {
         </div>
 
         {/* Center/Left section: Logo and Desktop Status */}
-        <Link 
-            href="/" 
-            className={cn(
-                "flex items-center",
-                isMobile 
-                    ? "absolute left-1/2 transform -translate-x-1/2" // Center logo on mobile
-                    : "flex-col items-start gap-0.5" // Group logo and status on desktop
-            )}
-        >
-            <div className={cn(
-              "relative",
-              isMobile ? "h-12 w-12" : "h-12 w-12"
-            )}>
-              <Image 
-                src="/sushiaki-logo.png" 
-                alt="Sushiaki Logo" 
-                layout="fill"
-                objectFit="contain"
-              />
-            </div>
-            {/* Desktop Status below logo */}
+        <div className={cn(
+            "flex items-center",
+            isMobile 
+                ? "absolute left-1/2 transform -translate-x-1/2" // Center logo on mobile
+                : "gap-3" // Logo e Status lado a lado no desktop
+        )}>
+            <Link 
+                href="/" 
+                className={cn(
+                    "flex items-center",
+                    !isMobile && "h-full" // Garante que o link ocupe a altura para alinhamento
+                )}
+            >
+                <div className={cn(
+                  "relative",
+                  isMobile ? "h-12 w-12" : "h-14 w-14" // Aumentando a logo no desktop para h-14 w-14
+                )}>
+                  <Image 
+                    src="/sushiaki-logo.png" 
+                    alt="Sushiaki Logo" 
+                    layout="fill"
+                    objectFit="contain"
+                  />
+                </div>
+            </Link>
+            {/* Desktop Status ao lado da logo */}
             {!isMobile && (
                 <BusinessHoursStatus variant="desktop" />
             )}
-        </Link>
+        </div>
         
         {/* Search Input (Desktop only) */}
         {!isMobile && (
