@@ -93,7 +93,7 @@ export const PromoModal = () => {
                 className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6"
                 onClick={handleClose}
               >
-                Eu Quero! Ver Detalhes
+                Pedir Agora
               </Button>
             </Link>
           </div>
