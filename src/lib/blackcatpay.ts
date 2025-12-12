@@ -82,10 +82,16 @@ function buildPayload(order: Order) {
       console.log(`Item ${item.name}: R$${itemPrice.toFixed(2)} = ${itemPriceInCents} cents, quantity: ${item.quantity}`);
 
       return {
-        title: item.name, // Corrected field name
-        quantity: item.quantity,
-        unitPrice: itemPriceInCents, // Corrected field name and converted to cents
-        tangible: true // Required boolean field
+        title: item.name, // ✅ Campo correto
+        quantity: item.quantity, // ✅ Obrigatório
+        unitPrice: itemPriceInCents, // ✅ Campo correto em centavos
+        tangible: true, // ✅ Obrigatório (sushi é físico)
+        fee: 0, // ✅ Obrigatório
+        metadata: JSON.stringify({ // ✅ Obrigatório (string)
+          productId: item.id,
+          productName: item.name,
+          description: item.description || ''
+        })
       };
     }),
     customer: {
@@ -94,21 +100,19 @@ function buildPayload(order: Order) {
       phone: cleanPhone(order.customer.phone),
       document: order.customer.cpf?.replace(/\D/g, '') || undefined
     },
+    // ✅ SHIPPING CORRIGIDO: Campos de endereço no nível superior
     shipping: {
-      fee: 0, // Required field, assuming 0 if not provided
-      address: { // Corrected structure - now an object
-        street: order.address.street,
-        streetNumber: order.address.number || "SN", // Added streetNumber field
-        complement: order.address.complement || undefined,
-        neighborhood: order.address.neighborhood || "Centro",
-        city: order.address.city,
-        state: order.address.state,
-        zipCode: cleanCEP(order.address.cep),
-        country: "BR" // Added country field with fixed value
-      }
+      fee: 0, // ✅ Obrigatório
+      address: order.address.street, // ✅ Nome da rua
+      number: order.address.number || "SN", // ✅ Número
+      complement: order.address.complement || undefined,
+      neighborhood: order.address.neighborhood || "Centro", // ✅ Bairro
+      city: order.address.city, // ✅ Cidade
+      state: order.address.state, // ✅ Estado
+      zipCode: cleanCEP(order.address.cep), // ✅ CEP
     },
     externalRef: `PEDIDO-${Date.now()}`,
-    metadata: JSON.stringify({ // Corrected - now a stringified JSON object
+    metadata: JSON.stringify({ // ✅ Metadados da transação (string)
       orderId: `ORDER-${Date.now()}`,
       userId: order.customer.email,
       timestamp: new Date().toISOString()
