@@ -37,6 +37,15 @@ export default function PixPaymentPage() {
           throw new Error("Dados do pedido inválidos");
         }
 
+        // Validate required fields
+        if (!parsedOrder.customer || !parsedOrder.customer.name) {
+          throw new Error("Nome do cliente é obrigatório");
+        }
+
+        if (!parsedOrder.address || !parsedOrder.address.street || !parsedOrder.address.cep) {
+          throw new Error("Endereço completo é obrigatório");
+        }
+
         setOrderData(parsedOrder);
 
         // Create PIX transaction
@@ -46,7 +55,7 @@ export default function PixPaymentPage() {
         setIsLoading(false);
       }
     } catch (err) {
-      setError("Dados do pedido inválidos");
+      setError(err instanceof Error ? err.message : "Dados do pedido inválidos");
       setIsLoading(false);
       console.error("Error parsing order data:", err);
     }

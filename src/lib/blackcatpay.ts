@@ -31,6 +31,9 @@ const formatOrderData = (order: Order): any => {
     email: "cliente@gmail.com"
   };
 
+  // Format customer phone without special characters
+  const formattedPhone = fixedCustomerData.phone.replace(/\D/g, '');
+
   return {
     amount: totalAmount,
     currency: "BRL",
@@ -41,7 +44,7 @@ const formatOrderData = (order: Order): any => {
     customer: {
       name: order.customer.name || "Cliente",
       email: fixedCustomerData.email,
-      phone: fixedCustomerData.phone,
+      phone: formattedPhone,
       document: fixedCustomerData.cpf
     },
     shipping: {
@@ -69,6 +72,15 @@ export const createPixTransaction = async (order: Order) => {
       throw new Error("Valor do pedido inválido");
     }
 
+    // Validate required fields
+    if (!order.customer || !order.customer.name) {
+      throw new Error("Nome do cliente é obrigatório");
+    }
+
+    if (!order.address || !order.address.street || !order.address.cep) {
+      throw new Error("Endereço completo é obrigatório");
+    }
+
     const payload = formatOrderData(order);
 
     // Log the payload for debugging
@@ -86,13 +98,29 @@ export const createPixTransaction = async (order: Order) => {
     if (!response.ok) {
       const errorData = await response.json();
       console.error('BlackCatPay API Error:', errorData);
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+
+      // Try to extract more detailed error information
+      let errorMessage = "Erro ao criar transação PIX";
+      if (errorData.message) {
+        errorMessage = errorData.message;
+      } else if (errorData.error) {
+        errorMessage = errorData.error;
+      } else if (errorData.errors && errorData.errors.length > 0) {
+        errorMessage = errorData.errors.join(', ');
+      }
+
+      throw new Error(errorMessage || `HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
 
     // Log the response for debugging
     console.log('BlackCatPay Response:', data);
+
+    // Validate required response fields
+    if (!data.id || !data.pix || !data.pix.qr_code) {
+      throw new Error("Resposta da API incompleta");
+    }
 
     return {
       success: true,
