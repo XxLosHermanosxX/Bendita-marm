@@ -109,8 +109,10 @@ export const Header = () => {
       )}
 
       <div className={cn(
-        "container flex h-16 items-center px-4 md:px-6 relative",
-        isMobile ? "justify-between" : "justify-start gap-8"
+        "flex h-16 items-center px-4 md:px-6 relative",
+        isMobile 
+            ? "justify-between" 
+            : "justify-start gap-8"
       )}>
         
         {/* Left section: Mobile Menu Trigger (Hamburger) */}

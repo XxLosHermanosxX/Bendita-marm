@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form"; // Importando SubmitHandler
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { PaymentMethod } from "@/types";
@@ -17,7 +17,7 @@ const PaymentSchema = z.object({
   type: z.enum(["credit_card", "money"], {
     required_error: "Por favor, selecione um método de pagamento.",
   }),
-  cardBrand: z.string().optional(), // Para futuras implementações de seleção de bandeira
+  cardBrand: z.string().optional(),
   changeNeeded: z.boolean().optional(),
   changeFor: z.preprocess(
     (val) => (val === "" ? undefined : Number(val)),
@@ -30,8 +30,10 @@ interface PaymentFormProps {
   onNext: (data: PaymentMethod) => void;
 }
 
+type PaymentFormData = z.infer<typeof PaymentSchema>;
+
 export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
-  const form = useForm<z.infer<typeof PaymentSchema>>({
+  const form = useForm<PaymentFormData>({
     resolver: zodResolver(PaymentSchema),
     defaultValues: initialData || {
       type: "credit_card",
@@ -43,8 +45,7 @@ export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
   const selectedPaymentType = form.watch("type");
   const changeNeeded = form.watch("changeNeeded");
 
-  // Explicitamente tipando o onSubmit para ajudar na inferência
-  const onSubmit: SubmitHandler<z.infer<typeof PaymentSchema>> = (data) => {
+  const onSubmit = (data: PaymentFormData) => {
     onNext(data as PaymentMethod);
   };
 
