@@ -32,7 +32,10 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     <>
       <div className="group relative flex flex-col overflow-hidden rounded-lg border bg-card shadow-sm transition-all hover:shadow-md">
         {/* Imagem: Usando aspect-square para consistência visual */}
-        <div className="relative w-full aspect-square overflow-hidden bg-secondary">
+        <div 
+          className="relative w-full aspect-square overflow-hidden bg-secondary cursor-pointer"
+          onClick={handleAddToCart} // Torna a imagem clicável
+        >
           <Image
             src={product.imageUrl}
             alt={product.name}

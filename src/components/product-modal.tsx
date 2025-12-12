@@ -12,6 +12,7 @@ import { useCartStore } from "@/store/use-cart-store";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner"; // <-- Added import
 
 interface ProductModalProps {
   product: Product;
@@ -66,25 +67,33 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
   const selectedPrice = product.price; 
   const totalItemPrice = selectedPrice * quantity;
 
-  const handleItemQuantityChange = (item: keyof typeof INITIAL_COMBINED_ITEMS, delta: number) => {
+  const handleSetItemQuantity = (item: keyof typeof INITIAL_COMBINED_ITEMS, newCount: number) => {
     setSelectedItems(prev => {
       const currentCount = prev[item];
-      const newCount = Math.max(0, currentCount + delta);
-      
-      // Limite individual (se aplicável)
       const limit = ITEM_LIMITS[item] || 80;
-      const limitedCount = Math.min(newCount, limit);
-
-      // Limite total de 80 peças
-      const currentTotal = totalPieces;
       
-      if (delta > 0) {
-        // Tentando adicionar
-        if (currentTotal < 80 && limitedCount > currentCount) {
-          return { ...prev, [item]: limitedCount };
+      // 1. Apply individual limit
+      let limitedCount = Math.min(newCount, limit);
+      limitedCount = Math.max(0, limitedCount); // Ensure non-negative
+
+      // 2. Check total limit (80)
+      const currentTotalExcludingItem = totalPieces - currentCount;
+      let newTotal = currentTotalExcludingItem + limitedCount;
+
+      if (newTotal > 80) {
+        // If the new total exceeds 80, adjust the limitedCount down
+        limitedCount = 80 - currentTotalExcludingItem;
+        limitedCount = Math.max(0, limitedCount); // Ensure non-negative
+        newTotal = 80; // Set new total to 80
+
+        // If the user tried to set a quantity higher than the limit allows, show a warning
+        if (limitedCount < newCount) {
+             toast.warning(`Limite total de 80 peças atingido. Máximo para ${item}: ${limitedCount}`);
         }
-      } else if (delta < 0) {
-        // Tentando remover
+      }
+      
+      // If the resulting count is different, update the state
+      if (limitedCount !== currentCount) {
         return { ...prev, [item]: limitedCount };
       }
       
@@ -94,8 +103,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
 
   const handleAddToCart = () => {
     if (isCustomCombined && totalPieces !== 80) {
-      // Aqui você pode adicionar um toast de erro se necessário
-      console.error("Selecione exatamente 80 peças.");
+      toast.error(`Selecione exatamente 80 peças. Faltam ${80 - totalPieces} peças.`);
       return;
     }
 
@@ -157,38 +165,70 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
                 </span>
               </div>
 
-              <div className="space-y-3 max-h-[200px] overflow-y-auto pr-2">
+              <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
                 {Object.entries(INITIAL_COMBINED_ITEMS).map(([item, initialCount]) => {
-                  const currentCount = selectedItems[item as keyof typeof INITIAL_COMBINED_ITEMS];
+                  const key = item as keyof typeof INITIAL_COMBINED_ITEMS;
+                  const currentCount = selectedItems[key];
                   const limit = ITEM_LIMITS[item];
                   
+                  // Calculate max pieces that can be added to this item without exceeding the total limit
+                  const maxAddable = 80 - (totalPieces - currentCount);
+                  const effectiveLimit = Math.min(limit, maxAddable);
+
                   return (
-                    <div key={item} className="flex items-center justify-between">
-                      <Label className="text-sm font-normal w-2/3">
+                    <div key={item} className="space-y-2 border-b pb-3 last:border-b-0">
+                      <Label className="text-sm font-semibold block">
                         {item} 
-                        <span className="text-xs text-muted-foreground ml-2">
-                          (Máx: {limit})
+                        <span className="text-xs text-muted-foreground ml-2 font-normal">
+                          (Máx: {limit} | Atual: {currentCount})
                         </span>
                       </Label>
-                      <div className="flex items-center gap-2">
+                      
+                      {/* Quick Selection Buttons */}
+                      <div className="flex flex-wrap gap-2">
+                        {[1, 5, 10, 15, 20].map(amount => (
+                          <Button
+                            key={amount}
+                            variant="outline"
+                            size="sm"
+                            className={cn(
+                              "h-8 px-3",
+                              currentCount === amount ? "bg-accent" : ""
+                            )}
+                            onClick={() => handleSetItemQuantity(key, amount)}
+                            // Disable if setting this amount exceeds the effective limit
+                            disabled={amount > effectiveLimit && amount > currentCount}
+                          >
+                            {amount}
+                          </Button>
+                        ))}
+                      </div>
+
+                      {/* Manual Input */}
+                      <div className="flex items-center gap-2 mt-2">
+                        <Input
+                          type="number"
+                          min={0}
+                          max={limit}
+                          placeholder="Qtd."
+                          value={currentCount === 0 ? "" : currentCount}
+                          onChange={(e) => {
+                            const value = parseInt(e.target.value);
+                            if (!isNaN(value)) {
+                              handleSetItemQuantity(key, value);
+                            } else if (e.target.value === "") {
+                              handleSetItemQuantity(key, 0);
+                            }
+                          }}
+                          className="w-20 text-center h-9"
+                        />
                         <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => handleItemQuantityChange(item as keyof typeof INITIAL_COMBINED_ITEMS, -1)}
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => handleSetItemQuantity(key, 0)}
                           disabled={currentCount === 0}
                         >
-                          <Minus className="h-4 w-4" />
-                        </Button>
-                        <span className="text-md font-semibold w-6 text-center">{currentCount}</span>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => handleItemQuantityChange(item as keyof typeof INITIAL_COMBINED_ITEMS, 1)}
-                          disabled={totalPieces >= 80 || currentCount >= limit}
-                        >
-                          <Plus className="h-4 w-4" />
+                          Limpar
                         </Button>
                       </div>
                     </div>
