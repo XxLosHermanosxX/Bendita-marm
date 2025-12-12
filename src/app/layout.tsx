@@ -1,6 +1,6 @@
 "use client";
 
-import type { Metadata } from "next";
+// import type { Metadata } from "next"; // Removed as metadata is now in a separate file
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
@@ -18,13 +18,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Sushiaki Delivery",
-  description: "O melhor sushi da cidade, entregue na sua porta!",
-  icons: {
-    icon: '/sushiaki-logo.png',
-  },
-};
+// metadata is now defined in src/app/metadata.ts
+// export const metadata: Metadata = {
+//   title: "Sushiaki Delivery",
+//   description: "O melhor sushi da cidade, entregue na sua porta!",
+//   icons: {
+//     icon: '/sushiaki-logo.png',
+//   },
+// };
 
 // Componente Wrapper para gerenciar o estado do splash screen
 const RootLayoutWrapper = ({ children }: { children: React.ReactNode }) => {
