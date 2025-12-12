@@ -13,15 +13,6 @@ export const specialProducts: Product[] = [
   },
   // Especiais
   {
-    id: "p27",
-    name: "2 Hot Temaki de Salmão Grelhado",
-    description: "2 Hot Temaki de Salmão Grelhado com Cream Cheese e Molho Tarê.",
-    price: 22.08,
-    originalPrice: 55.20,
-    category: "Especiais",
-    imageUrl: "/images/2-hot-temaki-salmao-grelhado.png",
-  },
-  {
     id: "p28",
     name: "Salmão Baterá",
     description: "Sushi de salmão no maçarico prensado coberto com chilli sauce, crispy de couve e raspas de limão. (8 unidades)",

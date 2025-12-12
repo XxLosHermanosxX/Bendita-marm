@@ -2,14 +2,6 @@ import { Product } from "@/types";
 
 export const hossomakiProducts: Product[] = [
   {
-    id: "p55",
-    name: "Hossomaki Skin",
-    description: "Alga enrolada com recheio de arroz e skin.",
-    price: 11.30,
-    category: "Hossomaki",
-    imageUrl: "/images/hossomaki-skin.png",
-  },
-  {
     id: "p56",
     name: "Hossomaki Kani",
     description: "Alga enrolada com recheio de arroz e kani.",

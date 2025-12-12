@@ -2,30 +2,6 @@ import { Product } from "@/types";
 
 export const niguiriProducts: Product[] = [
   {
-    id: "p17",
-    name: "Niguiri Camarão",
-    description: "Arroz com fatia de camarão.",
-    price: 21.90,
-    category: "Niguiri",
-    imageUrl: "/images/photo1736443068.jpeg.webp",
-  },
-  {
-    id: "p18",
-    name: "Niguiri Skin",
-    description: "Arroz com fatia de skin.",
-    price: 17.20,
-    category: "Niguiri",
-    imageUrl: "/images/photo1736442607.jpeg.webp",
-  },
-  {
-    id: "p19",
-    name: "Niguiri Kani",
-    description: "Arroz com fatia de kani.",
-    price: 17.20,
-    category: "Niguiri",
-    imageUrl: "/images/photo1736442485.jpeg.webp",
-  },
-  {
     id: "p20",
     name: "Niguiri Atum",
     description: "Arroz com fatia de atum.",

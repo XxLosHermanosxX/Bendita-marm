@@ -11,14 +11,6 @@ export const tilapiaProducts: Product[] = [
     imageUrl: "/images/CEVICHE_TILAPIA.jpg",
   },
   {
-    id: "p88",
-    name: "URAMAKI FRY BUN",
-    description: "Tilápia panko, maionese, cream cheese e cebolinha.",
-    price: 22.50,
-    category: "Tilápia Sushiaki",
-    imageUrl: "/images/URAMAKI_FRY.jpg",
-  },
-  {
     id: "p89",
     name: "PEIXE CRISPY APERITIVO",
     description: "Iscas de tilápia na panko, acompanha molho de maionese com pimenta.",

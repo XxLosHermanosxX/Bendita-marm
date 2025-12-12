@@ -22,46 +22,12 @@ export const beverageProducts: Product[] = [
     ]
   },
   {
-    id: "p100",
-    name: "Refrigerante 2L (Vários Sabores)",
-    description: "Coca-Cola, Coca-Cola Zero, Guaraná Kuat.",
-    price: 15.90,
-    category: "Bebidas",
-    imageUrl: "/images/Imagem2.webp",
-    variations: [
-        {
-            name: "Sabor",
-            options: [
-                { label: "Coca-Cola Classic 2L", price: 15.90 },
-                { label: "Coca-Cola Zero 2L", price: 15.90 },
-                { label: "Guaraná Kuat 2L", price: 15.90 },
-            ]
-        }
-    ]
-  },
-  {
     id: "p96",
     name: "Água Mineral Crystal 500ml",
     description: "Água mineral sem gás.",
     price: 4.50,
     category: "Bebidas",
     imageUrl: "/images/agua__1_.jpg",
-  },
-  {
-    id: "p31",
-    name: "Soda Ichigo",
-    description: "Morango e limão siciliano.",
-    price: 13.50,
-    category: "Bebidas",
-    imageUrl: "/images/soda-ichigo.png",
-  },
-  {
-    id: "p32",
-    name: "Soda Pink Lemonade",
-    description: "Cranberry, morango e limão.",
-    price: 13.50,
-    category: "Bebidas",
-    imageUrl: "/images/soda-pink-lemonade.png",
   },
   {
     id: "p33",
