@@ -6,10 +6,10 @@ import {
   Leaf, Gift, Utensils, Fish, Coffee, 
   Package, Drumstick, GlassWater
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { categories } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 // Map categories to Lucide icons (using available icons)
 const categoryIcons: { [key: string]: React.ElementType } = {
@@ -40,7 +40,7 @@ export const Sidebar = () => {
   // Lê a categoria da URL. Se não houver, assume 'Exclusivos do App' como padrão.
   const activeCategory = searchParams.get('category') || "Exclusivos do App"; 
   
-  // Filtra a lista de categorias para remover 'Combinados' se não for mais usada
+  // Filtra a lista de categorias para remover 'Combinados'
   const filteredCategories = categories.filter(c => c !== "Combinados");
 
   return (

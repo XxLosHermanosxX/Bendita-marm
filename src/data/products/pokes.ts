@@ -1,0 +1,60 @@
+import { Product } from "@/types";
+
+export const pokeProducts: Product[] = [
+  {
+    id: "p8",
+    name: "Poke Ceviche",
+    description: "Arroz oriental, ceviche (corte de salmão, atum, peixe branco, kani e cebola roxa, marinados), manga, pepino, cebolinha e...",
+    price: 49.50,
+    category: "Pokes",
+    imageUrl: "/images/POKE_CEVICHE_2_app.webp",
+  },
+  {
+    id: "p9",
+    name: "Poke Camarão",
+    description: "Camarão pequeno na panko, crispy de batata doce e couve, kani, edamame e cebolinha com arroz gohan temperado e...",
+    price: 52.50,
+    category: "Pokes",
+    imageUrl: "/images/POKE_CAMRAO.jpg",
+  },
+  {
+    id: "p10",
+    name: "Poke Salmão",
+    description: "Arroz oriental, salmão, cebola roxa, sunomono, kani, manga, nori em tiras, gergelim e chips de harumaki.",
+    price: 54.50,
+    category: "Pokes",
+    imageUrl: "/images/poke_salmao-01.jpg",
+  },
+  {
+    id: "p11",
+    name: "Poke Chicken",
+    description: "Arroz oriental, frango crispy com molho chilli sauce, pepino japonês, manga, gergelim e batata doce.",
+    price: 43.50,
+    category: "Pokes",
+    imageUrl: "/images/poke_chicken.jpg",
+  },
+  {
+    id: "p12",
+    name: "Poke Atum",
+    description: "Atum em cubos, sunomono, kani, gergelim, edamame cebola roxa e crispy de batata doce.",
+    price: 52.50,
+    category: "Pokes",
+    imageUrl: "/images/poketuna.jpg",
+  },
+  {
+    id: "p99",
+    name: "Poke Vegetariano",
+    description: "Arroz, tofu, edamame, pepino, cenoura, tomate cereja e alga nori.",
+    price: 40.90,
+    category: "Pokes",
+    imageUrl: "/images/2022_SAK_POKE_VEGETARINO____2_.jpg",
+  },
+  {
+    id: "p109",
+    name: "Salada Sashimi",
+    description: "Salmão, kani, manga, pepino e mix de folhas.",
+    price: 48.90,
+    category: "Pokes",
+    imageUrl: "/images/salada_sashimi.jpg",
+  },
+];
