@@ -3,9 +3,14 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { CartItem, Product } from '@/types';
 import { toast } from 'sonner';
 
+interface AddItemDetails {
+  selectedVariation?: CartItem['selectedVariation'];
+  customItems?: CartItem['customItems'];
+}
+
 interface CartState {
   items: CartItem[];
-  addItem: (product: Product, quantity?: number, selectedVariation?: CartItem['selectedVariation'], notes?: string) => void;
+  addItem: (product: Product, quantity?: number, details?: AddItemDetails, notes?: string) => void;
   removeItem: (id: string, variationName?: string, optionLabel?: string) => void;
   updateQuantity: (id: string, quantity: number, variationName?: string, optionLabel?: string) => void;
   clearCart: () => void;
@@ -18,13 +23,20 @@ export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
-      addItem: (product, quantity = 1, selectedVariation, notes) => {
+      addItem: (product, quantity = 1, details, notes) => {
         set((state) => {
+          const selectedVariation = details?.selectedVariation;
+          const customItems = details?.customItems;
+
+          // Lógica de identificação de item existente (usando variação ou customItems)
           const existingItemIndex = state.items.findIndex(
             (item) =>
               item.id === product.id &&
               item.selectedVariation?.name === selectedVariation?.name &&
-              item.selectedVariation?.option.label === selectedVariation?.option.label
+              item.selectedVariation?.option.label === selectedVariation?.option.label &&
+              // Para customItems, assumimos que se o ID for o mesmo e houver customItems, é o mesmo item.
+              // Nota: Para combinações complexas, a lógica de comparação pode precisar ser mais detalhada.
+              (item.customItems ? item.customItems.length > 0 : true) === (customItems ? customItems.length > 0 : true)
           );
 
           if (existingItemIndex > -1) {
@@ -40,6 +52,7 @@ export const useCartStore = create<CartState>()(
               ...product,
               quantity,
               selectedVariation,
+              customItems, // Adicionando customItems
               notes,
             };
             toast.success(`${product.name} adicionado ao carrinho!`);

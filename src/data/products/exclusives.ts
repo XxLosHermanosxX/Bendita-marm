@@ -1,14 +1,14 @@
 import { Product } from "@/types";
 
 export const exclusiveProducts: Product[] = [
-  // 1. PROMOÇÃO PRINCIPAL: 80 PEÇAS (Movida de Novidades)
+  // 1. PROMOÇÃO PRINCIPAL: 80 PEÇAS
   {
     id: "p30",
     name: "Combinado Exclusivo 80 Peças",
     description: "O maior combinado da casa por um preço imbatível. Escolha seus 80 sushis favoritos!",
     price: 49.90,
     category: "Exclusivos do App",
-    imageUrl: "/images/barca-80-pecas.png", // Mantendo o placeholder até o novo upload
+    imageUrl: "/images/combinado-80-pecas.png", // ATUALIZADO
     isExclusive: true,
     isNew: true,
     // Adicionando variações para permitir a escolha dos 80 itens (simplificado)
@@ -27,15 +27,25 @@ export const exclusiveProducts: Product[] = [
   },
   // 2. PROMOÇÃO TEMAKI DUPLO
   {
-    id: "p110", // Novo ID para Temaki Duplo
+    id: "p110", 
     name: "Temaki Duplo (2 Unidades)",
-    description: "1 Temaki Salmão Grelhado + 1 Temaki Salmão Skin.",
+    description: "1 Temaki Salmão Grelhado + 1 Temaki Salmão Skin. Compre 1, Leve 2!",
     price: 24.90,
     category: "Exclusivos do App",
-    imageUrl: "/images/temaki-duplo.png", // Placeholder
+    imageUrl: "/images/temaki-duplo.png", // ATUALIZADO
     isExclusive: true,
   },
-  // 3. COMBINADO EXCLUSIVO 38 (Mantido como terceiro destaque)
+  // 3. PROMOÇÃO HOT ROLL LOVERS (Novo produto)
+  {
+    id: "p111", 
+    name: "Hot Roll Lovers (16 Peças)",
+    description: "16 peças de Hot Roll crocante por um preço especial.",
+    price: 19.90,
+    category: "Exclusivos do App",
+    imageUrl: "/images/hot-roll-lovers.png", // NOVO
+    isExclusive: true,
+  },
+  // Outros exclusivos (reordenados)
   {
     id: "p1",
     name: "COMBINADO EXCLUSIVO 38",
@@ -46,7 +56,6 @@ export const exclusiveProducts: Product[] = [
     imageUrl: "/images/AF-APP-PROMO-EXCLUSIVA_1.jpg",
     isExclusive: true,
   },
-  // Outros exclusivos (reordenados)
   {
     id: "p2",
     name: "COMBINADO EXCLUSIVO 32",
