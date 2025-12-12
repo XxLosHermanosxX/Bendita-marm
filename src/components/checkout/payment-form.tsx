@@ -20,20 +20,20 @@ const PaymentSchema = z.object({
   cardBrand: z.string().optional(),
   changeNeeded: z.boolean().optional(),
   changeFor: z.preprocess(
-    (val) => (val === "" ? undefined : Number(val)),
+    (val) => (val === "" || val === undefined ? undefined : Number(val)),
     z.number().min(0, "O valor do troco não pode ser negativo.").optional()
   ),
 });
+
+type PaymentFormValues = z.infer<typeof PaymentSchema>;
 
 interface PaymentFormProps {
   initialData: PaymentMethod | null;
   onNext: (data: PaymentMethod) => void;
 }
 
-type PaymentFormData = z.infer<typeof PaymentSchema>;
-
 export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
-  const form = useForm<PaymentFormData>({
+  const form = useForm<PaymentFormValues>({
     resolver: zodResolver(PaymentSchema),
     defaultValues: initialData || {
       type: "credit_card",
@@ -45,7 +45,7 @@ export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
   const selectedPaymentType = form.watch("type");
   const changeNeeded = form.watch("changeNeeded");
 
-  const onSubmit: SubmitHandler<PaymentFormData> = (data) => {
+  const onSubmit: SubmitHandler<PaymentFormValues> = (data) => {
     onNext(data as PaymentMethod);
   };
 
@@ -102,8 +102,8 @@ export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
                   <FormControl>
                     <input
                       type="checkbox"
-                      checked={field.value}
-                      onChange={field.onChange}
+                      checked={field.value || false}
+                      onChange={(e) => field.onChange(e.target.checked)}
                       className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                     />
                   </FormControl>
@@ -127,9 +127,12 @@ export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
                         type="number"
                         step="0.01"
                         min="0"
+                        value={field.value || ""}
                         onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          field.onChange(isNaN(value) ? undefined : value);
+                          const value = e.target.value;
+                          field.onChange(
+                            value === "" ? undefined : parseFloat(value)
+                          );
                         }}
                       />
                     </FormControl>

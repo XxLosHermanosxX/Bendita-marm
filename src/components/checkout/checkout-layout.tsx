@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Header } from "@/components/header";
@@ -10,7 +11,7 @@ import { UserDataForm } from "./user-data-form";
 import { PaymentForm } from "./payment-form";
 import { CouponForm } from "./coupon-form";
 import { OrderSummary } from "./order-summary";
-import { Address, UserData, PaymentMethod, Coupon } from "@/types";
+import { Address, UserData, PaymentMethod, Coupon, Order } from "@/types";
 import { useCartStore } from "@/store/use-cart-store";
 import { formatCurrency } from "@/lib/utils";
 import { toast } from "sonner";
@@ -25,15 +26,15 @@ export const CheckoutLayout = () => {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
   const [coupon, setCoupon] = useState<Coupon | null>(null);
   const subtotal = getTotalPrice();
-  const deliveryFee = 10.0; // Exemplo de taxa de entrega
-  
+  const deliveryFee = 10.00; // Exemplo de taxa de entrega
+
   // Calculate discount based on coupon type
-  const discount = coupon 
-    ? coupon.type === "percentage" 
-      ? (subtotal * coupon.discount) / 100 
-      : coupon.discount 
+  const discount = coupon
+    ? coupon.type === "percentage"
+      ? (subtotal * coupon.discount) / 100
+      : coupon.discount
     : 0;
-    
+
   const total = subtotal + deliveryFee - discount;
 
   useEffect(() => {
@@ -52,18 +53,40 @@ export const CheckoutLayout = () => {
   };
 
   const handlePlaceOrder = () => {
-    // Lógica para finalizar o pedido
-    console.log("Pedido finalizado!", {
-      address,
-      userData,
-      paymentMethod,
-      coupon,
-      items,
-      total,
-    });
-    toast.success("Seu pedido foi realizado com sucesso!");
-    clearCart(); // Limpa o carrinho após o pedido
-    router.push("/order-confirmation"); // Redireciona para uma página de confirmação
+    if (!address || !userData || !paymentMethod || items.length === 0) {
+      toast.error("Por favor, complete todas as etapas antes de finalizar.");
+      return;
+    }
+
+    // Create order object
+    const order: Order = {
+      id: `ORDER-${Date.now()}`,
+      date: new Date().toISOString(),
+      items: items.map(item => ({
+        ...item.product,
+        quantity: item.quantity,
+        details: item.details,
+        notes: item.notes
+      })),
+      subtotal: subtotal,
+      discount: discount,
+      deliveryFee: deliveryFee,
+      total: total,
+      status: "pending",
+      address: address,
+      customer: userData,
+      paymentMethod: paymentMethod.type,
+      pixDetails: paymentMethod.type === 'credit_card' ? undefined : {
+        qrCode: "",
+        pixKey: "",
+        transactionId: "",
+        expiresAt: ""
+      }
+    };
+
+    // Redirect to PIX payment page with order data
+    const orderData = encodeURIComponent(JSON.stringify(order));
+    router.push(`/pix-payment?order=${orderData}`);
   };
 
   const renderStepContent = () => {
@@ -129,9 +152,11 @@ export const CheckoutLayout = () => {
           >
             <ChevronLeft className="h-5 w-5 mr-2" /> Voltar
           </Button>
+
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8">
             Finalizar Pedido
           </h1>
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Coluna Principal do Formulário */}
             <div className="lg:col-span-2 space-y-8">
@@ -202,7 +227,9 @@ export const CheckoutLayout = () => {
                   </span>
                 </div>
               </div>
+
               {renderStepContent()}
+
               {currentStep > 1 && currentStep <= 3 && (
                 <Button
                   variant="outline"
@@ -212,6 +239,7 @@ export const CheckoutLayout = () => {
                   <ChevronLeft className="h-5 w-5 mr-2" /> Voltar
                 </Button>
               )}
+
               {currentStep === 4 && (
                 <div className="space-y-6">
                   <h3 className="text-xl font-semibold flex items-center gap-2 text-primary">
@@ -301,6 +329,7 @@ export const CheckoutLayout = () => {
                       </Button>
                     </div>
                   </div>
+
                   <CouponForm
                     currentCoupon={coupon}
                     onNext={(c: Coupon | null) => setCoupon(c)}
@@ -308,6 +337,7 @@ export const CheckoutLayout = () => {
                     onApply={(c: Coupon) => setCoupon(c)}
                     onRemove={() => setCoupon(null)}
                   />
+
                   <Button
                     onClick={handlePlaceOrder}
                     className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6 mt-6"
@@ -320,9 +350,11 @@ export const CheckoutLayout = () => {
                 </div>
               )}
             </div>
+
             {/* Coluna do Resumo do Pedido */}
             <div className="lg:col-span-1">
               <OrderSummary deliveryFee={deliveryFee} discount={discount} />
+
               {/* Mini resumo do carrinho */}
               <div className="rounded-lg border bg-card p-6 shadow-sm mt-8">
                 <h3 className="text-lg font-semibold mb-4">Itens no Carrinho</h3>

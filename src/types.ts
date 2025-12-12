@@ -29,6 +29,7 @@ export interface UserData {
   name: string;
   email: string;
   phone: string;
+  cpf?: string;
 }
 
 export interface Coupon {
@@ -45,4 +46,34 @@ export interface PaymentMethod {
   cardBrand?: string; // Para cartão de crédito
   changeNeeded?: boolean; // Para dinheiro
   changeFor?: number; // Para dinheiro
+}
+
+export interface Order {
+  id: string;
+  date: string;
+  items: Array<{
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    imageUrl: string;
+    category: string;
+    quantity: number;
+    details?: any;
+    notes?: string;
+  }>;
+  subtotal: number;
+  discount: number;
+  deliveryFee: number;
+  total: number;
+  status: "pending" | "paid" | "preparing" | "on_the_way" | "delivered" | "cancelled";
+  address: Address;
+  customer: UserData;
+  paymentMethod: "PIX" | "credit_card" | "money";
+  pixDetails?: {
+    qrCode: string;
+    pixKey: string;
+    transactionId: string;
+    expiresAt: string;
+  };
 }
