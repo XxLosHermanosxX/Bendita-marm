@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { SplashScreen } from "@/components/splash-screen"; // Importando SplashScreen
+import { Suspense } from "react"; // Necessário para use-sound/use-is-mobile
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,6 +24,21 @@ export const metadata: Metadata = {
   },
 };
 
+// Componente Wrapper para gerenciar o estado do splash screen
+const RootLayoutWrapper = ({ children }: { children: React.ReactNode }) => {
+  const [showSplash, setShowSplash] = React.useState(true);
+
+  return (
+    <>
+      {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
+      <div style={{ display: showSplash ? 'none' : 'block' }}>
+        {children}
+      </div>
+    </>
+  );
+};
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -38,7 +55,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <Suspense fallback={<div>Carregando...</div>}>
+            <RootLayoutWrapper>{children}</RootLayoutWrapper>
+          </Suspense>
           <Toaster />
         </ThemeProvider>
       </body>
