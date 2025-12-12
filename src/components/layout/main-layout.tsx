@@ -4,7 +4,7 @@ import React from "react";
 import { Header } from "@/components/header";
 import { Sidebar } from "@/components/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
-// Removendo importações de Sheet, SheetContent, SheetTrigger, Button, Menu
+import { Footer } from "@/components/footer"; // Importando Footer
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -15,7 +15,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header /> {/* O Header agora gerencia seu próprio trigger de sidebar mobile */}
+      <Header />
       <div className="flex flex-1">
         {/* Sidebar para Desktop */}
         {!isMobile && ( // Exibir apenas no desktop
@@ -25,6 +25,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
         )}
         <main className="flex-1 pt-4 md:pt-0">{children}</main>
       </div>
+      <Footer /> {/* Adicionando o Footer */}
     </div>
   );
 };
