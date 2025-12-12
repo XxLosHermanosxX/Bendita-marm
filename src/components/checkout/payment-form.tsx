@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { PaymentMethod } from "@/types";
@@ -45,7 +45,7 @@ export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
   const selectedPaymentType = form.watch("type");
   const changeNeeded = form.watch("changeNeeded");
 
-  const onSubmit = (data: PaymentFormData) => {
+  const onSubmit: SubmitHandler<PaymentFormData> = (data) => {
     onNext(data as PaymentMethod);
   };
 
