@@ -68,25 +68,20 @@ function buildPayload(order: Order) {
         title: item.name,
         quantity: item.quantity,
         unitPrice: itemPriceInCents,
-        tangible: true, // Mantendo true, pois sushi é físico
-        // Removendo fee e metadata do item para replicar a estrutura de sucesso
+        tangible: true,
       };
     }),
     customer: {
       name: TEST_CUSTOMER.name,
       email: TEST_CUSTOMER.email,
       phone: cleanPhone(TEST_CUSTOMER.phone),
-      // ✅ CORREÇÃO: Documento como sub-objeto
       document: {
         type: "cpf",
         number: cleanPhone(TEST_CUSTOMER.document)
       }
     },
-    // ✅ CORREÇÃO: Removendo o objeto shipping, pois a transação de sucesso o retorna como null
-    // Se a adquirente não processa o frete, não devemos enviar o objeto shipping.
-    
     externalRef: `PEDIDO-${Date.now()}`,
-    metadata: JSON.stringify({ // Mantendo metadados da transação principal
+    metadata: JSON.stringify({
       orderId: `ORDER-${Date.now()}`,
       userId: TEST_CUSTOMER.email,
       timestamp: new Date().toISOString()
@@ -159,13 +154,14 @@ export async function createPixTransaction(order: Order) {
     const data = JSON.parse(responseText);
     console.log("Transaction created successfully:", data);
 
+    // ✅ CORREÇÃO: Usar data.pix.qrcode como a chave PIX e definir qrCodeUrl como null
     return {
       success: true,
       transactionId: data.id,
-      qrCode: data.pix.qrCode,
-      qrCodeUrl: data.pix.qrCodeUrl,
-      pixKey: data.pix.pixKey,
-      expiresAt: data.pix.expiresAt,
+      qrCode: data.pix.qrcode, // O payload do QR Code (chave copia e cola)
+      qrCodeUrl: null, // Não fornecido pela API neste formato
+      pixKey: data.pix.qrcode, // Mapeando para pixKey para uso no frontend
+      expiresAt: data.pix.expirationDate, // Usando expirationDate
       amount: order.total,
       transactionData: data
     };

@@ -76,6 +76,8 @@ export default function PixPaymentPage() {
         // Start countdown timer
         const timer = setInterval(() => {
           if (result.expiresAt) {
+            // A API retorna expirationDate, que é uma data. formatTimeRemaining espera um timestamp.
+            // Vamos garantir que a data seja passada corretamente.
             const remaining = formatTimeRemaining(result.expiresAt);
             setTimeRemaining(remaining);
 
@@ -134,7 +136,7 @@ export default function PixPaymentPage() {
           <div className="text-center space-y-4">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
             <p className="text-lg font-semibold text-foreground">Processando seu pagamento...</p>
-            <p className="text-muted-foreground">Aguarde enquanto geramos seu QR Code PIX</p>
+            <p className="text-muted-foreground">Aguarde enquanto geramos sua chave PIX</p>
           </div>
         </div>
       </MainLayout>
@@ -176,7 +178,7 @@ export default function PixPaymentPage() {
     );
   }
 
-  if (!transaction) {
+  if (!transaction || !transaction.pixKey) {
     return (
       <MainLayout>
         <div className="container mx-auto p-4 md:p-6 min-h-[80vh] flex items-center justify-center">
@@ -185,7 +187,7 @@ export default function PixPaymentPage() {
               <XCircle className="h-12 w-12 text-destructive" />
             </div>
             <h2 className="text-2xl font-bold text-destructive">Erro no Pagamento</h2>
-            <p className="text-muted-foreground">Não foi possível criar a transação PIX</p>
+            <p className="text-muted-foreground">Não foi possível obter a chave PIX. Tente novamente.</p>
             <Button onClick={handleBackToCheckout} className="w-full">
               Voltar para o checkout
             </Button>
@@ -201,7 +203,7 @@ export default function PixPaymentPage() {
         <div className="max-w-2xl mx-auto space-y-6">
           <div className="text-center space-y-2">
             <h1 className="text-3xl font-bold text-foreground">Pagamento via PIX</h1>
-            <p className="text-muted-foreground">Escaneie o QR Code ou copie a chave PIX para pagar</p>
+            <p className="text-muted-foreground">Copie a chave PIX para pagar</p>
           </div>
 
           {/* Payment Status */}
@@ -241,34 +243,11 @@ export default function PixPaymentPage() {
             </div>
           )}
 
-          {/* QR Code Display */}
-          <Card className="bg-white shadow-lg">
-            <CardHeader className="text-center">
-              <CardTitle className="text-xl font-semibold">QR Code PIX</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center space-y-4">
-              {transaction.qrCodeUrl ? (
-                <div className="bg-white p-4 rounded-lg border">
-                  <img
-                    src={transaction.qrCodeUrl}
-                    alt="QR Code PIX"
-                    className="w-64 h-64 mx-auto object-contain"
-                  />
-                </div>
-              ) : (
-                <div className="bg-gray-100 p-8 rounded-lg border-dashed border-2 border-gray-300">
-                  <QrCode className="h-16 w-16 mx-auto text-gray-400" />
-                  <p className="text-muted-foreground mt-2">QR Code não disponível</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* PIX Key Display */}
+          {/* PIX Key Display (Agora é o foco principal) */}
           <Card className="bg-white shadow-lg">
             <CardHeader>
               <CardTitle className="text-xl font-semibold flex items-center justify-between">
-                Chave PIX
+                Chave PIX (Copia e Cola)
                 <Button
                   variant="ghost"
                   size="sm"
@@ -286,11 +265,25 @@ export default function PixPaymentPage() {
                   {transaction.pixKey}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Copie esta chave e cole no aplicativo do seu banco para pagar
+                  Copie esta chave e cole na área PIX Copia e Cola do aplicativo do seu banco para pagar.
                 </p>
               </div>
             </CardContent>
           </Card>
+          
+          {/* QR Code Display (Removido, mas mantendo o placeholder para instruções) */}
+          {/* <Card className="bg-white shadow-lg">
+            <CardHeader className="text-center">
+              <CardTitle className="text-xl font-semibold">QR Code PIX</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center space-y-4">
+              <div className="bg-gray-100 p-8 rounded-lg border-dashed border-2 border-gray-300">
+                <QrCode className="h-16 w-16 mx-auto text-gray-400" />
+                <p className="text-muted-foreground mt-2">QR Code não disponível</p>
+              </div>
+            </CardContent>
+          </Card> */}
+
 
           {/* Order Summary */}
           <Card className="bg-white shadow-lg">
@@ -340,11 +333,11 @@ export default function PixPaymentPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">2</span>
-                  <span>Selecione a opção "Pagar com PIX"</span>
+                  <span>Selecione a opção "Pagar com PIX" ou "PIX Copia e Cola"</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">3</span>
-                  <span>Escaneie o QR Code ou cole a chave PIX</span>
+                  <span>Cole a chave PIX copiada acima</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">4</span>
