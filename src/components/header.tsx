@@ -21,13 +21,13 @@ const checkIsOpen = () => {
   const currentHour = now.getHours();
 
   const BUSINESS_HOURS = [
-    { day: "Segunda-feira", start: 10, end: 22 },
-    { day: "Terça-feira", start: 10, end: 22 },
-    { day: "Quarta-feira", start: 10, end: 22 },
-    { day: "Quinta-feira", start: 10, end: 22 },
-    { day: "Sexta-feira", start: 10, end: 22 },
-    { day: "Sábado", start: 11, end: 23 },
-    { day: "Domingo", start: 11, end: 23 },
+    { day: "Segunda-feira", start: 10, end: 24 }, // 24h representa 23:59
+    { day: "Terça-feira", start: 10, end: 24 },
+    { day: "Quarta-feira", start: 10, end: 24 },
+    { day: "Quinta-feira", start: 10, end: 24 },
+    { day: "Sexta-feira", start: 10, end: 24 },
+    { day: "Sábado", start: 11, end: 24 },
+    { day: "Domingo", start: 11, end: 24 },
   ];
   
   const todayIndex = dayOfWeek === 0 ? 6 : dayOfWeek - 1;

@@ -8,13 +8,13 @@ import { cn } from "@/lib/utils";
 
 // Hardcoded business hours (24h format)
 const BUSINESS_HOURS = [
-  { day: "Segunda-feira", start: 10, end: 22 },
-  { day: "Terça-feira", start: 10, end: 22 },
-  { day: "Quarta-feira", start: 10, end: 22 },
-  { day: "Quinta-feira", start: 10, end: 22 },
-  { day: "Sexta-feira", start: 10, end: 22 },
-  { day: "Sábado", start: 11, end: 23 },
-  { day: "Domingo", start: 11, end: 23 },
+  { day: "Segunda-feira", start: 10, end: 24 }, // 24h representa 23:59
+  { day: "Terça-feira", start: 10, end: 24 },
+  { day: "Quarta-feira", start: 10, end: 24 },
+  { day: "Quinta-feira", start: 10, end: 24 },
+  { day: "Sexta-feira", start: 10, end: 24 },
+  { day: "Sábado", start: 11, end: 24 },
+  { day: "Domingo", start: 11, end: 24 },
 ];
 
 // Helper function to check if the store is open now
@@ -29,6 +29,7 @@ const checkIsOpen = () => {
 
   if (!todayHours) return false;
 
+  // Se currentHour for 23, e end for 24, ele estará aberto.
   return currentHour >= todayHours.start && currentHour < todayHours.end;
 };
 
@@ -83,7 +84,8 @@ export const BusinessHoursStatus = ({ variant }: BusinessHoursStatusProps) => {
             {BUSINESS_HOURS.map((h, index) => (
               <li key={index} className="flex justify-between">
                 <span className="text-muted-foreground">{h.day}:</span>
-                <span className="font-medium">{h.start}:00 - {h.end}:00</span>
+                {/* Exibindo 23:59 para o usuário */}
+                <span className="font-medium">{h.start}:00 - {h.end === 24 ? '23:59' : `${h.end}:00`}</span>
               </li>
             ))}
           </ul>
