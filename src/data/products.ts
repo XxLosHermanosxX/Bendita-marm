@@ -192,24 +192,6 @@ export const products: Product[] = [
     category: "Temaki",
     imageUrl: "/images/temaki_salmao.jpg", // Atualizado
   },
-  // NOVO PRODUTO
-  {
-    id: "p97",
-    name: "Temaki Filadélfia",
-    description: "Salmão, cream cheese e arroz.",
-    price: 32.90,
-    category: "Temaki",
-    imageUrl: "/images/temaki_filadelfia.jpg", // Novo
-  },
-  // NOVO PRODUTO
-  {
-    id: "p98",
-    name: "Temaki Atum",
-    description: "Cortes de atum e arroz.",
-    price: 31.90,
-    category: "Temaki",
-    imageUrl: "/images/temaki_atum.jpg", // Novo
-  },
 
   // Yakisoba
   {
@@ -404,6 +386,8 @@ export const products: Product[] = [
     category: "Pratos Quentes",
     imageUrl: "/images/macarrao-frango-chilli.png",
   },
+  
+  // Combinados
   {
     id: "p41",
     name: "Combinado Casal 40un",
@@ -474,7 +458,7 @@ export const products: Product[] = [
     description: "4 uramaki filadelfia, 4 uramaki california, 4 tarê skin, 4 shakemaki",
     price: 45.50,
     category: "Combinados",
-    imageUrl: "/images/CBO_SIMPLES_16.jpg",
+    imageUrl: "/images/CBO_SIMPLES_16.jpg", // Atualizado
   },
   {
     id: "p50",
@@ -482,7 +466,7 @@ export const products: Product[] = [
     description: "4 sashimi de salmão, 2 niguiri salmão, 2 hossomaki salmão",
     price: 47.80,
     category: "Combinados",
-    imageUrl: "/images/CBO_SIMPLES_12.jpg",
+    imageUrl: "/images/CBO_SIMPLES_12.jpg", // Atualizado
   },
   {
     id: "p51",
@@ -517,6 +501,8 @@ export const products: Product[] = [
     category: "Combinados",
     imageUrl: "/images/combinado_NAMI2.jpg",
   },
+  
+  // Hossomaki
   {
     id: "p55",
     name: "Hossomaki Skin",
@@ -533,6 +519,8 @@ export const products: Product[] = [
     category: "Hossomaki",
     imageUrl: "/images/hossomaki-kani.png",
   },
+  
+  // Uramaki
   {
     id: "p57",
     name: "Filadélfia Especial",
@@ -573,6 +561,8 @@ export const products: Product[] = [
     category: "Uramaki",
     imageUrl: "/images/uramaki_filadelfia.jpg", // Atualizado
   },
+  
+  // Niguiri
   {
     id: "p62",
     name: "Niguiri Salmão",
@@ -597,6 +587,8 @@ export const products: Product[] = [
     category: "Niguiri",
     imageUrl: "/images/niguiri-salmao-filadelfia.png",
   },
+  
+  // Sashimi
   {
     id: "p65",
     name: "Sashimi Atum",
@@ -613,6 +605,8 @@ export const products: Product[] = [
     category: "Sashimi",
     imageUrl: "/images/sashimi-salmao.png",
   },
+  
+  // Hot Sushis
   {
     id: "p67",
     name: "Hot Roll",
@@ -637,6 +631,8 @@ export const products: Product[] = [
     category: "Hot Sushis",
     imageUrl: "/images/hot-filadelfia.png",
   },
+  
+  // Temaki (Continuando)
   {
     id: "p70",
     name: "Temaki Hot Furai",
@@ -685,8 +681,26 @@ export const products: Product[] = [
     category: "Temaki",
     imageUrl: "/images/temaki_salmao_panko.jpg", // Atualizado
   },
+  // Adicionando Temaki Atum (pode ter sido removido ou não ter imagem antes)
+  {
+    id: "p97",
+    name: "Temaki Atum",
+    description: "Cortes de atum e arroz.",
+    price: 31.90,
+    category: "Temaki",
+    imageUrl: "/images/temaki_atum.jpg", // Novo produto/imagem
+  },
+  // Adicionando Temaki Filadélfia (pode ter sido removido ou não ter imagem antes)
+  {
+    id: "p98",
+    name: "Temaki Filadélfia",
+    description: "Salmão, cream cheese e arroz.",
+    price: 32.90,
+    category: "Temaki",
+    imageUrl: "/images/temaki_filadelfia.jpg", // Novo produto/imagem
+  },
 
-  // Yakisoba
+  // Yakisoba (Continuando)
   {
     id: "p76",
     name: "Yakisoba Salmão G",
@@ -709,7 +723,7 @@ export const products: Product[] = [
     description: "Macarrão, carne, frango, camarão e legumes.",
     price: 43.90,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba_especial.jpg", // Atualizado
+    imageUrl: "/images/yakisoba_especial_m.webp", // Atualizado
   },
   {
     id: "p79",
@@ -717,7 +731,7 @@ export const products: Product[] = [
     description: "Macarrão, carne, frango e legumes.",
     price: 39.90,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba_tradicional.jpg", // Atualizado
+    imageUrl: "/images/yakisoba_tradicional_m.webp", // Atualizado
   },
 
   // Vegetarianos
@@ -751,7 +765,7 @@ export const products: Product[] = [
     description: "Macarrão com legumes ao molho oriental",
     price: 31.50,
     category: "Vegetarianos",
-    imageUrl: "/images/yakisoba_vegetariano.jpg", // Atualizado
+    imageUrl: "/images/2022__SAK_YAKISOBA_VEG_IMG_1758-2__4_.jpg", // Atualizado
   },
 
   // Street Food
