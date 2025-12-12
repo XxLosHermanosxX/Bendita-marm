@@ -4,21 +4,22 @@ import Link from "next/link";
 import { 
   Star, Sparkles, Flame, ScrollText, 
   Leaf, Gift, Utensils, Fish, Coffee, 
-  Package, Drumstick 
+  Package, Drumstick, GlassWater
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { categories } from "@/data/products";
 import { Button } from "@/components/ui/button";
+import { useSearchParams } from "next/navigation";
 
 // Map categories to Lucide icons (using available icons)
 const categoryIcons: { [key: string]: React.ElementType } = {
   "Exclusivos do App": Star,
   "Prato do Dia": Sparkles,
-  "Pokes": Utensils, // Using Utensils instead of non-existent Bowl
+  "Pokes": Utensils,
   "Pratos Quentes": Utensils,
   "Niguiri": Fish,
   "Temaki": ScrollText,
-  "Yakisoba": Utensils, // Using Utensils instead of non-existent Noodle
+  "Yakisoba": Utensils,
   "Vegetarianos": Leaf,
   "Especiais": Sparkles,
   "Novidades": Gift,
@@ -30,10 +31,14 @@ const categoryIcons: { [key: string]: React.ElementType } = {
   "Hot Sushis": Flame,
   "Tilápia Sushiaki": Fish,
   "Street Food": Drumstick,
+  "Bebidas": GlassWater,
 };
 
 export const Sidebar = () => {
-  const activeCategory = "Exclusivos do App";
+  const searchParams = useSearchParams();
+  // Lê a categoria da URL. Se não houver, assume 'Exclusivos do App' como padrão.
+  const activeCategory = searchParams.get('category') || "Exclusivos do App"; 
+  
   return (
     <div className="h-full flex flex-col p-4 bg-secondary/50">
       <h2 className="text-lg font-semibold mb-4 text-foreground">Categorias</h2>

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { products } from "@/data/products";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { HeroCarousel } from "@/components/hero-carousel";
 
 export default function Home() {
   const exclusiveProducts = products.filter(p => p.isExclusive).slice(0, 6); // Limitar para 6 na home
@@ -12,21 +13,13 @@ export default function Home() {
 
   return (
     <MainLayout>
-      {/* Banner de Boas-vindas */}
-      <section className="relative w-full h-[200px] md:h-[300px] bg-primary flex items-center justify-center overflow-hidden">
-        <Image
-          src="/images/banner-sushiaki.png" // Placeholder para o banner
-          alt="Ganhe 20% de desconto"
-          layout="fill"
-          objectFit="cover"
-          className="z-0"
-        />
-        <div className="relative z-10 text-center text-white p-4">
-          {/* Conteúdo do banner, se houver texto sobreposto */}
-        </div>
+      {/* Banner de Boas-vindas (Agora Carrossel) */}
+      <section className="mb-8">
+        {/* Removendo container mx-auto p-4 md:p-6 para que o carrossel ocupe a largura total */}
+        <HeroCarousel />
       </section>
 
-      <div className="container mx-auto p-4 md:p-6">
+      <div className="container mx-auto p-4 md:p-6 pt-0">
         <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
           Bem-vindo ao Sushiaki Delivery!
         </h1>
