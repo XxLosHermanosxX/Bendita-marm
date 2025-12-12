@@ -31,8 +31,8 @@ export interface Product {
   imageUrl: string;
   rating?: number;
   reviews?: number;
-  isNew?: boolean;
-  isExclusive?: boolean;
+  isNew?: boolean; // Adicionado
+  isExclusive?: boolean; // Adicionado
   variations?: {
     name: string;
     options: { label: string; price: number }[];
@@ -70,8 +70,8 @@ export interface UserData {
 
 export interface Coupon {
   code: string;
-  discount: number; // percentage or fixed amount
-  type: "percentage" | "fixed";
+  discount: number; // percentage or fixed amount - Adicionado
+  type: "percentage" | "fixed"; // Adicionado
   minOrderValue?: number;
   appliesTo?: "first_purchase" | "all";
 }

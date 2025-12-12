@@ -25,9 +25,11 @@ interface CouponFormProps {
   currentCoupon: Coupon | null;
   onNext: (coupon: Coupon | null) => void;
   onBack: () => void;
+  onApply: (coupon: Coupon) => void; // Adicionado
+  onRemove: () => void; // Adicionado
 }
 
-export const CouponForm = ({ currentCoupon, onNext, onBack }: CouponFormProps) => {
+export const CouponForm = ({ currentCoupon, onNext, onBack, onApply, onRemove }: CouponFormProps) => {
   const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(currentCoupon);
   
   const form = useForm<z.infer<typeof CouponSchema>>({
@@ -41,6 +43,7 @@ export const CouponForm = ({ currentCoupon, onNext, onBack }: CouponFormProps) =
     const code = data.couponCode?.toUpperCase();
     if (!code) {
         setAppliedCoupon(null);
+        onRemove(); // Chamar onRemove
         toast.info("Cupom removido.");
         return;
     }
@@ -49,9 +52,11 @@ export const CouponForm = ({ currentCoupon, onNext, onBack }: CouponFormProps) =
 
     if (couponData) {
         setAppliedCoupon(couponData);
+        onApply(couponData); // Chamar onApply
         toast.success(`Cupom ${code} aplicado! Você ganhou ${couponData.discount}${couponData.type === 'percentage' ? '%' : ' R$'} de desconto.`);
     } else {
         setAppliedCoupon(null);
+        onRemove(); // Chamar onRemove
         toast.error("Cupom inválido ou expirado.");
     }
   };
@@ -59,6 +64,7 @@ export const CouponForm = ({ currentCoupon, onNext, onBack }: CouponFormProps) =
   const handleRemoveCoupon = () => {
     setAppliedCoupon(null);
     form.setValue("couponCode", "");
+    onRemove(); // Chamar onRemove
     toast.info("Cupom removido.");
   };
 

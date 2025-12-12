@@ -28,7 +28,7 @@ export const CheckoutLayout = () => {
   
   const subtotal = getTotalPrice();
   const deliveryFee = 10.00; // Exemplo de taxa de entrega
-  const discount = coupon ? (subtotal * coupon.discountPercentage) / 100 : 0;
+  const discount = coupon ? (subtotal * coupon.discount) / 100 : 0; // Corrigido: coupon.discountPercentage -> coupon.discount
   const total = subtotal + deliveryFee - discount;
 
   useEffect(() => {
@@ -172,7 +172,13 @@ export const CheckoutLayout = () => {
                     </div>
                   </div>
 
-                  <CouponForm currentCoupon={coupon} onApply={(c: Coupon) => setCoupon(c)} onRemove={() => setCoupon(null)} />
+                  <CouponForm 
+                    currentCoupon={coupon} 
+                    onNext={(c: Coupon | null) => setCoupon(c)} 
+                    onBack={handlePreviousStep} // Adicionado onBack
+                    onApply={(c: Coupon) => setCoupon(c)} 
+                    onRemove={() => setCoupon(null)} 
+                  />
 
                   <Button 
                     onClick={handlePlaceOrder} 
