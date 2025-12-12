@@ -98,12 +98,13 @@ function buildPayload(order: Order) {
       fee: 0, // Required field, assuming 0 if not provided
       address: { // Corrected structure - now an object
         street: order.address.street,
-        number: order.address.number || "SN",
+        streetNumber: order.address.number || "SN", // Added streetNumber field
         complement: order.address.complement || undefined,
         neighborhood: order.address.neighborhood || "Centro",
         city: order.address.city,
         state: order.address.state,
-        zipCode: cleanCEP(order.address.cep)
+        zipCode: cleanCEP(order.address.cep),
+        country: "BR" // Added country field with fixed value
       }
     },
     externalRef: `PEDIDO-${Date.now()}`,
