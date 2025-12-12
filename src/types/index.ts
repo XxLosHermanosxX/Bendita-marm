@@ -47,6 +47,8 @@ export interface CartItem extends Product {
     option: { label: string; price: number };
   };
   notes?: string;
+  // Adicionando suporte para itens personalizados (como o combinado de 80 peças)
+  customItems?: { name: string; count: number }[];
 }
 
 export interface Address {
