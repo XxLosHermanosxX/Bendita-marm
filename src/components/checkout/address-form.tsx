@@ -19,7 +19,7 @@ const AddressSchema = z.object({
   complement: z.string().optional(),
   neighborhood: z.string().min(3, "Bairro é obrigatório"),
   city: z.string().min(3, "Cidade é obrigatória"),
-  state: z.string().min(2, "Estado é obrigatório"),
+  state: z.string().min(2, "Estado é obrigatória"),
 });
 
 interface AddressFormProps {
@@ -47,17 +47,20 @@ export const AddressForm = ({ initialData, onNext }: AddressFormProps) => {
     const cepValue = form.getValues("cep").replace(/\D/g, '');
     if (cepValue.length !== 8) {
       form.setError("cep", { message: "CEP deve ter 8 dígitos." });
+      toast.error("Por favor, insira um CEP válido com 8 dígitos.", { id: "cep-search" });
       return;
     }
 
     setIsSearching(true);
+    toast.loading("Buscando CEP...", { id: "cep-search" }); // Mostra toast de carregamento
     try {
-      // Simulação de busca de CEP (ViaCEP)
+      console.log(`Searching for CEP: ${cepValue}`); // Log do CEP sendo buscado
       const response = await fetch(`https://viacep.com.br/ws/${cepValue}/json/`);
       const data = await response.json();
+      console.log("ViaCEP response:", data); // Log da resposta completa da ViaCEP
 
       if (data.erro) {
-        toast.error("CEP não encontrado.");
+        toast.error("CEP não encontrado.", { id: "cep-search" });
         form.setError("cep", { message: "CEP não encontrado." });
         form.setValue("street", "");
         form.setValue("neighborhood", "");
@@ -68,10 +71,11 @@ export const AddressForm = ({ initialData, onNext }: AddressFormProps) => {
         form.setValue("neighborhood", data.bairro || "");
         form.setValue("city", data.localidade || "");
         form.setValue("state", data.uf || "");
-        toast.success("Endereço preenchido automaticamente!");
+        toast.success("Endereço preenchido automaticamente!", { id: "cep-search" });
       }
     } catch (error) {
-      toast.error("Erro ao buscar CEP.");
+      console.error("Error fetching CEP:", error); // Log do erro real
+      toast.error("Erro ao buscar CEP. Tente novamente.", { id: "cep-search" });
     } finally {
       setIsSearching(false);
     }
