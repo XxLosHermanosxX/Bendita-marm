@@ -2,34 +2,36 @@
 
 import React from "react";
 import { Header } from "@/components/header";
-import { Sidebar } from "@/components/sidebar";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { Footer } from "@/components/footer";
-import { PromoModal } from "../promo-modal"; // Importando PromoModal
+import { PromoModal } from "../promo-modal";
+import { SidebarProvider } from "@/hooks/use-sidebar-toggle";
+import { SidebarSheet } from "./sidebar-sheet";
 
 interface MainLayoutProps {
   children: React.ReactNode;
 }
 
 export const MainLayout = ({ children }: MainLayoutProps) => {
-  const isMobile = useIsMobile();
+  // useIsMobile is no longer strictly needed here as SidebarSheet handles responsiveness via Sheet component,
+  // but we keep it if other parts of the layout rely on it. However, since the fixed sidebar is gone,
+  // we can remove the useIsMobile import and usage related to the sidebar.
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <div className="flex flex-1">
-        {/* Sidebar para Desktop */}
-        {!isMobile && ( // Exibir apenas no desktop
-          <aside className="hidden md:block w-72 border-r bg-secondary/50 p-4 pt-20">
-            <Sidebar />
-          </aside>
-        )}
-        <main className="flex-1 pt-4 md:pt-0 overflow-y-auto">{children}</main>
+    <SidebarProvider>
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <div className="flex flex-1">
+          {/* Sidebar now handled by SidebarSheet (Drawer/Hamburger Menu) */}
+          <SidebarSheet />
+          
+          {/* Main content is now full width */}
+          <main className="flex-1 pt-4 md:pt-0 overflow-y-auto">{children}</main>
+        </div>
+        <Footer />
+        
+        {/* Modal de Promoção */}
+        <PromoModal />
       </div>
-      <Footer />
-      
-      {/* Modal de Promoção (Apenas para Mobile) */}
-      <PromoModal />
-    </div>
+    </SidebarProvider>
   );
 };

@@ -7,7 +7,7 @@ import { ChevronLeft, CheckCircle2 } from "lucide-react";
 import { AddressForm } from "./address-form";
 import { UserDataForm } from "./user-data-form";
 import { PaymentForm } from "./payment-form";
-import { OrderSummary } from "./order-summary";
+import { OrderSummaryDrawer } from "./order-summary-drawer"; // New import
 import { Address, UserData, PaymentMethod, Order } from "@/types";
 import { useCartStore } from "@/store/use-cart-store";
 import { formatCurrency } from "@/lib/utils";
@@ -21,6 +21,8 @@ export const CheckoutLayout = () => {
   const [address, setAddress] = useState<Address | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
+  const [showSummaryDrawer, setShowSummaryDrawer] = useState(false); // New state for drawer
+  
   const subtotal = getTotalPrice();
   const deliveryFee = 10.00; // Exemplo de taxa de entrega
   const total = subtotal + deliveryFee; // Preço final sem descontos
@@ -130,24 +132,37 @@ export const CheckoutLayout = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-1 container mx-auto px-4 py-8 md:py-12">
+      {/* Reduced top padding for closer proximity to header */}
+      <main className="flex-1 container mx-auto px-4 py-4 md:py-6">
         <div className="max-w-4xl mx-auto">
-          <Button
-            variant="ghost"
-            onClick={() => router.back()}
-            className="mb-6 text-muted-foreground hover:text-foreground"
-          >
-            <ChevronLeft className="h-5 w-5 mr-2" /> Voltar
-          </Button>
+          
+          {/* Header controls: Back button and Summary button */}
+          <div className="flex justify-between items-center mb-6">
+            <Button
+              variant="ghost"
+              onClick={() => router.back()}
+              className="text-muted-foreground hover:text-foreground p-0 h-auto"
+            >
+              <ChevronLeft className="h-5 w-5 mr-2" /> Voltar
+            </Button>
+            
+            <Button
+              variant="link"
+              onClick={() => setShowSummaryDrawer(true)}
+              className="p-0 h-auto text-primary font-semibold"
+            >
+              Ver resumo do pedido
+            </Button>
+          </div>
 
           {/* Título único e ajustado */}
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8">
             Finalizar Pedido
           </h1>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Coluna Principal do Formulário */}
-            <div className="lg:col-span-2 space-y-8">
+          <div className="grid grid-cols-1 gap-8">
+            {/* Coluna Principal do Formulário (now full width) */}
+            <div className="space-y-8">
               {/* Indicador de Progresso */}
               <div className="flex justify-between items-center mb-8">
                 <div className="flex flex-col items-center">
@@ -217,17 +232,6 @@ export const CheckoutLayout = () => {
               </div>
 
               {renderStepContent()}
-
-              {/* REMOVENDO BOTÃO VOLTAR DUPLICADO */}
-              {/* {currentStep > 1 && currentStep <= 3 && (
-                <Button
-                  variant="outline"
-                  onClick={handlePreviousStep}
-                  className="mt-4 text-muted-foreground hover:text-foreground"
-                >
-                  <ChevronLeft className="h-5 w-5 mr-2" /> Voltar
-                </Button>
-              )} */}
 
               {currentStep === 4 && (
                 <div className="space-y-6">
@@ -322,38 +326,17 @@ export const CheckoutLayout = () => {
                 </div>
               )}
             </div>
-
-            {/* Coluna do Resumo do Pedido */}
-            <div className="lg:col-span-1">
-              <OrderSummary deliveryFee={deliveryFee} discount={0} />
-
-              {/* Mini resumo do carrinho */}
-              <div className="rounded-lg border bg-card p-6 shadow-sm mt-8">
-                <h3 className="text-lg font-semibold mb-4">Itens no Carrinho</h3>
-                <ul className="space-y-3">
-                  {items.map((item) => (
-                    <div
-                      key={item.product.id}
-                      className="flex justify-between text-sm"
-                    >
-                      <span className="text-muted-foreground">
-                        {item.quantity}x {item.product.name}
-                      </span>
-                      <span className="font-medium">
-                        {formatCurrency(
-                          item.quantity *
-                            (item.details?.selectedVariation?.option.price ||
-                              item.product.price)
-                        )}
-                      </span>
-                    </div>
-                  ))}
-                </ul>
-              </div>
-            </div>
           </div>
         </div>
       </main>
+      
+      {/* Order Summary Drawer */}
+      <OrderSummaryDrawer
+        isOpen={showSummaryDrawer}
+        onClose={() => setShowSummaryDrawer(false)}
+        deliveryFee={deliveryFee}
+        discount={0}
+      />
     </div>
   );
 };
