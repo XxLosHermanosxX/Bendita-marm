@@ -9,9 +9,8 @@ import { ChevronLeft, CheckCircle2 } from "lucide-react";
 import { AddressForm } from "./address-form";
 import { UserDataForm } from "./user-data-form";
 import { PaymentForm } from "./payment-form";
-import { CouponForm } from "./coupon-form";
 import { OrderSummary } from "./order-summary";
-import { Address, UserData, PaymentMethod, Coupon, Order } from "@/types";
+import { Address, UserData, PaymentMethod, Order } from "@/types";
 import { useCartStore } from "@/store/use-cart-store";
 import { formatCurrency } from "@/lib/utils";
 import { toast } from "sonner";
@@ -24,18 +23,9 @@ export const CheckoutLayout = () => {
   const [address, setAddress] = useState<Address | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
-  const [coupon, setCoupon] = useState<Coupon | null>(null);
   const subtotal = getTotalPrice();
   const deliveryFee = 10.00; // Exemplo de taxa de entrega
-
-  // Calculate discount based on coupon type
-  const discount = coupon
-    ? coupon.type === "percentage"
-      ? (subtotal * coupon.discount) / 100
-      : coupon.discount
-    : 0;
-
-  const total = subtotal + deliveryFee - discount;
+  const total = subtotal + deliveryFee; // Preço final sem descontos
 
   useEffect(() => {
     if (items.length === 0) {
@@ -69,9 +59,9 @@ export const CheckoutLayout = () => {
         notes: item.notes
       })),
       subtotal: subtotal,
-      discount: discount,
+      discount: 0, // Sem descontos
       deliveryFee: deliveryFee,
-      total: total,
+      total: total, // Preço final
       status: "pending",
       address: address,
       customer: userData,
@@ -322,14 +312,6 @@ export const CheckoutLayout = () => {
                     </div>
                   </div>
 
-                  <CouponForm
-                    currentCoupon={coupon}
-                    onNext={(c: Coupon | null) => setCoupon(c)}
-                    onBack={handlePreviousStep}
-                    onApply={(c: Coupon) => setCoupon(c)}
-                    onRemove={() => setCoupon(null)}
-                  />
-
                   <Button
                     onClick={handlePlaceOrder}
                     className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6 mt-6"
@@ -345,7 +327,7 @@ export const CheckoutLayout = () => {
 
             {/* Coluna do Resumo do Pedido */}
             <div className="lg:col-span-1">
-              <OrderSummary deliveryFee={deliveryFee} discount={discount} />
+              <OrderSummary deliveryFee={deliveryFee} discount={0} />
 
               {/* Mini resumo do carrinho */}
               <div className="rounded-lg border bg-card p-6 shadow-sm mt-8">
