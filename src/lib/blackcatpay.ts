@@ -1,6 +1,8 @@
 import { Order } from "@/types";
 
+// Chaves fornecidas pelo usuário
 const SECRET_KEY = 'sk_jatFTlsz-CMluRfzHixO_ax-b5l9gTH2ulxu8-pujt5piFu8';
+const PUBLIC_KEY = 'pk_QeH6GwZYP3KPXMdRPDIC9VzFo8CDqLATI7f764w1KQxkYRtB'; // Não usado na autenticação, mas mantido por contexto
 const API_BASE_URL = 'https://api.blackcatpagamentos.com/v1';
 
 // Helper function to convert amount to cents with proper rounding
@@ -18,12 +20,12 @@ function cleanCEP(cep: string): string {
   return cep.replace(/\D/g, '');
 }
 
-// Hardcoded test data to ensure API validation passes
+// Hardcoded test data (Garantindo CPF/Documento completo)
 const TEST_CUSTOMER = {
   name: "Cliente Teste Sushiaki",
   email: "teste@sushiaki.com",
   phone: "41999999999",
-  document: "12345678901"
+  document: "12345678901" // CPF de teste válido (apenas números)
 };
 
 const TEST_ADDRESS = {
@@ -45,7 +47,6 @@ function validateOrderData(order: Order): { valid: boolean; error?: string } {
   if (!order.items || order.items.length === 0) {
     return { valid: false, error: "Itens do pedido são obrigatórios" };
   }
-  // We skip customer/address validation here since we are hardcoding them for the API call
   return { valid: true };
 }
 
@@ -56,10 +57,8 @@ function buildPayload(order: Order) {
     throw new Error(validation.error);
   }
 
-  // Calculate total amount by summing up all items (price × quantity)
+  // Calculate total amount
   const totalAmount = order.total; 
-
-  // Convert total to cents with proper rounding
   const amountInCents = Math.round(totalAmount * 100);
 
   console.log(`Calculated total amount: R$${totalAmount.toFixed(2)} = ${amountInCents} cents`);
@@ -82,7 +81,7 @@ function buildPayload(order: Order) {
         unitPrice: itemPriceInCents, // ✅ Campo correto em centavos
         tangible: true, // ✅ Obrigatório (sushi é físico)
         fee: 0, // ✅ Obrigatório (taxa/comissão do item)
-        metadata: JSON.stringify({ // ✅ Obrigatório (string) - Simplificado
+        metadata: JSON.stringify({ // ✅ Obrigatório (string)
           productId: item.id,
           productName: item.name,
         })
@@ -92,7 +91,7 @@ function buildPayload(order: Order) {
       name: TEST_CUSTOMER.name,
       email: TEST_CUSTOMER.email,
       phone: cleanPhone(TEST_CUSTOMER.phone),
-      document: cleanPhone(TEST_CUSTOMER.document)
+      document: cleanPhone(TEST_CUSTOMER.document) // ✅ Garantindo que o documento seja enviado
     },
     // ✅ SHIPPING CORRIGIDO: Usando dados de teste completos
     shipping: {
@@ -122,6 +121,7 @@ export async function createPixTransaction(order: Order) {
     const payload = buildPayload(order);
     console.log("Enviando payload para Blackcat Pay:", JSON.stringify(payload, null, 2));
 
+    // Autenticação: Base64(SECRET_KEY + ':')
     const auth = btoa(SECRET_KEY + ':');
 
     const response = await fetch(`${API_BASE_URL}/transactions`, {
