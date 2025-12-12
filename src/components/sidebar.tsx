@@ -17,6 +17,7 @@ const categoryIcons: { [key: string]: React.ElementType } = {
   "Prato do Dia": Sparkles,
   "Pokes": Utensils,
   "Pratos Quentes": Utensils,
+  "Teppan": Utensils, // Corrigido: Usando Utensils no lugar de Steak
   "Niguiri": Fish,
   "Temaki": ScrollText,
   "Yakisoba": Utensils,

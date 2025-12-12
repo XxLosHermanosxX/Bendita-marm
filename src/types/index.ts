@@ -17,7 +17,8 @@ export type Category =
   | "Hot Sushis"
   | "Tilápia Sushiaki"
   | "Street Food"
-  | "Bebidas"; // Nova categoria
+  | "Bebidas"
+  | "Teppan"; // Nova categoria
 
 
 export interface Product {
