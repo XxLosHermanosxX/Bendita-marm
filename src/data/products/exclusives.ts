@@ -1,50 +1,6 @@
 import { Product } from "@/types";
 
 export const exclusiveProducts: Product[] = [
-  // 1. PROMOÇÃO PRINCIPAL: 80 PEÇAS (EXCLUDED BY ID: p30)
-  {
-    id: "p30",
-    name: "Combinado Exclusivo 80 Peças",
-    description: "O maior combinado da casa por um preço imbatível. Escolha seus 80 sushis favoritos!",
-    price: 49.90,
-    category: "Exclusivos do App",
-    imageUrl: "/images/combinado-80-pecas.png", // ATUALIZADO
-    isExclusive: true,
-    isNew: true,
-    // Adicionando variações para permitir a escolha dos 80 itens (simplificado)
-    variations: [
-      {
-        name: "Itens (80 peças)",
-        options: [
-          { label: "Sashimi Salmão (Max 10)", price: 0 },
-          { label: "Niguiri Salmão (Max 10)", price: 0 },
-          { label: "Uramaki Filadélfia (Max 20)", price: 0 },
-          { label: "Hot Filadélfia (Max 20)", price: 0 },
-          { label: "Hossomaki Salmão (Max 20)", price: 0 },
-        ],
-      },
-    ],
-  },
-  // 2. PROMOÇÃO TEMAKI DUPLO (EXCLUDED BY ID: p110)
-  {
-    id: "p110", 
-    name: "Temaki Duplo (2 Unidades)",
-    description: "1 Temaki Salmão Grelhado + 1 Temaki Salmão Skin. Compre 1, Leve 2!",
-    price: 24.90,
-    category: "Exclusivos do App",
-    imageUrl: "/images/temaki-duplo.png", // ATUALIZADO
-    isExclusive: true,
-  },
-  // 3. PROMOÇÃO HOT ROLL LOVERS (EXCLUDED BY ID: p111)
-  {
-    id: "p111", 
-    name: "Hot Roll Lovers (16 Peças)",
-    description: "16 peças de Hot Roll crocante por um preço especial.",
-    price: 19.90,
-    category: "Exclusivos do App",
-    imageUrl: "/images/hot-roll-lovers.png", // NOVO
-    isExclusive: true,
-  },
   // Outros exclusivos (reordenados)
   {
     id: "p1",
