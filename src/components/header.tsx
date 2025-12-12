@@ -44,7 +44,7 @@ export const Header = () => {
   const totalCartItems = useCartStore((state) => state.getTotalItems());
   const totalCartPrice = useCartStore((state) => state.getTotalPrice()); // Obtendo o preço total
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(""); // Mantido para o mobile search
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const [isOpen, setIsOpen] = useState(true); 
@@ -156,20 +156,8 @@ export const Header = () => {
             )}
         </div>
         
-        {/* Search Input (Desktop only) */}
-        {!isMobile && (
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Buscar no cardápio"
-              className="w-full pl-9 pr-4 py-2 rounded-md border border-input bg-background focus-visible:ring-primary"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={handleSearch}
-            />
-          </div>
-        )}
+        {/* Search Input (Desktop only) - REMOVED */}
+        {/* O campo de busca no desktop agora está no DesktopMenuLayout */}
 
         {/* Right section: Cart, Profile */}
         <div className="flex items-center gap-4 ml-auto">

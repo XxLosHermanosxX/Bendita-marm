@@ -7,12 +7,16 @@ import { useSidebarToggle } from "@/hooks/use-sidebar-toggle";
 import Image from 'next/image';
 import { MapPin } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export const SidebarSheet = () => {
   const { isSidebarOpen, closeSidebar } = useSidebarToggle();
+  const isMobile = useIsMobile();
 
   // Placeholder for dynamic unit information
   const currentUnit = "Curitiba"; 
+
+  if (!isMobile) return null; // Do not render on desktop
 
   return (
     <Sheet open={isSidebarOpen} onOpenChange={closeSidebar}>
