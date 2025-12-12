@@ -354,7 +354,7 @@ export const products: Product[] = [
     description: "Macarrão, carne, frango e legumes.",
     price: 59.90,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba_tradicional.jpg",
+    imageUrl: "/images/yakisoba_tradicional.jpg", // Corrigido
   },
   {
     id: "p23",
@@ -362,7 +362,7 @@ export const products: Product[] = [
     description: "Macarrão, carne, frango, camarão e legumes.",
     price: 65.50,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba_especial.jpg",
+    imageUrl: "/images/yakisoba_especial.jpg", // Corrigido
   },
   {
     id: "p76",
@@ -370,7 +370,7 @@ export const products: Product[] = [
     description: "Macarrão, salmão e legumes.",
     price: 65.50,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba-salmao-g.png",
+    imageUrl: "/images/yakisoba-salmao-g.png", // Mantido (sem nova imagem)
   },
   {
     id: "p77",
@@ -378,7 +378,7 @@ export const products: Product[] = [
     description: "Macarrão, salmão e legumes.",
     price: 43.90,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba-salmao-m.png",
+    imageUrl: "/images/yakisoba-salmao-m.png", // Mantido (sem nova imagem)
   },
   {
     id: "p78",
@@ -386,7 +386,7 @@ export const products: Product[] = [
     description: "Macarrão, carne, frango, camarão e legumes.",
     price: 43.90,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba_especial_m.webp",
+    imageUrl: "/images/yakisoba_especial_m.webp", // Corrigido
   },
   {
     id: "p79",
@@ -394,15 +394,15 @@ export const products: Product[] = [
     description: "Macarrão, carne, frango e legumes.",
     price: 39.90,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba_tradicional_m.webp",
+    imageUrl: "/images/yakisoba_tradicional_m.webp", // Corrigido
   },
   {
     id: "p83",
     name: "Yakisoba Vegetariano",
     description: "Macarrão com legumes ao molho oriental",
     price: 31.50,
-    category: "Yakisoba", // Movido de Vegetarianos para Yakisoba (mantendo a tag Vegetariano)
-    imageUrl: "/images/2022__SAK_YAKISOBA_VEG_IMG_1758-2__4_.jpg",
+    category: "Yakisoba",
+    imageUrl: "/images/2022__SAK_YAKISOBA_VEG_IMG_1758-2__4_.jpg", // Corrigido
   },
 
   // Vegetarianos
@@ -517,7 +517,7 @@ export const products: Product[] = [
     isExclusive: true,
   },
   
-  // BEBIDAS
+  // BEBIDAS (Limpando e mantendo apenas os que têm imagem clara)
   {
     id: "p95",
     name: "Refrigerante Lata (Vários Sabores)",
@@ -555,33 +555,6 @@ export const products: Product[] = [
             ]
         }
     ]
-  },
-  {
-    id: "p101",
-    name: "Suco Del Valle Lata",
-    description: "Sabores: Goiaba, Uva, Maracujá, Pêssego.",
-    price: 8.90,
-    category: "Bebidas",
-    imageUrl: "/images/dell.jpg",
-    variations: [
-        {
-            name: "Sabor",
-            options: [
-                { label: "Goiaba", price: 8.90 },
-                { label: "Uva", price: 8.90 },
-                { label: "Maracujá", price: 8.90 },
-                { label: "Pêssego", price: 8.90 },
-            ]
-        }
-    ]
-  },
-  {
-    id: "p102",
-    name: "Cerveja Eisenbahn Pilsen 355ml",
-    description: "Cerveja puro malte.",
-    price: 12.90,
-    category: "Bebidas",
-    imageUrl: "/images/cerveja-eisenbahn.png",
   },
   {
     id: "p96",
