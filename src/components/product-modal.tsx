@@ -25,7 +25,12 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
   const selectedPrice = product.price; 
 
   const handleAddToCart = () => {
-    addItem(product, quantity, undefined, notes);
+    // Placeholder para lógica de variação, se houver
+    const selectedVariation = product.variations && product.variations.length > 0 
+      ? { name: product.variations[0].name, option: product.variations[0].options[0] } // Usando a primeira variação/opção como placeholder
+      : undefined;
+
+    addItem(product, quantity, selectedVariation, notes);
     setQuantity(1);
     setNotes("");
     onClose();
@@ -48,6 +53,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
         
         <div className="p-6 pt-0 space-y-4">
           <DialogHeader className="text-left">
+            {/* DialogTitle é obrigatório para acessibilidade */}
             <DialogTitle className="text-2xl font-bold text-foreground">
               {product.name}
             </DialogTitle>
