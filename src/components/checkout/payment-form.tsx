@@ -35,10 +35,11 @@ interface PaymentFormProps {
 export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
   const form = useForm<PaymentFormValues>({
     resolver: zodResolver(PaymentSchema),
-    defaultValues: initialData || {
-      type: "credit_card",
-      changeNeeded: false,
-      changeFor: undefined,
+    defaultValues: {
+      type: initialData?.type || "credit_card",
+      cardBrand: initialData?.cardBrand || "",
+      changeNeeded: initialData?.changeNeeded || false,
+      changeFor: initialData?.changeFor || undefined,
     },
   });
 

@@ -21,19 +21,16 @@ const getAuthHeader = (): string => {
 
 // Convert order data to BlackCatPay transaction format
 const formatOrderData = (order: Order): any => {
+  // Calculate total amount in cents
+  const totalAmount = toCents(order.total);
+
   return {
-    amount: toCents(order.total),
+    amount: totalAmount,
     currency: "BRL",
-    paymentMethod: "pix",
+    payment_method: "pix",
     pix: {
-      expiresIn: 600 // 10 minutes
+      expires_in: 600 // 10 minutes in seconds
     },
-    items: order.items.map(item => ({
-      name: item.name,
-      quantity: item.quantity,
-      price: toCents(item.details?.selectedVariation?.option.price || item.price),
-      description: item.description || ""
-    })),
     customer: {
       name: order.customer.name,
       email: order.customer.email,
@@ -47,9 +44,9 @@ const formatOrderData = (order: Order): any => {
       neighborhood: order.address.neighborhood,
       city: order.address.city,
       state: order.address.state,
-      zipCode: order.address.cep.replace(/\D/g, '')
+      zip_code: order.address.cep.replace(/\D/g, '')
     },
-    externalRef: `PEDIDO-${order.id}`,
+    external_reference: `PEDIDO-${order.id}`,
     metadata: {
       orderId: order.id,
       userId: "user_" + Math.random().toString(36).substring(2, 9),
@@ -73,6 +70,7 @@ export const createPixTransaction = async (order: Order) => {
 
     if (!response.ok) {
       const errorData = await response.json();
+      console.error('BlackCatPay API Error:', errorData);
       throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
     }
 
@@ -81,10 +79,10 @@ export const createPixTransaction = async (order: Order) => {
     return {
       success: true,
       transactionId: data.id,
-      qrCode: data.pix.qrCode,
-      qrCodeUrl: data.pix.qrCodeUrl,
-      pixKey: data.pix.pixKey,
-      expiresAt: data.pix.expiresAt,
+      qrCode: data.pix.qr_code,
+      qrCodeUrl: data.pix.qr_code_url,
+      pixKey: data.pix.pix_key,
+      expiresAt: data.pix.expires_at,
       amount: order.total
     };
   } catch (error) {
@@ -117,7 +115,7 @@ export const checkPaymentStatus = async (transactionId: string) => {
       success: true,
       status: data.status,
       amount: toAmount(data.amount),
-      paidAt: data.paidAt,
+      paidAt: data.paid_at,
       transactionId: data.id
     };
   } catch (error) {
