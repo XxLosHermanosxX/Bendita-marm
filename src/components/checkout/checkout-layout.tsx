@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, CheckCircle2 } from "lucide-react";
 import { AddressForm } from "./address-form";
@@ -354,7 +353,6 @@ export const CheckoutLayout = () => {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 };

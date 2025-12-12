@@ -1,26 +1,27 @@
 "use client";
 
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useState, useEffect } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Address } from "@/types";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { toast } from "sonner";
-import { MapPin, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { MapPin, Compass, Search } from "lucide-react";
 
 // Esquema de validação com Zod
 const AddressSchema = z.object({
-  cep: z.string().min(8, "CEP deve ter 8 dígitos").max(9, "CEP deve ter 8 dígitos").regex(/^\d{5}-?\d{3}$/, "Formato de CEP inválido"),
-  street: z.string().min(3, "Rua é obrigatória"),
+  cep: z.string().min(8, "CEP deve ter 8 dígitos").max(9, "CEP deve ter 8 dígitos"),
+  street: z.string().min(1, "Rua é obrigatória"),
   number: z.string().min(1, "Número é obrigatório"),
   complement: z.string().optional(),
-  neighborhood: z.string().min(3, "Bairro é obrigatório"),
-  city: z.string().min(3, "Cidade é obrigatória"),
-  state: z.string().min(2, "Estado é obrigatória"),
+  neighborhood: z.string().min(1, "Bairro é obrigatório"),
+  city: z.string().min(1, "Cidade é obrigatória"),
+  state: z.string().min(2, "Estado é obrigatório"),
 });
+
+type AddressFormValues = z.infer<typeof AddressSchema>;
 
 interface AddressFormProps {
   initialData: Address | null;
@@ -28,7 +29,11 @@ interface AddressFormProps {
 }
 
 export const AddressForm = ({ initialData, onNext }: AddressFormProps) => {
-  const form = useForm<z.infer<typeof AddressSchema>>({
+  const [isLoading, setIsLoading] = useState(false);
+  const [showAddressFields, setShowAddressFields] = useState(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
+
+  const form = useForm<AddressFormValues>({
     resolver: zodResolver(AddressSchema),
     defaultValues: initialData || {
       cep: "",
@@ -41,48 +46,114 @@ export const AddressForm = ({ initialData, onNext }: AddressFormProps) => {
     },
   });
 
-  const [isSearching, setIsSearching] = useState(false);
+  const cep = form.watch("cep");
 
-  const handleCepSearch = async () => {
-    const cepValue = form.getValues("cep").replace(/\D/g, '');
-    if (cepValue.length !== 8) {
-      form.setError("cep", { message: "CEP deve ter 8 dígitos." });
-      toast.error("Por favor, insira um CEP válido com 8 dígitos.", { id: "cep-search" });
-      return;
+  // Auto-format CEP as user types
+  useEffect(() => {
+    if (cep && cep.length > 0) {
+      // Remove any non-digit characters
+      const cleanedCep = cep.replace(/\D/g, '');
+
+      // Format CEP as user types (e.g., 12345-678)
+      if (cleanedCep.length <= 8) {
+        let formattedCep = cleanedCep;
+        if (cleanedCep.length > 5) {
+          formattedCep = `${cleanedCep.slice(0, 5)}-${cleanedCep.slice(5)}`;
+        }
+        form.setValue("cep", formattedCep, { shouldValidate: true });
+      }
+
+      // Auto-fetch address when CEP has 8 digits
+      if (cleanedCep.length === 8) {
+        fetchAddressByCep(cleanedCep);
+      }
     }
+  }, [cep]);
 
-    setIsSearching(true);
-    toast.loading("Buscando CEP...", { id: "cep-search" }); // Mostra toast de carregamento
+  const fetchAddressByCep = async (cep: string) => {
     try {
-      console.log(`Searching for CEP: ${cepValue}`); // Log do CEP sendo buscado
-      const response = await fetch(`https://viacep.com.br/ws/${cepValue}/json/`);
+      setIsLoading(true);
+      setLocationError(null);
+
+      // Use ViaCEP API to fetch address data
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
       const data = await response.json();
-      console.log("ViaCEP response:", data); // Log da resposta completa da ViaCEP
 
       if (data.erro) {
-        toast.error("CEP não encontrado.", { id: "cep-search" });
-        form.setError("cep", { message: "CEP não encontrado." });
-        form.setValue("street", "");
-        form.setValue("neighborhood", "");
-        form.setValue("city", "");
-        form.setValue("state", "");
-      } else {
-        form.setValue("street", data.logradouro || "");
-        form.setValue("neighborhood", data.bairro || "");
-        form.setValue("city", data.localidade || "");
-        form.setValue("state", data.uf || "");
-        toast.success("Endereço preenchido automaticamente!", { id: "cep-search" });
+        setLocationError("CEP não encontrado. Por favor, verifique o CEP digitado.");
+        return;
       }
+
+      // Auto-fill address fields
+      form.setValue("street", data.logradouro || "");
+      form.setValue("neighborhood", data.bairro || "");
+      form.setValue("city", data.localidade || "");
+      form.setValue("state", data.uf || "");
+      setShowAddressFields(true);
+
     } catch (error) {
-      console.error("Error fetching CEP:", error); // Log do erro real
-      toast.error("Erro ao buscar CEP. Tente novamente.", { id: "cep-search" });
+      setLocationError("Erro ao buscar endereço. Por favor, tente novamente.");
+      console.error("Error fetching address:", error);
     } finally {
-      setIsSearching(false);
+      setIsLoading(false);
     }
   };
 
-  const onSubmit = (data: z.infer<typeof AddressSchema>) => {
-    onNext(data as Address);
+  const handleGetCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError("Geolocalização não é suportada pelo seu navegador.");
+      return;
+    }
+
+    setIsLoading(true);
+    setLocationError(null);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+
+          // Use Nominatim (OpenStreetMap) to reverse geocode
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`
+          );
+          const data = await response.json();
+
+          if (data && data.address) {
+            const address = data.address;
+            const cep = address.postcode ? address.postcode.replace(/\D/g, '') : "";
+
+            // Fill form with location data
+            form.setValue("cep", cep || "");
+            form.setValue("street", address.road || address.street || "");
+            form.setValue("neighborhood", address.suburb || address.neighbourhood || address.village || "");
+            form.setValue("city", address.city || address.town || address.village || "");
+            form.setValue("state", address.state || "");
+
+            setShowAddressFields(true);
+          } else {
+            setLocationError("Não foi possível obter o endereço da sua localização.");
+          }
+        } catch (error) {
+          setLocationError("Erro ao obter endereço da localização.");
+          console.error("Error reverse geocoding:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      },
+      (error) => {
+        setIsLoading(false);
+        if (error.code === error.PERMISSION_DENIED) {
+          setLocationError("Permissão de localização negada. Por favor, permita o acesso à localização.");
+        } else {
+          setLocationError("Erro ao obter localização. Por favor, tente novamente.");
+        }
+      }
+    );
+  };
+
+  const onSubmit: SubmitHandler<AddressFormValues> = (data) => {
+    onNext(data);
   };
 
   return (
@@ -92,135 +163,152 @@ export const AddressForm = ({ initialData, onNext }: AddressFormProps) => {
           <MapPin className="h-5 w-5" /> 1. Endereço de Entrega
         </h3>
 
-        {/* Campo de CEP e Botão de Busca */}
-        <div className="flex gap-4 items-end">
-          <FormField
-            control={form.control}
-            name="cep"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>CEP</FormLabel>
-                <FormControl>
-                  <Input 
-                    placeholder="Ex: 12345-678" 
-                    {...field} 
-                    maxLength={9}
-                    onChange={(e) => {
-                        // Formatação simples de CEP
-                        let value = e.target.value.replace(/\D/g, '');
-                        if (value.length > 5) {
-                            value = value.substring(0, 5) + '-' + value.substring(5, 8);
-                        }
-                        field.onChange(value);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button 
-            type="button" 
-            onClick={handleCepSearch} 
-            disabled={isSearching || form.getValues("cep").replace(/\D/g, '').length !== 8}
-            className="bg-secondary text-secondary-foreground hover:bg-secondary/80"
-          >
-            <Search className="h-4 w-4 mr-2" />
-            Buscar
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="cep"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>CEP</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Digite seu CEP"
+                      {...field}
+                      maxLength={9}
+                      disabled={isLoading}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex items-end">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleGetCurrentLocation}
+                disabled={isLoading}
+                className="w-full gap-2"
+              >
+                <Compass className="h-4 w-4" />
+                Usar minha localização
+              </Button>
+            </div>
+          </div>
+
+          {locationError && (
+            <div className="text-sm text-destructive">
+              {locationError}
+            </div>
+          )}
+
+          {isLoading && (
+            <div className="text-sm text-muted-foreground flex items-center gap-2">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+              Buscando endereço...
+            </div>
+          )}
+
+          {showAddressFields && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="street"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Rua</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Nome da rua" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="neighborhood"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Bairro</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Nome do bairro" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <FormField
+                  control={form.control}
+                  name="number"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Número</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Número" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="complement"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Complemento (opcional)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Apto, bloco, etc." {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="city"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Cidade</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Cidade" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="state"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Estado</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Estado" {...field} maxLength={2} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="flex justify-end pt-4">
+          <Button type="submit" className="bg-primary hover:bg-primary/90 text-lg py-6">
+            Continuar
           </Button>
         </div>
-
-        {/* Campos de Endereço */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="street"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Rua</FormLabel>
-                <FormControl>
-                  <Input placeholder="Rua dos Sushis" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="number"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Número</FormLabel>
-                <FormControl>
-                  <Input placeholder="100" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="neighborhood"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Bairro</FormLabel>
-                <FormControl>
-                  <Input placeholder="Centro" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="complement"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Complemento (Opcional)</FormLabel>
-                <FormControl>
-                  <Input placeholder="Apto 101" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="city"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Cidade</FormLabel>
-                <FormControl>
-                  <Input placeholder="São Paulo" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="state"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Estado (UF)</FormLabel>
-                <FormControl>
-                  <Input placeholder="SP" {...field} maxLength={2} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-lg py-6 mt-6">
-          Usar este endereço
-        </Button>
       </form>
     </Form>
   );
