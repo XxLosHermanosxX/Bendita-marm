@@ -3,12 +3,14 @@
 import { MainLayout } from "@/components/layout/main-layout";
 import { ProductCard } from "@/components/product-card";
 import Image from "next/image";
-import { products } from "@/data/products";
+import { products, categories } from "@/data/products";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { HeroCarousel } from "@/components/hero-carousel";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { MobileMenuLayout } from "@/components/mobile-menu-layout";
+import { MenuLayout } from "@/components/menu-layout"; // Renamed import
+import { useMemo } from "react";
+import { Product } from "@/types";
 
 export default function Home() {
   const isMobile = useIsMobile();
@@ -16,6 +18,19 @@ export default function Home() {
   // Pegamos os 3 primeiros produtos exclusivos para destaque
   const exclusiveProducts = products.filter(p => p.category === "Exclusivos do App").slice(0, 3); 
   const newProducts = products.filter(p => p.isNew && p.category !== "Exclusivos do App").slice(0, 3); // Novidades que não são exclusivos
+
+  // Group products by category for MenuLayout
+  const groupedProducts = useMemo(() => {
+    return categories.reduce((acc, category) => {
+      acc[category] = products.filter(p => p.category === category);
+      return acc;
+    }, {} as Record<string, Product[]>);
+  }, []);
+
+  const visibleCategories = useMemo(() => {
+    return categories.filter(c => groupedProducts[c] && groupedProducts[c].length > 0);
+  }, [groupedProducts]);
+
 
   // Se for mobile, renderiza o layout completo do menu
   if (isMobile) {
@@ -27,7 +42,11 @@ export default function Home() {
         </section>
         
         {/* Full Menu for Mobile */}
-        <MobileMenuLayout />
+        <MenuLayout 
+          activeCategory="Exclusivos do App"
+          visibleCategories={visibleCategories}
+          groupedProducts={groupedProducts}
+        />
       </MainLayout>
     );
   }

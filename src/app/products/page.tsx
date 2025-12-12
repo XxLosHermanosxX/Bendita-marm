@@ -2,30 +2,45 @@
 
 import React, { useState, useMemo } from "react";
 import { MainLayout } from "@/components/layout/main-layout";
-import { ProductCard } from "@/components/product-card";
-import { products } from "@/data/products";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { products, categories } from "@/data/products";
 import { useSearchParams } from "next/navigation";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { MenuLayout } from "@/components/menu-layout";
+import { DesktopMenuLayout } from "@/components/desktop-menu-layout";
+import { Product } from "@/types";
 
 export default function ProductsPage() {
+  const isMobile = useIsMobile();
   const searchParams = useSearchParams();
   
   // Derivar a categoria ativa diretamente dos searchParams para garantir reatividade
-  const activeCategory = searchParams.get('category') || "Todos";
+  const activeCategory = searchParams.get('category') || "Exclusivos do App";
   
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Lógica de Filtragem e Busca
+  // 1. Agrupar produtos por categoria e filtrar categorias vazias
+  const groupedProducts = useMemo(() => {
+    return categories.reduce((acc, category) => {
+      acc[category] = products.filter(p => p.category === category);
+      return acc;
+    }, {} as Record<string, Product[]>);
+  }, []);
+
+  const visibleCategories = useMemo(() => {
+    return categories.filter(c => groupedProducts[c] && groupedProducts[c].length > 0);
+  }, [groupedProducts]);
+
+
+  // 2. Lógica de Filtragem e Busca
   const filteredProducts = useMemo(() => {
     let filtered = products;
 
-    // 1. Filtrar por Categoria (usando o parâmetro de URL)
+    // Filtrar por Categoria (usando o parâmetro de URL)
     if (activeCategory && activeCategory !== "Todos") {
       filtered = filtered.filter(p => p.category === activeCategory);
     }
 
-    // 2. Filtrar por Busca
+    // Filtrar por Busca
     if (searchTerm) {
       const lowerCaseSearch = searchTerm.toLowerCase();
       filtered = filtered.filter(
@@ -34,59 +49,44 @@ export default function ProductsPage() {
       );
     }
 
-    // Futuramente: 3. Filtrar por Preço e Avaliação
+    // Nota: Filtros de Preço e Avaliação seriam aplicados aqui se existissem.
 
     return filtered;
   }, [activeCategory, searchTerm]);
 
-  // Nota: A Sidebar já está no MainLayout e gerencia a navegação por categoria.
-  // Aqui, vamos garantir que a busca funcione.
+  // 3. Reagrupar produtos filtrados para o layout de desktop (que precisa renderizar seções)
+  const filteredGroupedProducts = useMemo(() => {
+    return visibleCategories.reduce((acc, category) => {
+      acc[category] = filteredProducts.filter(p => p.category === category);
+      return acc;
+    }, {} as Record<string, Product[]>);
+  }, [filteredProducts, visibleCategories]);
 
+
+  if (isMobile) {
+    // No mobile, usamos o MenuLayout que inclui a barra de busca no Header
+    return (
+      <MainLayout>
+        <MenuLayout 
+          activeCategory={activeCategory}
+          visibleCategories={visibleCategories}
+          groupedProducts={groupedProducts}
+        />
+      </MainLayout>
+    );
+  }
+
+  // Desktop Layout
   return (
     <MainLayout>
-      <div className="container mx-auto p-4 md:p-6">
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
-          Cardápio Completo
-        </h1>
-
-        {/* Barra de Busca (Mobile) */}
-        <div className="relative md:hidden mb-6">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="text"
-            placeholder="Buscar no cardápio"
-            className="w-full pl-9 pr-4 py-2 rounded-md border border-input bg-background focus-visible:ring-primary"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-
-        {/* Filtros e Ordenação (Desktop/Tablet) - Placeholder */}
-        <div className="flex justify-between items-center mb-6">
-          <p className="text-sm text-muted-foreground">
-            {filteredProducts.length} produtos encontrados
-          </p>
-          {/* Placeholder para Ordenação */}
-          <div className="hidden md:block text-sm text-muted-foreground">
-            Ordenar por: <span className="font-medium text-foreground">Mais vendidos</span>
-          </div>
-        </div>
-
-        {/* Grid de Produtos */}
-        {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12 text-muted-foreground">
-            <Search className="h-12 w-12 mx-auto mb-4" />
-            <p className="text-lg">Nenhum produto encontrado.</p>
-            <p className="text-sm">Tente ajustar sua busca ou filtros.</p>
-          </div>
-        )}
-      </div>
+      <DesktopMenuLayout
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        filteredProducts={filteredProducts}
+        activeCategory={activeCategory}
+        visibleCategories={visibleCategories}
+        groupedProducts={filteredGroupedProducts} // Passamos os produtos filtrados por categoria
+      />
     </MainLayout>
   );
 }

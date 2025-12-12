@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useRef, useMemo, useState, useEffect } from "react";
-import { products, categories } from "@/data/products";
 import { ProductCard } from "@/components/product-card";
 import { cn } from "@/lib/utils";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -29,23 +28,16 @@ const ProductCategorySection = React.forwardRef<HTMLDivElement, { category: stri
 ProductCategorySection.displayName = 'ProductCategorySection';
 
 
-export const MobileMenuLayout = () => {
-  const [activeCategory, setActiveCategory] = useState(categories[0]);
+interface MenuLayoutProps {
+  activeCategory: string;
+  visibleCategories: string[];
+  groupedProducts: Record<string, Product[]>;
+}
+
+export const MenuLayout = ({ activeCategory: initialActiveCategory, visibleCategories, groupedProducts }: MenuLayoutProps) => {
+  const [activeCategory, setActiveCategory] = useState(initialActiveCategory);
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  // Group products by category
-  const groupedProducts = useMemo(() => {
-    return categories.reduce((acc, category) => {
-      acc[category] = products.filter(p => p.category === category);
-      return acc;
-    }, {} as Record<string, Product[]>);
-  }, []);
-
-  // Filter categories that actually have products
-  const visibleCategories = useMemo(() => {
-    return categories.filter(c => groupedProducts[c] && groupedProducts[c].length > 0);
-  }, [groupedProducts]);
 
   // Combined height of fixed header (64px) + location bar (48px) = 112px
   const STICKY_OFFSET = 112; 
@@ -112,7 +104,7 @@ export const MobileMenuLayout = () => {
   return (
     <div className="w-full">
       
-      {/* NEW: Sticky Location and Delivery Info Bar (top-16 = 64px) */}
+      {/* Sticky Location and Delivery Info Bar (top-16 = 64px) */}
       <div className="sticky top-16 z-30">
         <LocationDeliveryInfo 
           currentCity="Curitiba" 
