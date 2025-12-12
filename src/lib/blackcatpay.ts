@@ -57,10 +57,10 @@ function buildPayload(order: Order) {
   }
 
   // Calculate total amount by summing up all items (price × quantity)
-  const totalAmount = order.items.reduce((sum, item) => {
-    const itemPrice = item.details?.selectedVariation?.option.price || item.price;
-    return sum + (itemPrice * item.quantity);
-  }, 0);
+  // NOTE: We must use the item price + delivery fee (if applicable) to calculate the total.
+  // Since delivery fee is 10.00, we need to adjust the total amount sent to the API.
+  // The order.total already includes the delivery fee (10.00).
+  const totalAmount = order.total; 
 
   // Convert total to cents with proper rounding
   const amountInCents = Math.round(totalAmount * 100);
@@ -68,7 +68,7 @@ function buildPayload(order: Order) {
   console.log(`Calculated total amount: R$${totalAmount.toFixed(2)} = ${amountInCents} cents`);
 
   return {
-    amount: amountInCents, // Total amount in cents
+    amount: amountInCents, // Total amount in cents (including delivery fee)
     currency: "BRL",
     paymentMethod: "pix",
     pix: {
@@ -84,11 +84,10 @@ function buildPayload(order: Order) {
         quantity: item.quantity, // ✅ Obrigatório
         unitPrice: itemPriceInCents, // ✅ Campo correto em centavos
         tangible: true, // ✅ Obrigatório (sushi é físico)
-        fee: 0, // ✅ Obrigatório
+        fee: 0, // ✅ Obrigatório (taxa/comissão do item, não a taxa de entrega)
         metadata: JSON.stringify({ // ✅ Obrigatório (string)
           productId: item.id,
           productName: item.name,
-          description: item.description || ''
         })
       };
     }),
@@ -100,7 +99,7 @@ function buildPayload(order: Order) {
     },
     // ✅ SHIPPING CORRIGIDO: Usando dados de teste completos
     shipping: {
-      fee: 0, // ✅ Obrigatório
+      fee: amountToCents(order.deliveryFee || 0), // ✅ Taxa de entrega em centavos
       address: TEST_ADDRESS.street, // ✅ Nome da rua
       number: TEST_ADDRESS.number, // ✅ Número
       complement: TEST_ADDRESS.complement,
