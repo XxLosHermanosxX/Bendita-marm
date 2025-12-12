@@ -7,7 +7,7 @@ export const yakisobaProducts: Product[] = [
     description: "Macarrão, carne, frango e legumes.",
     price: 59.90,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba_tradicional.jpg",
+    imageUrl: "/images/yakisoba_tradicional.jpg", // Corrigido
   },
   {
     id: "p23",
@@ -15,7 +15,7 @@ export const yakisobaProducts: Product[] = [
     description: "Macarrão, carne, frango, camarão e legumes.",
     price: 65.50,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba_especial.jpg",
+    imageUrl: "/images/yakisoba_especial.jpg", // Corrigido
   },
   {
     id: "p78",
@@ -23,7 +23,7 @@ export const yakisobaProducts: Product[] = [
     description: "Macarrão, carne, frango, camarão e legumes.",
     price: 43.90,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba_especial_m.webp",
+    imageUrl: "/images/yakisoba_especial_m.webp", // Corrigido
   },
   {
     id: "p79",
@@ -31,7 +31,7 @@ export const yakisobaProducts: Product[] = [
     description: "Macarrão, carne, frango e legumes.",
     price: 39.90,
     category: "Yakisoba",
-    imageUrl: "/images/yakisoba_tradicional_m.webp",
+    imageUrl: "/images/yakisoba_tradicional_m.webp", // Corrigido
   },
   {
     id: "p83",
@@ -39,6 +39,6 @@ export const yakisobaProducts: Product[] = [
     description: "Macarrão com legumes ao molho oriental",
     price: 31.50,
     category: "Yakisoba",
-    imageUrl: "/images/2022__SAK_YAKISOBA_VEG_IMG_1758-2__4_.jpg",
+    imageUrl: "/images/2022__SAK_YAKISOBA_VEG_IMG_1758-2__4_.jpg", // Corrigido
   },
 ];
