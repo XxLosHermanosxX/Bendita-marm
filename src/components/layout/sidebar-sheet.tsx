@@ -1,19 +1,48 @@
 "use client";
 
 import React from 'react';
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Sidebar } from "@/components/sidebar";
 import { useSidebarToggle } from "@/hooks/use-sidebar-toggle";
+import Image from 'next/image';
+import { MapPin } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 
 export const SidebarSheet = () => {
   const { isSidebarOpen, closeSidebar } = useSidebarToggle();
 
-  // The sidebar content is wrapped in a Sheet, which acts as a drawer on all screen sizes.
-  // The padding top is adjusted to account for the fixed header (assuming Header is fixed).
+  // Placeholder for dynamic unit information
+  const currentUnit = "Curitiba"; 
+
   return (
     <Sheet open={isSidebarOpen} onOpenChange={closeSidebar}>
-      <SheetContent side="left" className="w-72 p-0 pt-16 sm:pt-0 flex flex-col">
-        <Sidebar />
+      <SheetContent side="left" className="w-72 p-0 flex flex-col">
+        
+        {/* Custom Header for Sidebar */}
+        <div className="p-4 border-b">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="relative h-10 w-10 flex-shrink-0">
+              <Image 
+                src="/sushiaki-logo.png" 
+                alt="Sushiaki Logo" 
+                layout="fill"
+                objectFit="contain"
+              />
+            </div>
+            <h3 className="text-xl font-bold text-foreground">Sushiaki</h3>
+          </div>
+          
+          {/* Unit Information */}
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <MapPin className="h-4 w-4 text-primary" />
+            <span>Unidade: <span className="font-semibold text-foreground">{currentUnit}</span></span>
+          </div>
+        </div>
+
+        {/* Sidebar Content */}
+        <div className="flex-1 overflow-y-auto">
+            <Sidebar />
+        </div>
       </SheetContent>
     </Sheet>
   );

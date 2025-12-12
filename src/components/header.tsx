@@ -6,13 +6,12 @@ import { Search, ShoppingCart, User, Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Sidebar } from "@/components/sidebar";
 import { CartDrawer } from "@/components/cart-drawer";
 import { useCartStore } from "@/store/use-cart-store";
 import { useRouter } from "next/navigation";
 import { BusinessHoursStatus } from "./business-hours-status";
-import { cn, formatCurrency } from "@/lib/utils"; // Importando formatCurrency
+import { cn, formatCurrency } from "@/lib/utils";
+import { useSidebarToggle } from "@/hooks/use-sidebar-toggle"; // Importando o novo hook
 
 // Hardcoded business hours check (duplicated from BusinessHoursStatus for conditional rendering logic)
 const checkIsOpen = () => {
@@ -41,6 +40,7 @@ const checkIsOpen = () => {
 
 export const Header = () => {
   const isMobile = useIsMobile();
+  const { toggleSidebar } = useSidebarToggle(); // Usando o hook global
   const totalCartItems = useCartStore((state) => state.getTotalItems());
   const totalCartPrice = useCartStore((state) => state.getTotalPrice()); // Obtendo o preço total
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -118,20 +118,9 @@ export const Header = () => {
         {/* Left section: Mobile Menu Trigger (Hamburger) */}
         <div className="flex items-center gap-2">
           {isMobile && (
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="p-0 w-64 pt-16">
-                <Sidebar />
-                {/* Add status inside sidebar for mobile */}
-                <div className="p-4 border-t border-border mt-auto">
-                    <BusinessHoursStatus variant="mobile-sidebar" />
-                </div>
-              </SheetContent>
-            </Sheet>
+            <Button variant="ghost" size="icon" onClick={toggleSidebar}>
+              <Menu className="h-5 w-5" />
+            </Button>
           )}
         </div>
 
