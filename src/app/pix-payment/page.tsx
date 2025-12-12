@@ -6,7 +6,7 @@ import { MainLayout } from "@/components/layout/main-layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { CheckCircle2, Clock, Copy, QrCode, XCircle, AlertTriangle } from "lucide-react";
+import { CheckCircle2, Clock, Copy, QrCode, XCircle, AlertTriangle, ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
 import { formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/store/use-cart-store";
@@ -24,6 +24,7 @@ export default function PixPaymentPage() {
   const [timeRemaining, setTimeRemaining] = useState<string>("10:00");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<{ message: string; details?: any; status?: number } | null>(null);
+  const [showOrderSummary, setShowOrderSummary] = useState(false);
 
   useEffect(() => {
     // Parse order data from URL search params
@@ -76,8 +77,6 @@ export default function PixPaymentPage() {
         // Start countdown timer
         const timer = setInterval(() => {
           if (result.expiresAt) {
-            // A API retorna expirationDate, que é uma data. formatTimeRemaining espera um timestamp.
-            // Vamos garantir que a data seja passada corretamente.
             const remaining = formatTimeRemaining(result.expiresAt);
             setTimeRemaining(remaining);
 
@@ -127,6 +126,14 @@ export default function PixPaymentPage() {
   const handleGoToHome = () => {
     clearCart();
     router.push("/");
+  };
+
+  // Calculate progress bar width based on time remaining
+  const calculateProgress = () => {
+    const [minutes, seconds] = timeRemaining.split(':').map(Number);
+    const totalSeconds = minutes * 60 + seconds;
+    const maxSeconds = 10 * 60; // 10 minutes
+    return (totalSeconds / maxSeconds) * 100;
   };
 
   if (isLoading) {
@@ -228,22 +235,32 @@ export default function PixPaymentPage() {
             )}
           </div>
 
-          {/* Countdown Timer */}
+          {/* Countdown Timer with Progress Bar */}
           {paymentStatus === 'pending' && (
-            <div className="text-center">
-              <div className="inline-flex items-center gap-2 bg-muted p-2 rounded-lg">
-                <Clock className="h-4 w-4 text-muted-foreground" />
-                <span className="font-mono text-lg font-semibold text-foreground">
-                  {timeRemaining}
-                </span>
+            <div className="space-y-2">
+              <div className="text-center">
+                <div className="inline-flex items-center gap-2 bg-muted p-2 rounded-lg">
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                  <span className="font-mono text-lg font-semibold text-foreground">
+                    {timeRemaining}
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Tempo restante para pagar
+                </p>
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Tempo restante para pagar
-              </p>
+
+              {/* Progress Bar */}
+              <div className="w-full bg-gray-200 rounded-full h-2.5">
+                <div
+                  className="bg-primary h-2.5 rounded-full transition-all duration-1000 ease-linear"
+                  style={{ width: `${calculateProgress()}%` }}
+                ></div>
+              </div>
             </div>
           )}
 
-          {/* PIX Key Display (Agora é o foco principal) */}
+          {/* PIX Key Display - Simplified */}
           <Card className="bg-white shadow-lg">
             <CardHeader>
               <CardTitle className="text-xl font-semibold flex items-center justify-between">
@@ -255,70 +272,76 @@ export default function PixPaymentPage() {
                   className="text-primary hover:text-primary/80"
                 >
                   <Copy className="h-4 w-4 mr-2" />
-                  Copiar
+                  Copiar Chave
                 </Button>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                <div className="bg-muted p-3 rounded-md break-all text-sm font-mono">
-                  {transaction.pixKey}
-                </div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   Copie esta chave e cole na área PIX Copia e Cola do aplicativo do seu banco para pagar.
                 </p>
               </div>
             </CardContent>
           </Card>
-          
-          {/* QR Code Display (Removido, mas mantendo o placeholder para instruções) */}
-          {/* <Card className="bg-white shadow-lg">
-            <CardHeader className="text-center">
-              <CardTitle className="text-xl font-semibold">QR Code PIX</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center space-y-4">
-              <div className="bg-gray-100 p-8 rounded-lg border-dashed border-2 border-gray-300">
-                <QrCode className="h-16 w-16 mx-auto text-gray-400" />
-                <p className="text-muted-foreground mt-2">QR Code não disponível</p>
-              </div>
-            </CardContent>
-          </Card> */}
 
+          {/* Order Summary Button (Right Side) */}
+          <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-10">
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full h-12 w-12 shadow-lg"
+              onClick={() => setShowOrderSummary(!showOrderSummary)}
+            >
+              {showOrderSummary ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+            </Button>
+          </div>
 
-          {/* Order Summary */}
-          <Card className="bg-white shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-xl font-semibold">Resumo do Pedido</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Valor total:</span>
-                <span className="text-xl font-bold text-primary">
-                  {formatCurrency(transaction.amount)}
-                </span>
-              </div>
+          {/* Order Summary Modal */}
+          {showOrderSummary && (
+            <div className="fixed inset-0 bg-black/50 z-20 flex items-center justify-center p-4">
+              <Card className="bg-white shadow-lg max-w-md w-full">
+                <CardHeader>
+                  <CardTitle className="text-xl font-semibold">Resumo do Pedido</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Valor total:</span>
+                    <span className="text-xl font-bold text-primary">
+                      {formatCurrency(transaction.amount)}
+                    </span>
+                  </div>
 
-              <Separator />
+                  <Separator />
 
-              <div className="space-y-2">
-                <h4 className="font-semibold text-foreground">Itens do pedido:</h4>
-                <ul className="space-y-1 text-sm">
-                  {items.map((item, index) => (
-                    <li key={index} className="flex justify-between">
-                      <span className="text-muted-foreground">
-                        {item.quantity}x {item.product.name}
-                      </span>
-                      <span className="font-medium">
-                        {formatCurrency(
-                          item.quantity * (item.details?.selectedVariation?.option.price || item.product.price)
-                        )}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-foreground">Itens do pedido:</h4>
+                    <ul className="space-y-1 text-sm">
+                      {items.map((item, index) => (
+                        <li key={index} className="flex justify-between">
+                          <span className="text-muted-foreground">
+                            {item.quantity}x {item.product.name}
+                          </span>
+                          <span className="font-medium">
+                            {formatCurrency(
+                              item.quantity * (item.details?.selectedVariation?.option.price || item.product.price)
+                            )}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <Button
+                    onClick={() => setShowOrderSummary(false)}
+                    className="w-full mt-4"
+                  >
+                    Fechar
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
           {/* Payment Instructions */}
           <Card className="bg-white shadow-lg">
