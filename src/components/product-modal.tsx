@@ -123,7 +123,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] p-0 overflow-hidden">
+      <DialogContent className="sm:max-w-[600px] p-0 overflow-y-auto max-h-[90vh]"> {/* Alterado para overflow-y-auto e adicionado max-h */}
         <div className="relative h-64 w-full">
           <Image
             src={product.imageUrl}
@@ -157,7 +157,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
                 </span>
               </div>
 
-              <div className="space-y-3 max-h-[200px] overflow-y-auto pr-2"> {/* Adicionado max-h e overflow-y-auto */}
+              <div className="space-y-3 max-h-[200px] overflow-y-auto pr-2">
                 {Object.entries(INITIAL_COMBINED_ITEMS).map(([item, initialCount]) => {
                   const currentCount = selectedItems[item as keyof typeof INITIAL_COMBINED_ITEMS];
                   const limit = ITEM_LIMITS[item];
