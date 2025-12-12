@@ -1,18 +1,12 @@
 "use client";
+
 import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form"; // Importando SubmitHandler
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { PaymentMethod } from "@/types";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import { CreditCard, DollarSign, ChevronLeft } from "lucide-react";
@@ -23,17 +17,13 @@ const PaymentSchema = z.object({
   type: z.enum(["credit_card", "money"], {
     required_error: "Por favor, selecione um método de pagamento.",
   }),
-  cardBrand: z.string().optional(),
+  cardBrand: z.string().optional(), // Para futuras implementações de seleção de bandeira
   changeNeeded: z.boolean().optional(),
-  changeFor: z
-    .preprocess(
-      (val) => (val === "" || val === undefined ? undefined : Number(val)),
-      z.number().min(0, "O valor do troco não pode ser negativo.").optional()
-    )
-    .optional(),
+  changeFor: z.preprocess(
+    (val) => (val === "" ? undefined : Number(val)),
+    z.number().min(0, "O valor do troco não pode ser negativo.").optional()
+  ),
 });
-
-type PaymentFormValues = z.infer<typeof PaymentSchema>;
 
 interface PaymentFormProps {
   initialData: PaymentMethod | null;
@@ -41,7 +31,7 @@ interface PaymentFormProps {
 }
 
 export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
-  const form = useForm<PaymentFormValues>({
+  const form = useForm<z.infer<typeof PaymentSchema>>({
     resolver: zodResolver(PaymentSchema),
     defaultValues: initialData || {
       type: "credit_card",
@@ -53,7 +43,8 @@ export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
   const selectedPaymentType = form.watch("type");
   const changeNeeded = form.watch("changeNeeded");
 
-  const onSubmit: SubmitHandler<PaymentFormValues> = (data) => {
+  // Explicitamente tipando o onSubmit para ajudar na inferência
+  const onSubmit: SubmitHandler<z.infer<typeof PaymentSchema>> = (data) => {
     onNext(data as PaymentMethod);
   };
 
@@ -63,6 +54,7 @@ export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
         <h3 className="text-xl font-semibold flex items-center gap-2 text-primary">
           <CreditCard className="h-5 w-5" /> 3. Método de Pagamento
         </h3>
+
         <FormField
           control={form.control}
           name="type"
@@ -80,8 +72,7 @@ export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
                       <RadioGroupItem value="credit_card" />
                     </FormControl>
                     <FormLabel className="font-normal flex items-center gap-2">
-                      <CreditCard className="h-5 w-5 text-muted-foreground" />
-                      Cartão de Crédito/Débito (na entrega)
+                      <CreditCard className="h-5 w-5 text-muted-foreground" /> Cartão de Crédito/Débito (na entrega)
                     </FormLabel>
                   </FormItem>
                   <FormItem className="flex items-center space-x-3 space-y-0 p-3 border rounded-md">
@@ -89,8 +80,7 @@ export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
                       <RadioGroupItem value="money" />
                     </FormControl>
                     <FormLabel className="font-normal flex items-center gap-2">
-                      <DollarSign className="h-5 w-5 text-muted-foreground" />
-                      Dinheiro (na entrega)
+                      <DollarSign className="h-5 w-5 text-muted-foreground" /> Dinheiro (na entrega)
                     </FormLabel>
                   </FormItem>
                 </RadioGroup>
@@ -99,11 +89,10 @@ export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
             </FormItem>
           )}
         />
+
         {selectedPaymentType === "money" && (
           <div className="space-y-4 p-4 border rounded-md bg-secondary/50">
-            <h4 className="font-semibold text-foreground">
-              Precisa de troco?
-            </h4>
+            <h4 className="font-semibold text-foreground">Precisa de troco?</h4>
             <FormField
               control={form.control}
               name="changeNeeded"
@@ -112,8 +101,8 @@ export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
                   <FormControl>
                     <input
                       type="checkbox"
-                      checked={field.value || false}
-                      onChange={(e) => field.onChange(e.target.checked)}
+                      checked={field.value}
+                      onChange={field.onChange}
                       className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                     />
                   </FormControl>
@@ -137,12 +126,9 @@ export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
                         type="number"
                         step="0.01"
                         min="0"
-                        value={field.value || ""}
                         onChange={(e) => {
-                          const value = e.target.value;
-                          field.onChange(
-                            value === "" ? undefined : parseFloat(value)
-                          );
+                          const value = parseFloat(e.target.value);
+                          field.onChange(isNaN(value) ? undefined : value);
                         }}
                       />
                     </FormControl>
@@ -153,6 +139,7 @@ export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
             )}
           </div>
         )}
+
         <div className="flex justify-end pt-4">
           <Button type="submit" className="bg-primary hover:bg-primary/90 text-lg py-6">
             Continuar

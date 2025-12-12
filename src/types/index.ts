@@ -1,4 +1,4 @@
-export type Category = 
+export type Category =
   | "Exclusivos do App"
   | "Prato do Dia"
   | "Pokes"
@@ -18,7 +18,8 @@ export type Category =
   | "Tilápia Sushiaki"
   | "Street Food"
   | "Bebidas"
-  | "Teppan";
+  | "Teppan"; // Nova categoria
+
 
 export interface Product {
   id: string;
@@ -30,14 +31,11 @@ export interface Product {
   imageUrl: string;
   rating?: number;
   reviews?: number;
-  isNew?: boolean;
-  isExclusive?: boolean;
+  isNew?: boolean; // Adicionado
+  isExclusive?: boolean; // Adicionado
   variations?: {
     name: string;
-    options: {
-      label: string;
-      price: number;
-    }[];
+    options: { label: string; price: number }[];
   }[];
   ingredients?: string[];
 }
@@ -46,17 +44,11 @@ export interface CartItem extends Product {
   quantity: number;
   selectedVariation?: {
     name: string;
-    option: {
-      label: string;
-      price: number;
-    };
+    option: { label: string; price: number };
   };
   notes?: string;
   // Adicionando suporte para itens personalizados (como o combinado de 80 peças)
-  customItems?: {
-    name: string;
-    count: number;
-  }[];
+  customItems?: { name: string; count: number }[];
 }
 
 export interface Address {
@@ -78,8 +70,8 @@ export interface UserData {
 
 export interface Coupon {
   code: string;
-  discount: number; // percentage or fixed amount
-  type: "percentage" | "fixed";
+  discount: number; // percentage or fixed amount - Adicionado
+  type: "percentage" | "fixed"; // Adicionado
   minOrderValue?: number;
   appliesTo?: "first_purchase" | "all";
 }
@@ -92,13 +84,7 @@ export interface Order {
   discount: number;
   deliveryFee: number;
   total: number;
-  status:
-    | "pending"
-    | "paid"
-    | "preparing"
-    | "on_the_way"
-    | "delivered"
-    | "cancelled";
+  status: "pending" | "paid" | "preparing" | "on_the_way" | "delivered" | "cancelled";
   address: Address;
   customer: UserData;
   paymentMethod: "PIX";
