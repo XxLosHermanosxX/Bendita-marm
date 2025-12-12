@@ -25,6 +25,9 @@ export default function PixPaymentPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<{ message: string; details?: any; status?: number } | null>(null);
   const [showOrderSummary, setShowOrderSummary] = useState(false);
+  
+  // Ref para a seção de instruções
+  const instructionsRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Parse order data from URL search params
@@ -118,6 +121,12 @@ export default function PixPaymentPage() {
       toast.success("Chave PIX copiada para a área de transferência!");
     }
   };
+  
+  const handleScrollToInstructions = () => {
+    if (instructionsRef.current) {
+      instructionsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   const handleBackToCheckout = () => {
     router.push("/checkout");
@@ -204,6 +213,9 @@ export default function PixPaymentPage() {
     );
   }
 
+  // Truncate PIX key for display
+  const truncatedPixKey = transaction.pixKey.substring(0, 40) + '...';
+
   return (
     <MainLayout>
       <div className="container mx-auto p-4 md:p-6 min-h-[80vh]">
@@ -262,26 +274,36 @@ export default function PixPaymentPage() {
 
           {/* PIX Key Display - Simplified */}
           <Card className="bg-white shadow-lg">
-            <CardHeader>
+            <CardHeader className="pb-3">
               <CardTitle className="text-xl font-semibold flex items-center justify-between">
                 Chave PIX (Copia e Cola)
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={handleCopyPixKey}
-                  className="text-primary hover:text-primary/80"
+                  className="text-primary hover:text-primary/80 animate-slow-pulse"
                 >
                   <Copy className="h-4 w-4 mr-2" />
                   Copiar Chave
                 </Button>
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-0">
               <div className="space-y-2">
+                <p className="text-sm text-muted-foreground break-all font-mono bg-muted p-3 rounded-md">
+                  {truncatedPixKey}
+                </p>
                 <p className="text-sm text-muted-foreground">
                   Copie esta chave e cole na área PIX Copia e Cola do aplicativo do seu banco para pagar.
                 </p>
               </div>
+              <Button 
+                variant="link" 
+                onClick={handleScrollToInstructions}
+                className="p-0 h-auto mt-4 text-primary font-semibold"
+              >
+                Não sabe como pagar? Clique aqui!
+              </Button>
             </CardContent>
           </Card>
 
@@ -344,7 +366,7 @@ export default function PixPaymentPage() {
           )}
 
           {/* Payment Instructions */}
-          <Card className="bg-white shadow-lg">
+          <Card className="bg-white shadow-lg" ref={instructionsRef}>
             <CardHeader>
               <CardTitle className="text-xl font-semibold">Como pagar</CardTitle>
             </CardHeader>
