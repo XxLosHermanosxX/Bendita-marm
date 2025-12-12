@@ -31,7 +31,8 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <>
       <div className="group relative flex flex-col overflow-hidden rounded-lg border bg-card shadow-sm transition-all hover:shadow-md">
-        <div className="relative h-48 w-full overflow-hidden bg-secondary">
+        {/* Imagem: Usando aspect-square para consistência visual */}
+        <div className="relative w-full aspect-square overflow-hidden bg-secondary">
           <Image
             src={product.imageUrl}
             alt={product.name}
@@ -40,20 +41,24 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             className="object-center transition-transform duration-300 group-hover:scale-105"
           />
         </div>
-        <div className="flex flex-1 flex-col p-4">
-          <h3 className="text-lg font-semibold text-foreground">{product.name}</h3>
-          <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
+        <div className="flex flex-1 flex-col p-3 md:p-4">
+          <h3 className="text-base md:text-lg font-semibold text-foreground line-clamp-2">{product.name}</h3>
+          <p className="mt-1 text-xs md:text-sm text-muted-foreground line-clamp-2 h-8 md:h-10">
             {product.description}
           </p>
           <div className="flex items-center justify-between mt-auto pt-3">
-            <span className="text-xl font-bold text-primary">
+            <span className="text-lg md:text-xl font-bold text-primary">
               {formatCurrency(product.price)}
             </span>
+            
+            {/* Botão Responsivo */}
             <Button 
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground p-2 h-auto md:px-4 md:py-2"
               onClick={handleAddToCart}
             >
-              <Plus className="h-4 w-4 mr-2" /> Adicionar
+              {/* Ícone e texto: Ícone no mobile, Ícone + Texto no desktop */}
+              <Plus className="h-4 w-4 md:mr-2" /> 
+              <span className="hidden md:inline">Adicionar</span>
             </Button>
           </div>
         </div>
