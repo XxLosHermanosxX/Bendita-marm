@@ -8,22 +8,31 @@ import { useLocationStore, simulateIpDetection } from '@/store/use-location-stor
 import { useRouter } from 'next/navigation';
 import { SushiakiLogo } from './sushiaki-logo';
 
+// Definindo o tipo para a localização detectada
+type DetectedLocation = { 
+  city: string, 
+  state: string, 
+  deliveryTime: string, 
+  distance: string 
+};
+
 export const LocationModal = () => {
   const router = useRouter();
   const { isLocationConfirmed, setConfirmedLocation, clearLocation } = useLocationStore();
   const [isClient, setIsClient] = useState(false);
-  const [detectedLocation, setDetectedLocation] = useState<{ city: string, state: string, deliveryTime: string } | null>(null);
+  const [detectedLocation, setDetectedLocation] = useState<DetectedLocation | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
     // Only run detection and show modal if location is not confirmed yet
     if (!isLocationConfirmed) {
-      const { detectedCity, detectedState, detectedDeliveryTime } = simulateIpDetection();
+      const { detectedCity, detectedState, detectedDeliveryTime, detectedDistance } = simulateIpDetection();
       setDetectedLocation({ 
         city: detectedCity, 
         state: detectedState, 
-        deliveryTime: detectedDeliveryTime 
+        deliveryTime: detectedDeliveryTime,
+        distance: detectedDistance
       });
       setIsOpen(true);
     }
@@ -34,7 +43,8 @@ export const LocationModal = () => {
       setConfirmedLocation(
         detectedLocation.city,
         detectedLocation.state,
-        detectedLocation.deliveryTime
+        detectedLocation.deliveryTime,
+        detectedLocation.distance // Passando a distância
       );
       setIsOpen(false);
     }

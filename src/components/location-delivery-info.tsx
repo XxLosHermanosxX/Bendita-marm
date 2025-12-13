@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { MapPin, Clock } from 'lucide-react';
+import { MapPin, Clock, Car } from 'lucide-react'; // Importando Car para representar a distância
 import { cn } from '@/lib/utils';
 import { useLocationStore, simulateIpDetection } from '@/store/use-location-store';
 
@@ -19,13 +19,14 @@ interface LocationDeliveryInfoProps {
 }
 
 export const LocationDeliveryInfo = ({ onLocationChange }: LocationDeliveryInfoProps) => {
-  const { city, state, deliveryTime, clearLocation } = useLocationStore();
+  const { city, state, deliveryTime, distance, clearLocation } = useLocationStore();
   
   // Fallback to simulated data if store hasn't loaded yet or is empty
   const fallback = simulateIpDetection();
   const currentCity = city || fallback.detectedCity;
   const currentState = state || fallback.detectedState;
   const currentDeliveryTime = deliveryTime || fallback.detectedDeliveryTime;
+  const currentDistance = distance || fallback.detectedDistance; // Usando a distância
 
   const cityEmoji = getCityEmoji(currentCity);
 
@@ -53,10 +54,19 @@ export const LocationDeliveryInfo = ({ onLocationChange }: LocationDeliveryInfoP
         </span>
       </Button>
 
-      {/* Delivery Time */}
-      <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
-        <Clock className="h-4 w-4 text-primary" />
-        <span>{currentDeliveryTime}</span>
+      {/* Delivery Time and Distance */}
+      <div className="flex items-center gap-4">
+        {/* Delivery Time */}
+        <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
+          <Clock className="h-4 w-4 text-primary" />
+          <span>{currentDeliveryTime}</span>
+        </div>
+        
+        {/* Distance */}
+        <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
+          <Car className="h-4 w-4 text-primary" />
+          <span>{currentDistance}</span>
+        </div>
       </div>
     </div>
   );
