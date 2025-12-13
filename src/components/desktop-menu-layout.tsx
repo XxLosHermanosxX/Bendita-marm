@@ -12,7 +12,6 @@ import { toast } from "sonner";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useSearchParams } from "next/navigation";
-import { HeroCarousel } from "./hero-carousel"; // Importando o carrossel
 
 // Helper component for category section
 const ProductCategorySection = React.forwardRef<HTMLDivElement, { category: string, products: Product[] }>(({ category, products }, ref) => {
@@ -40,7 +39,6 @@ interface DesktopMenuLayoutProps {
   activeCategory: string;
   visibleCategories: string[];
   groupedProducts: Record<string, Product[]>;
-  showCarousel: boolean; // Nova prop
 }
 
 export const DesktopMenuLayout = ({ 
@@ -49,8 +47,7 @@ export const DesktopMenuLayout = ({
   filteredProducts, 
   activeCategory, 
   visibleCategories, 
-  groupedProducts,
-  showCarousel
+  groupedProducts 
 }: DesktopMenuLayoutProps) => {
   
   const [currentActiveCategory, setCurrentActiveCategory] = useState(activeCategory);
@@ -122,13 +119,6 @@ export const DesktopMenuLayout = ({
   return (
     <div className="w-full">
       
-      {/* Carrossel Principal (Desktop) */}
-      {showCarousel && (
-        <div className="mb-6">
-          <HeroCarousel />
-        </div>
-      )}
-
       {/* Sticky Location and Delivery Info Bar (top-16 = 64px) */}
       <div className="sticky top-16 z-30">
         <LocationDeliveryInfo 
@@ -185,8 +175,7 @@ export const DesktopMenuLayout = ({
               {filteredProducts.length} produtos encontrados
             </p>
             {visibleCategories.map((category) => {
-              // Apenas pegamos os produtos já agrupados e filtrados
-              const categoryProducts = groupedProducts[category] || [];
+              const categoryProducts = groupedProducts[category].filter(p => filteredProducts.includes(p));
               
               // Only render category section if it contains filtered products
               if (categoryProducts.length === 0) return null;

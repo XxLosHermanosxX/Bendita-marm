@@ -15,7 +15,7 @@ const PROMO_PRODUCT = {
   name: "Combinado Exclusivo 80 Peças",
   price: 49.90,
   imageUrl: "/images/combinado-80-pecas.png",
-  link: "/?category=Exclusivos%20do%20App", // Corrigido para a rota raiz
+  link: "/products?category=Exclusivos%20do%20App",
 };
 
 const LOCAL_STORAGE_KEY = 'sushiaki_promo_seen';

@@ -18,7 +18,6 @@ interface ProductModalProps {
   product: Product;
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void; // Novo prop
 }
 
 // Define a estrutura inicial para o combinado de 80 peças
@@ -30,7 +29,7 @@ const INITIAL_COMBINED_ITEMS = {
   "Hossomaki Salmão": 0,
 };
 
-export const ProductModal = ({ product, isOpen, onClose, onSuccess }: ProductModalProps) => {
+export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
   const addItem = useCartStore((state) => state.addItem);
   const [quantity, setQuantity] = useState(1);
   const [notes, setNotes] = useState("");
@@ -116,9 +115,7 @@ export const ProductModal = ({ product, isOpen, onClose, onSuccess }: ProductMod
     setQuantity(1);
     setNotes("");
     setSelectedItems(INITIAL_COMBINED_ITEMS);
-    
-    // Chamar onSuccess em vez de onClose
-    onSuccess();
+    onClose();
   };
 
   return (

@@ -142,7 +142,7 @@ export const MenuLayout = ({ activeCategory: initialActiveCategory, visibleCateg
             key={category}
             ref={el => { sectionRefs.current[`category-${category.replace(/\s/g, '-')}`] = el; }}
             category={category} 
-            products={groupedProducts[category] || []} 
+            products={groupedProducts[category]} 
           />
         ))}
       </div>
