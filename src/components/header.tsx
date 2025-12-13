@@ -2,16 +2,16 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, ShoppingCart, User, Menu } from "lucide-react";
+import { Search, ShoppingCart, User, Menu, Plus, Minus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { CartDrawer } from "@/components/cart-drawer";
 import { useCartStore } from "@/store/use-cart-store";
-import { useRouter, usePathname } from "next/navigation"; // Importando usePathname
+import { useRouter, usePathname } from "next/navigation";
 import { BusinessHoursStatus } from "./business-hours-status";
 import { cn, formatCurrency } from "@/lib/utils";
-import { useSidebarToggle } from "@/hooks/use-sidebar-toggle"; // Importando o novo hook
+import { useSidebarToggle } from "@/hooks/use-sidebar-toggle";
 
 // Hardcoded business hours check (duplicated from BusinessHoursStatus for conditional rendering logic)
 const checkIsOpen = () => {
@@ -40,13 +40,13 @@ const checkIsOpen = () => {
 
 export const Header = () => {
   const isMobile = useIsMobile();
-  const { toggleSidebar } = useSidebarToggle(); // Usando o hook global
+  const { toggleSidebar } = useSidebarToggle();
   const totalCartItems = useCartStore((state) => state.getTotalItems());
-  const totalCartPrice = useCartStore((state) => state.getTotalPrice()); // Obtendo o preço total
+  const totalCartPrice = useCartStore((state) => state.getTotalPrice());
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(""); // Mantido para o mobile search
+  const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
-  const pathname = usePathname(); // Usando usePathname
+  const pathname = usePathname();
   const [isClient, setIsClient] = useState(false);
   const [isOpen, setIsOpen] = useState(true); 
 
@@ -67,7 +67,8 @@ export const Header = () => {
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchTerm.trim()) {
-      router.push(`/products?search=${encodeURIComponent(searchTerm.trim())}`);
+      // Redireciona para a página inicial com o termo de busca
+      router.push(`/?search=${encodeURIComponent(searchTerm.trim())}`);
     }
   };
 
@@ -132,19 +133,19 @@ export const Header = () => {
         <div className={cn(
             "flex items-center",
             isMobile 
-                ? "absolute left-1/2 transform -translate-x-1/2" // Center logo on mobile
-                : "gap-3" // Logo e Status lado a lado no desktop
+                ? "absolute left-1/2 transform -translate-x-1/2"
+                : "gap-3"
         )}>
             <Link 
                 href="/" 
                 className={cn(
                     "flex items-center",
-                    !isMobile && "h-full" // Garante que o link ocupe a altura para alinhamento
+                    !isMobile && "h-full"
                 )}
             >
                 <div className={cn(
                   "relative",
-                  isMobile ? "h-12 w-12" : "h-14 w-14" // Aumentando a logo no desktop para h-14 w-14
+                  isMobile ? "h-12 w-12" : "h-14 w-14"
                 )}>
                   <Image 
                     src="/sushiaki-logo.png" 
@@ -169,22 +170,20 @@ export const Header = () => {
             </Button>
           )}
           
-          {/* Cart Button (Desktop only, or Mobile if cart is empty/on checkout page) */}
-          {(!isMobile || isCheckoutPage || totalCartItems === 0) && (
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="relative"
-              onClick={() => setIsCartOpen(true)}
-            >
-              <ShoppingCart className="h-5 w-5" />
-              {totalCartItems > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
-                  {totalCartItems}
-                </span>
-              )}
-            </Button>
-          )}
+          {/* Cart Button (Always visible in header, but only functional if not on checkout) */}
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="relative"
+            onClick={() => setIsCartOpen(true)}
+          >
+            <ShoppingCart className="h-5 w-5" />
+            {totalCartItems > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
+                {totalCartItems}
+              </span>
+            )}
+          </Button>
           
           {/* Profile Button (Desktop only) */}
           {!isMobile && (
@@ -209,17 +208,33 @@ export const Header = () => {
                 {formatCurrency(totalCartPrice)}
             </span>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 items-center">
+            {/* Botões de Quantidade (Visualmente simplificado conforme solicitado) */}
+            <div className="flex items-center gap-1 border rounded-lg p-1">
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-primary"
+                    onClick={() => router.push('/')} // Redireciona para a página inicial para adicionar mais
+                >
+                    <Plus className="h-4 w-4" />
+                </Button>
+                <span className="text-sm font-semibold text-foreground w-4 text-center">
+                    {totalCartItems}
+                </span>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-primary"
+                    onClick={() => setIsCartOpen(true)} // Abre o carrinho para remover itens
+                >
+                    <Minus className="h-4 w-4" />
+                </Button>
+            </div>
+
             <Button 
-                variant="outline" 
-                className="flex-1 text-primary border-primary hover:bg-primary/5"
-                onClick={() => router.push('/products')} // Redirect to products page to "Add More"
-            >
-                Adicionar mais
-            </Button>
-            <Button 
-                className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
-                onClick={() => router.push('/checkout')} // Redirect to checkout
+                className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground h-10"
+                onClick={() => router.push('/checkout')}
             >
                 Finalizar Pedido
             </Button>

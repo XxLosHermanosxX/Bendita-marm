@@ -9,7 +9,7 @@ import { formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/store/use-cart-store";
 import { ProductModal } from "./product-modal";
 import { useState } from "react";
-import { UpsellModal } from "./upsell-modal"; // Importando UpsellModal
+import { UpsellModal } from "./upsell-modal";
 
 interface ProductCardProps {
   product: Product;
@@ -18,7 +18,7 @@ interface ProductCardProps {
 export const ProductCard = ({ product }: ProductCardProps) => {
   const addItem = useCartStore((state) => state.addItem);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isUpsellOpen, setIsUpsellOpen] = useState(false); // Novo estado para o upsell
+  const [isUpsellOpen, setIsUpsellOpen] = useState(false);
 
   const handleAddToCart = () => {
     if (product.variations && product.variations.length > 0 || product.id === "p30") {
