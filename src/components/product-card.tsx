@@ -9,6 +9,7 @@ import { formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/store/use-cart-store";
 import { ProductModal } from "./product-modal";
 import { useState } from "react";
+import { UpsellModal } from "./upsell-modal"; // Importando UpsellModal
 
 interface ProductCardProps {
   product: Product;
@@ -17,6 +18,7 @@ interface ProductCardProps {
 export const ProductCard = ({ product }: ProductCardProps) => {
   const addItem = useCartStore((state) => state.addItem);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUpsellOpen, setIsUpsellOpen] = useState(false); // Novo estado para o upsell
 
   const handleAddToCart = () => {
     if (product.variations && product.variations.length > 0 || product.id === "p30") {
@@ -24,7 +26,15 @@ export const ProductCard = ({ product }: ProductCardProps) => {
       setIsModalOpen(true);
     } else {
       // For simple products, add directly to cart with default quantity 1
-      addItem(product, 1); // Corrected: added quantity argument
+      addItem(product, 1);
+      setIsUpsellOpen(true); // Open upsell modal immediately after adding
+    }
+  };
+  
+  const handleModalClose = (addedToCart: boolean) => {
+    setIsModalOpen(false);
+    if (addedToCart) {
+        setIsUpsellOpen(true);
     }
   };
 
@@ -70,7 +80,14 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         <ProductModal 
           product={product} 
           isOpen={isModalOpen} 
-          onClose={() => setIsModalOpen(false)} 
+          onClose={() => handleModalClose(false)} // Pass false if closed without adding
+          onSuccess={() => handleModalClose(true)} // New prop for success
+        />
+      )}
+      {isUpsellOpen && (
+        <UpsellModal
+            isOpen={isUpsellOpen}
+            onClose={() => setIsUpsellOpen(false)}
         />
       )}
     </>

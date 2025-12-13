@@ -169,20 +169,22 @@ export const Header = () => {
             </Button>
           )}
           
-          {/* Cart Button */}
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="relative"
-            onClick={() => setIsCartOpen(true)}
-          >
-            <ShoppingCart className="h-5 w-5" />
-            {totalCartItems > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
-                {totalCartItems}
-              </span>
-            )}
-          </Button>
+          {/* Cart Button (Desktop only, or Mobile if cart is empty/on checkout page) */}
+          {(!isMobile || isCheckoutPage || totalCartItems === 0) && (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="relative"
+              onClick={() => setIsCartOpen(true)}
+            >
+              <ShoppingCart className="h-5 w-5" />
+              {totalCartItems > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
+                  {totalCartItems}
+                </span>
+              )}
+            </Button>
+          )}
           
           {/* Profile Button (Desktop only) */}
           {!isMobile && (
@@ -193,15 +195,35 @@ export const Header = () => {
         </div>
       </div>
       
-      {/* Persistent Cart Button for Mobile (Hidden on Checkout/PIX pages) */}
+      {/* Persistent Cart Bar for Mobile (Hidden on Checkout/PIX pages) */}
       {isMobile && totalCartItems > 0 && !isCheckoutPage && (
-        <div className="fixed bottom-0 left-0 right-0 bg-primary p-4 z-40">
-          <Button 
-            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6"
-            onClick={() => setIsCartOpen(true)}
-          >
-            Ver Carrinho ({totalCartItems} {totalCartItems === 1 ? 'item' : 'itens'}) - {formatCurrency(totalCartPrice)}
-          </Button>
+        <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 z-40 shadow-2xl">
+          <div className="flex justify-between items-center mb-3">
+            <div className="flex items-center gap-2" onClick={() => setIsCartOpen(true)}>
+                <ShoppingCart className="h-5 w-5 text-primary" />
+                <span className="text-sm font-medium text-foreground">
+                    {totalCartItems} {totalCartItems === 1 ? 'item' : 'itens'}
+                </span>
+            </div>
+            <span className="text-xl font-bold text-primary">
+                {formatCurrency(totalCartPrice)}
+            </span>
+          </div>
+          <div className="flex gap-3">
+            <Button 
+                variant="outline" 
+                className="flex-1 text-primary border-primary hover:bg-primary/5"
+                onClick={() => router.push('/products')} // Redirect to products page to "Add More"
+            >
+                Adicionar mais
+            </Button>
+            <Button 
+                className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                onClick={() => router.push('/checkout')} // Redirect to checkout
+            >
+                Finalizar Pedido
+            </Button>
+          </div>
         </div>
       )}
       
