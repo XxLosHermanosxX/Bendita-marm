@@ -42,6 +42,7 @@ const AddonCard = ({ item, type, onQuantityChange, currentQuantity }: AddonCardP
                     className="object-center"
                 />
             </div>
+            {/* Flex-1 garante que este bloco ocupe o espaço restante */}
             <div className="flex-1 min-w-0">
                 <h4 className="text-sm font-semibold text-foreground truncate">{name}</h4>
                 <p className="text-xs text-muted-foreground line-clamp-2">{description}</p>
@@ -50,6 +51,7 @@ const AddonCard = ({ item, type, onQuantityChange, currentQuantity }: AddonCardP
                 )}
             </div>
             
+            {/* Controles de Quantidade: flex-shrink-0 para manter o tamanho fixo */}
             <div className="flex items-center gap-2 flex-shrink-0">
                 <Button
                     variant="outline"
@@ -145,7 +147,8 @@ export const AddonsModal = () => {
 
     return (
         <Dialog open={isOpen} onOpenChange={closeModal}>
-            <DialogContent className="sm:max-w-[600px] p-0 overflow-y-auto max-h-[90vh]">
+            {/* Removendo overflow-x-auto e garantindo que o modal se ajuste ao conteúdo */}
+            <DialogContent className="sm:max-w-[600px] p-0 overflow-y-auto max-h-[90vh] w-[95%]">
                 <DialogHeader className="text-left p-6 pb-4 border-b">
                     <DialogTitle className="text-2xl font-bold text-foreground flex items-center gap-2">
                         <CheckCircle2 className="h-6 w-6 text-success" /> Item Adicionado!
