@@ -93,7 +93,8 @@ export const PromoModal = () => {
             </p>
             
             {/* Preços Duplos: Cortado e Novo Preço em Destaque */}
-            <div className="flex flex-col items-center justify-center space-y-2">
+            {/* Adicionando mb-4 para garantir separação do botão */}
+            <div className="flex flex-col items-center justify-center space-y-2 mb-4">
                 <span className="text-xl text-gray-500 line-through font-medium">
                     De {formatCurrency(PROMO_PRODUCT.originalPrice)}
                 </span>
