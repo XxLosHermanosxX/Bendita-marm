@@ -32,13 +32,9 @@ const AddonCard = ({ item, type, onQuantityChange, currentQuantity }: AddonCardP
     const handleDecrement = () => onQuantityChange(item.id, Math.max(0, currentQuantity - 1));
 
     return (
-        // Reduzindo padding e gap para maximizar o espaço interno
-        <div className="flex items-center justify-between gap-1 p-2 border rounded-lg bg-secondary/50 overflow-hidden">
-            
-            {/* Left Section: Image and Text (Flex-1, constrained) */}
-            <div className="flex items-center gap-2 flex-1 min-w-0">
-                {/* Imagem reduzida para h-10 w-10 */}
-                <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-md">
+        <div className="flex items-center justify-between gap-3 p-3 border rounded-lg bg-secondary/50">
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+                <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
                     <Image 
                         src={item.imageUrl}
                         alt={name}
@@ -47,8 +43,7 @@ const AddonCard = ({ item, type, onQuantityChange, currentQuantity }: AddonCardP
                         className="object-center"
                     />
                 </div>
-                {/* Bloco de Texto: min-w-0 e flex-1 para garantir compressão */}
-                <div className="flex-1 min-w-0 overflow-hidden">
+                <div className="flex-1 min-w-0">
                     <h4 className="text-sm font-semibold text-foreground truncate">{name}</h4>
                     <p className="text-xs text-muted-foreground line-clamp-1">{description}</p>
                     {isPaid && (
@@ -57,31 +52,29 @@ const AddonCard = ({ item, type, onQuantityChange, currentQuantity }: AddonCardP
                 </div>
             </div>
             
-            {/* Right Section: Controles de Quantidade (Fixed Width) */}
-            <div className="flex items-center gap-1 flex-shrink-0">
+            <div className="flex items-center gap-2 flex-shrink-0">
                 <Button
                     variant="outline"
                     size="icon"
-                    className="h-6 w-6"
+                    className="h-7 w-7"
                     onClick={handleDecrement}
                     disabled={currentQuantity === 0}
                 >
-                    <Minus className="h-3 w-3" />
+                    <Minus className="h-3.5 w-3.5" />
                 </Button>
-                <span className="text-sm font-medium w-4 text-center">{currentQuantity}</span>
+                <span className="text-sm font-medium w-6 text-center">{currentQuantity}</span>
                 <Button
                     variant="outline"
                     size="icon"
-                    className="h-6 w-6"
+                    className="h-7 w-7"
                     onClick={handleIncrement}
                 >
-                    <Plus className="h-3 w-3" />
+                    <Plus className="h-3.5 w-3.5" />
                 </Button>
             </div>
         </div>
     );
 };
-
 
 export const AddonsModal = () => {
     const { isOpen, itemToConfigure, closeModal } = useAddonsStore();
@@ -153,25 +146,28 @@ export const AddonsModal = () => {
 
     return (
         <Dialog open={isOpen} onOpenChange={closeModal}>
-            {/* Removendo sm:max-w-[600px] para garantir que o modal use a largura total em telas pequenas, e adicionando w-full para garantir que ele preencha o espaço disponível. */}
-            <DialogContent className="w-full p-0 overflow-y-auto max-h-[90vh]">
-                <DialogHeader className="text-left p-6 pb-4 border-b">
-                    <DialogTitle className="text-2xl font-bold text-foreground flex items-center gap-2">
-                        <CheckCircle2 className="h-6 w-6 text-success" /> Item Adicionado!
+            <DialogContent 
+                className="flex flex-col max-w-md mx-auto h-[90vh] sm:h-[80vh] p-0 gap-0"
+                onOpenAutoFocus={(e) => e.preventDefault()}
+            >
+                {/* Header */}
+                <DialogHeader className="text-left p-5 pb-3 border-b flex-shrink-0">
+                    <DialogTitle className="text-xl font-bold text-foreground flex items-center gap-2">
+                        <CheckCircle2 className="h-5 w-5 text-success" /> Item Adicionado!
                     </DialogTitle>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground mt-1">
                         Turbine seu pedido com adicionais gratuitos e bebidas sugeridas.
                     </p>
                 </DialogHeader>
 
-                <div className="p-6 space-y-8">
-                    
+                {/* Scrollable Content Area */}
+                <div className="flex-1 overflow-y-auto p-5 space-y-6">
                     {/* Seção de Adicionais Gratuitos */}
-                    <section className="space-y-4">
-                        <h3 className="text-xl font-semibold text-primary">
+                    <section className="space-y-3">
+                        <h3 className="text-lg font-semibold text-primary">
                             Adicionais (Cortesia da Casa)
                         </h3>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-xs text-muted-foreground">
                             Selecione quantos itens gratuitos você deseja adicionar ao seu pedido.
                         </p>
                         <div className="space-y-3">
@@ -190,11 +186,11 @@ export const AddonsModal = () => {
                     <Separator />
 
                     {/* Seção de Sugestões Pagas (Bebidas) */}
-                    <section className="space-y-4">
-                        <h3 className="text-xl font-semibold text-foreground">
+                    <section className="space-y-3">
+                        <h3 className="text-lg font-semibold text-foreground">
                             Sugestões (Para Acompanhar)
                         </h3>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-xs text-muted-foreground">
                             Que tal uma bebida gelada para acompanhar seu sushi?
                         </p>
                         <div className="space-y-3">
@@ -211,10 +207,11 @@ export const AddonsModal = () => {
                     </section>
                 </div>
 
-                <div className="p-6 border-t">
+                {/* Fixed Footer with Button */}
+                <div className="p-5 border-t flex-shrink-0">
                     <Button 
                         onClick={handleFinalize}
-                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6"
+                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-base py-5"
                     >
                         Finalizar e Ir para o Carrinho
                     </Button>
