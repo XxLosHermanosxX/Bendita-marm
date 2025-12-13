@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { MapPin, Clock, Bike } from 'lucide-react'; // Corrigido: usando Bike
+import { MapPin, Bike } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLocationStore, simulateIpDetection } from '@/store/use-location-store';
 
@@ -38,22 +38,31 @@ export const LocationDeliveryInfo = ({ onLocationChange }: LocationDeliveryInfoP
   return (
     <div className="w-full bg-background border-b border-border/50 shadow-sm h-12 flex items-center justify-start gap-4 px-4">
       
-      {/* Location/Distance Info (1.6km de você) */}
+      {/* 1. Location (City Name) */}
       <Button 
         variant="ghost" 
         size="sm" 
         onClick={onLocationChange || handleLocationChange}
-        className="flex items-center gap-1 text-sm font-semibold text-muted-foreground p-0 h-auto hover:bg-transparent"
+        className="flex items-center gap-1 text-sm font-semibold text-foreground p-0 h-auto hover:bg-transparent"
       >
-        <MapPin className="h-4 w-4 text-muted-foreground" />
-        <span className="font-bold text-foreground">{currentDistance.replace(' km', 'km')}</span>
-        <span className="text-muted-foreground font-normal">de você</span>
+        <MapPin className="h-4 w-4 text-primary" />
+        <span className="text-primary font-bold">{currentCity}</span>
       </Button>
 
       {/* Separator */}
       <div className="h-6 w-px bg-border"></div>
 
-      {/* Delivery Time */}
+      {/* 2. Distance Info (1.6km de você) */}
+      <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
+        <span className="text-base">📍</span> {/* Emoji de mapa */}
+        <span className="font-bold text-foreground">{currentDistance.replace(' km', 'km')}</span>
+        <span className="text-muted-foreground font-normal">de você</span>
+      </div>
+
+      {/* Separator */}
+      <div className="h-6 w-px bg-border"></div>
+
+      {/* 3. Delivery Time */}
       <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
         <Bike className="h-4 w-4 text-muted-foreground" />
         <span className="font-bold text-foreground">{currentDeliveryTime.replace(' min', ' min')}</span>
