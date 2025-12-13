@@ -107,8 +107,6 @@ export const MenuLayout = ({ activeCategory: initialActiveCategory, visibleCateg
       {/* Sticky Location and Delivery Info Bar (top-16 = 64px) */}
       <div className="sticky top-16 z-30">
         <LocationDeliveryInfo 
-          currentCity="Curitiba" 
-          deliveryTime="35-45 min" 
           onLocationChange={() => toast.info("Funcionalidade de seleção de unidade será implementada aqui.")}
         />
       </div>

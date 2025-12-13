@@ -7,6 +7,7 @@ import { PromoModal } from "../promo-modal";
 import { SidebarProvider } from "@/hooks/use-sidebar-toggle";
 import { SidebarSheet } from "./sidebar-sheet";
 import { useIsMobile } from "@/hooks/use-mobile"; // Importando useIsMobile
+import { LocationModal } from "../location-modal"; // Importando LocationModal
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -28,8 +29,9 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
         </div>
         <Footer />
         
-        {/* Modal de Promoção */}
+        {/* Modals */}
         <PromoModal />
+        <LocationModal />
       </div>
     </SidebarProvider>
   );

@@ -4,6 +4,7 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { MapPin, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLocationStore, simulateIpDetection } from '@/store/use-location-store';
 
 // Placeholder function to determine emoji based on city
 const getCityEmoji = (city: string) => {
@@ -14,13 +15,26 @@ const getCityEmoji = (city: string) => {
 };
 
 interface LocationDeliveryInfoProps {
-  currentCity: string;
-  deliveryTime: string;
   onLocationChange?: () => void;
 }
 
-export const LocationDeliveryInfo = ({ currentCity, deliveryTime, onLocationChange }: LocationDeliveryInfoProps) => {
+export const LocationDeliveryInfo = ({ onLocationChange }: LocationDeliveryInfoProps) => {
+  const { city, state, deliveryTime, clearLocation } = useLocationStore();
+  
+  // Fallback to simulated data if store hasn't loaded yet or is empty
+  const fallback = simulateIpDetection();
+  const currentCity = city || fallback.detectedCity;
+  const currentState = state || fallback.detectedState;
+  const currentDeliveryTime = deliveryTime || fallback.detectedDeliveryTime;
+
   const cityEmoji = getCityEmoji(currentCity);
+
+  const handleLocationChange = () => {
+    // Clear location to trigger the modal again on next page load/refresh
+    clearLocation();
+    // Optionally, force a refresh or redirect to home to show the modal immediately
+    window.location.href = '/'; 
+  };
 
   return (
     <div className="w-full bg-background border-b border-border/50 shadow-sm h-12 flex items-center justify-between px-4">
@@ -29,20 +43,20 @@ export const LocationDeliveryInfo = ({ currentCity, deliveryTime, onLocationChan
       <Button 
         variant="ghost" 
         size="sm" 
-        onClick={onLocationChange}
+        onClick={onLocationChange || handleLocationChange}
         className="flex items-center gap-1 text-sm font-semibold text-foreground p-0 h-auto hover:bg-transparent"
       >
         <MapPin className="h-4 w-4 text-primary" />
         <span className="text-muted-foreground mr-1">Você está em:</span>
         <span className="text-primary">
-          {currentCity} {cityEmoji}
+          {currentCity} - {currentState} {cityEmoji}
         </span>
       </Button>
 
       {/* Delivery Time */}
       <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
         <Clock className="h-4 w-4 text-primary" />
-        <span>{deliveryTime}</span>
+        <span>{currentDeliveryTime}</span>
       </div>
     </div>
   );
