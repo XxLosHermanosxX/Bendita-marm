@@ -32,12 +32,13 @@ const AddonCard = ({ item, type, onQuantityChange, currentQuantity }: AddonCardP
     const handleDecrement = () => onQuantityChange(item.id, Math.max(0, currentQuantity - 1));
 
     return (
-        <div className="flex items-center justify-between gap-2 p-2 border rounded-lg bg-secondary/50 overflow-hidden">
+        // Reduzindo padding e gap para maximizar o espaço interno
+        <div className="flex items-center justify-between gap-1 p-2 border rounded-lg bg-secondary/50 overflow-hidden">
             
             {/* Left Section: Image and Text (Flex-1, constrained) */}
             <div className="flex items-center gap-2 flex-1 min-w-0">
-                {/* Imagem reduzida para h-12 w-12 */}
-                <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
+                {/* Imagem reduzida para h-10 w-10 */}
+                <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-md">
                     <Image 
                         src={item.imageUrl}
                         alt={name}
@@ -152,8 +153,8 @@ export const AddonsModal = () => {
 
     return (
         <Dialog open={isOpen} onOpenChange={closeModal}>
-            {/* Garantindo que o DialogContent não cause overflow horizontal */}
-            <DialogContent className="sm:max-w-[600px] p-0 overflow-y-auto max-h-[90vh]">
+            {/* Removendo sm:max-w-[600px] para garantir que o modal use a largura total em telas pequenas, e adicionando w-full para garantir que ele preencha o espaço disponível. */}
+            <DialogContent className="w-full p-0 overflow-y-auto max-h-[90vh]">
                 <DialogHeader className="text-left p-6 pb-4 border-b">
                     <DialogTitle className="text-2xl font-bold text-foreground flex items-center gap-2">
                         <CheckCircle2 className="h-6 w-6 text-success" /> Item Adicionado!
