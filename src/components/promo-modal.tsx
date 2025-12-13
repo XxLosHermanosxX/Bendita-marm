@@ -82,8 +82,8 @@ export const PromoModal = () => {
           </div>
 
           {/* Content */}
-          {/* Aumentando o espaçamento para space-y-6 */}
-          <div className="p-6 text-center space-y-6">
+          {/* Aumentando o espaçamento para space-y-8 */}
+          <div className="p-6 text-center space-y-8">
             {/* Usando emoji de sushi e melhorando a fonte */}
             <h3 className="text-2xl font-extrabold text-foreground flex items-center justify-center gap-2 font-serif">
                 🍣 {PROMO_PRODUCT.name}
