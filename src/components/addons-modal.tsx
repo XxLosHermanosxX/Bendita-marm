@@ -35,7 +35,7 @@ const AddonCard = ({ item, type, onQuantityChange, currentQuantity }: AddonCardP
         <div className="flex items-center justify-between gap-2 p-2 border rounded-lg bg-secondary/50 overflow-hidden">
             
             {/* Left Section: Image and Text (Flex-1, constrained) */}
-            <div className="flex items-center gap-2 flex-1 min-w-0 overflow-hidden">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
                 {/* Imagem reduzida para h-12 w-12 */}
                 <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
                     <Image 
@@ -46,9 +46,8 @@ const AddonCard = ({ item, type, onQuantityChange, currentQuantity }: AddonCardP
                         className="object-center"
                     />
                 </div>
-                {/* Bloco de Texto: min-w-0 e truncate para garantir compressão */}
-                {/* CORREÇÃO APLICADA AQUI: Adicionando flex-1 min-w-0 para forçar a compressão */}
-                <div className="flex-1 min-w-0">
+                {/* Bloco de Texto: min-w-0 e flex-1 para garantir compressão */}
+                <div className="flex-1 min-w-0 overflow-hidden">
                     <h4 className="text-sm font-semibold text-foreground truncate">{name}</h4>
                     <p className="text-xs text-muted-foreground line-clamp-1">{description}</p>
                     {isPaid && (
