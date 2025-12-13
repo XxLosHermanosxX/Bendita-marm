@@ -9,6 +9,7 @@ import { formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/store/use-cart-store";
 import { ProductModal } from "./product-modal";
 import { useState } from "react";
+import { useAddonsStore } from "@/store/use-addons-store"; // Importando o novo store
 
 interface ProductCardProps {
   product: Product;
@@ -16,15 +17,20 @@ interface ProductCardProps {
 
 export const ProductCard = ({ product }: ProductCardProps) => {
   const addItem = useCartStore((state) => state.addItem);
+  const openAddonsModal = useAddonsStore((state) => state.openModal);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAddToCart = () => {
     if (product.variations && product.variations.length > 0 || product.id === "p30") {
-      // If product has variations or is the custom combo, open modal
+      // If product has variations or is the custom combo, open modal for configuration
       setIsModalOpen(true);
     } else {
-      // For simple products, add directly to cart with default quantity 1
-      addItem(product, 1); // Corrected: added quantity argument
+      // For simple products, add directly to cart and open Addons Modal
+      // We pass the simple item structure to the Addons Modal for finalization
+      openAddonsModal({
+        product: product,
+        quantity: 1,
+      });
     }
   };
 

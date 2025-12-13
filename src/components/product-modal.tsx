@@ -8,11 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Minus, Plus, Utensils, Package } from "lucide-react";
 import { formatCurrency, cn } from "@/lib/utils"; // Importando cn
 import { Textarea } from "@/components/ui/textarea";
-import { useCartStore } from "@/store/use-cart-store";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner"; // <-- Added import
+import { toast } from "sonner";
+import { useAddonsStore } from "@/store/use-addons-store"; // Importando o novo store
 
 interface ProductModalProps {
   product: Product;
@@ -30,7 +30,7 @@ const INITIAL_COMBINED_ITEMS = {
 };
 
 export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) => {
-  const addItem = useCartStore((state) => state.addItem);
+  const openAddonsModal = useAddonsStore((state) => state.openModal);
   const [quantity, setQuantity] = useState(1);
   const [notes, setNotes] = useState("");
   const [selectedItems, setSelectedItems] = useState(INITIAL_COMBINED_ITEMS);
@@ -90,7 +90,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
     });
   };
 
-  const handleAddToCart = () => {
+  const handleContinue = () => {
     if (isCustomCombined && totalPieces !== 80) {
       toast.error(`Selecione exatamente 80 peças. Faltam ${80 - totalPieces} peças.`);
       return;
@@ -111,10 +111,15 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
         };
     }
 
-    addItem(product, quantity, details, notes);
-    setQuantity(1);
-    setNotes("");
-    setSelectedItems(INITIAL_COMBINED_ITEMS);
+    // Pass the configured item to the Addons Modal
+    openAddonsModal({
+        product: product,
+        quantity: quantity,
+        details: details,
+        notes: notes,
+    });
+    
+    // Close the current modal
     onClose();
   };
 
@@ -293,7 +298,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
               )}
               
               <Button
-                onClick={handleAddToCart}
+                onClick={handleContinue}
                 className={cn(
                   "bg-primary hover:bg-primary/90 text-primary-foreground text-base px-6 py-6",
                   isCustomCombined ? "w-full" : ""
@@ -301,9 +306,9 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
                 disabled={isCustomCombined && totalPieces !== 80}
               >
                 {isCustomCombined ? (
-                  totalPieces === 80 ? `Adicionar 80 Peças (${formatCurrency(product.price)})` : `Selecione 80 Peças`
+                  totalPieces === 80 ? `Continuar (${formatCurrency(product.price * quantity)})` : `Selecione 80 Peças`
                 ) : (
-                  `Adicionar ${formatCurrency(totalItemPrice)}`
+                  `Continuar (${formatCurrency(totalItemPrice)})`
                 )}
               </Button>
             </div>

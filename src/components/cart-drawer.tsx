@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { X, Minus, Plus, ShoppingCart, Package } from "lucide-react";
+import { X, Minus, Plus, ShoppingCart, Package, Gift } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -54,7 +54,8 @@ export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
             <ul className="flex-1 overflow-y-auto p-6 space-y-6">
               {items.map((item) => (
                 <li 
-                  key={`${item.product.id}-${item.details?.selectedVariation?.option.label || ''}-${item.details?.customItems?.map((c: { name: string }) => c.name).join('-') || ''}`}
+                  // Usando uma chave mais robusta que inclui freeAddons para diferenciar itens
+                  key={`${item.product.id}-${item.details?.selectedVariation?.option.label || ''}-${item.details?.customItems?.map((c: { name: string }) => c.name).join('-') || ''}-${item.freeAddons?.map(a => `${a.id}:${a.quantity}`).join(',') || ''}`}
                   className="flex items-center gap-4"
                 >
                   <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border bg-secondary">
@@ -107,6 +108,21 @@ export const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                             ))}
                         </div>
                     )}
+                    
+                    {/* Adicionais Gratuitos */}
+                    {item.freeAddons && item.freeAddons.length > 0 && (
+                        <div className="mt-1 space-y-0.5">
+                            <p className="text-xs font-semibold text-success flex items-center gap-1">
+                                <Gift className="h-3 w-3" /> Adicionais:
+                            </p>
+                            {item.freeAddons.map((addon, index) => (
+                                <p key={index} className="text-xs text-muted-foreground italic">
+                                    - {addon.quantity}x {addon.name}
+                                </p>
+                            ))}
+                        </div>
+                    )}
+
 
                     <div className="flex items-center justify-between mt-2">
                       <p className="text-sm text-muted-foreground mt-1">

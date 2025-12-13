@@ -40,6 +40,13 @@ export interface Product {
   ingredients?: string[];
 }
 
+// Define FreeAddon type for tracking selected free items
+export interface FreeAddon {
+  id: string;
+  name: string;
+  quantity: number;
+}
+
 export interface CartItem extends Product {
   quantity: number;
   selectedVariation?: {
@@ -49,6 +56,8 @@ export interface CartItem extends Product {
   notes?: string;
   // Adicionando suporte para itens personalizados (como o combinado de 80 peças)
   customItems?: { name: string; count: number }[];
+  // Adicionando suporte para adicionais gratuitos
+  freeAddons?: FreeAddon[];
 }
 
 export interface Address {

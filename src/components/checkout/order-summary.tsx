@@ -3,8 +3,8 @@
 import React from "react";
 import { useCartStore } from "@/store/use-cart-store";
 import { formatCurrency } from "@/lib/utils";
-import { Separator } from "@/components/ui/separator"; // Adicionado import
-import { Package } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Package, Gift } from "lucide-react";
 
 interface OrderSummaryProps {
   deliveryFee: number;
@@ -21,7 +21,7 @@ export const OrderSummary = ({ deliveryFee, discount }: OrderSummaryProps) => {
       <h2 className="mb-4 text-xl font-bold text-foreground">Resumo do Pedido</h2>
       <ul className="mb-4 space-y-4">
         {items.map((item) => (
-            <li key={`${item.product.id}-${item.details?.selectedVariation?.option.label || ''}-${item.details?.customItems?.map((c: { name: string }) => c.name).join('-') || ''}`} className="flex flex-col justify-between text-sm border-b border-border/50 pb-2 last:border-b-0">
+            <li key={`${item.product.id}-${item.details?.selectedVariation?.option.label || ''}-${item.details?.customItems?.map((c: { name: string }) => c.name).join('-') || ''}-${item.freeAddons?.map(a => `${a.id}:${a.quantity}`).join(',') || ''}`} className="flex flex-col justify-between text-sm border-b border-border/50 pb-2 last:border-b-0">
               <div className="flex justify-between">
                 <span className="text-muted-foreground font-medium">
                   {item.quantity}x {item.product.name}
@@ -42,6 +42,19 @@ export const OrderSummary = ({ deliveryFee, discount }: OrderSummaryProps) => {
                       {item.details.customItems.map((customItem: { name: string; count: number }, index: number) => (
                           <p key={index}>
                               - {customItem.count}x {customItem.name}
+                          </p>
+                      ))}
+                  </div>
+              )}
+              {/* Adicionais Gratuitos */}
+              {item.freeAddons && item.freeAddons.length > 0 && (
+                  <div className="mt-1 pl-4 text-xs text-muted-foreground italic">
+                      <p className="font-semibold text-success flex items-center gap-1">
+                          <Gift className="h-3 w-3" /> Adicionais (Cortesia):
+                      </p>
+                      {item.freeAddons.map((addon, index) => (
+                          <p key={index}>
+                              - {addon.quantity}x {addon.name}
                           </p>
                       ))}
                   </div>

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Product } from '@/types';
+import { Product, FreeAddon } from '@/types';
 import { toast } from 'sonner';
 
 // Define a more specific type for selectedVariation
@@ -19,27 +19,33 @@ interface CartItem {
     customItems?: { name: string; count: number }[];
   };
   notes?: string;
+  freeAddons?: FreeAddon[]; // Added FreeAddons
 }
 
 interface CartStore {
   items: CartItem[];
-  addItem: (product: Product, quantity: number, details?: { selectedVariation?: SelectedVariationDetails, customItems?: { name: string; count: number }[] }, notes?: string) => void;
+  addItem: (product: Product, quantity: number, details?: { selectedVariation?: SelectedVariationDetails, customItems?: { name: string; count: number }[] }, notes?: string, freeAddons?: FreeAddon[]) => void;
   removeItem: (productId: string, details?: { selectedVariation?: SelectedVariationDetails, customItems?: { name: string; count: number }[] }) => void;
-  updateItemQuantity: (productId: string, newQuantity: number, details?: { selectedVariation?: SelectedVariationDetails, customItems?: { name: string; count: number }[] }) => void; // Renamed from updateQuantity
+  updateItemQuantity: (productId: string, newQuantity: number, details?: { selectedVariation?: SelectedVariationDetails, customItems?: { name: string; count: number }[] }) => void;
   clearCart: () => void;
   getTotalItems: () => number;
   getTotalPrice: () => number;
-  getSubtotal: () => number; // Added getSubtotal (same as getTotalPrice for now)
+  getSubtotal: () => number;
 }
 
 export const useCartStore = create<CartStore>((set, get) => ({
   items: [],
-  addItem: (product, quantity, details, notes) => {
+  addItem: (product, quantity, details, notes, freeAddons) => {
     set((state) => {
+      // We need a unique identifier for items that are the same product but have different details/addons
+      const itemIdentifier = (item: CartItem) => 
+        `${item.product.id}-${JSON.stringify(item.details)}-${JSON.stringify(item.freeAddons)}`;
+      
+      const newItem: CartItem = { product, quantity, details, notes, freeAddons };
+
+      // Check if an identical item already exists (same product ID, same details, same free addons)
       const existingItemIndex = state.items.findIndex(
-        (item) =>
-          item.product.id === product.id &&
-          JSON.stringify(item.details) === JSON.stringify(details)
+        (item) => itemIdentifier(item) === itemIdentifier(newItem)
       );
 
       if (existingItemIndex > -1) {
@@ -52,12 +58,14 @@ export const useCartStore = create<CartStore>((set, get) => ({
         return { items: updatedItems };
       } else {
         toast.success(`${quantity}x ${product.name} adicionado ao carrinho!`);
-        return { items: [...state.items, { product, quantity, details, notes }] };
+        return { items: [...state.items, newItem] };
       }
     });
   },
   removeItem: (productId, details) => {
     set((state) => {
+      // Note: This removeItem logic is simplified and doesn't account for freeAddons in the details check, 
+      // which is fine if we assume removeItem is called from the CartDrawer where the item object is fully known.
       const updatedItems = state.items.filter(
         (item) =>
           !(item.product.id === productId && JSON.stringify(item.details) === JSON.stringify(details))
