@@ -75,15 +75,15 @@ export const PromoModal = () => {
               src={PROMO_PRODUCT.imageUrl}
               alt={PROMO_PRODUCT.name}
               layout="fill"
-              // Ajustando objectFit para 'contain' ou 'cover' com foco no centro. 
-              // Usaremos 'cover' e garantiremos que a imagem esteja bem enquadrada.
+              // Ajustando objectFit para 'cover' com foco no centro.
               objectFit="cover" 
               className="object-center"
             />
           </div>
 
           {/* Content */}
-          <div className="p-6 text-center space-y-4">
+          {/* Aumentando o espaçamento para space-y-6 */}
+          <div className="p-6 text-center space-y-6">
             {/* Usando emoji de sushi e melhorando a fonte */}
             <h3 className="text-2xl font-extrabold text-foreground flex items-center justify-center gap-2 font-serif">
                 🍣 {PROMO_PRODUCT.name}
@@ -93,11 +93,12 @@ export const PromoModal = () => {
             </p>
             
             {/* Preços Duplos: Cortado e Novo Preço em Destaque */}
-            <div className="flex flex-col items-center justify-center space-y-1">
-                <span className="text-lg text-gray-500 line-through">
+            <div className="flex flex-col items-center justify-center space-y-2">
+                <span className="text-xl text-gray-500 line-through font-medium">
                     De {formatCurrency(PROMO_PRODUCT.originalPrice)}
                 </span>
-                <div className="text-4xl font-extrabold text-green-600">
+                {/* Novo Preço: Verde Claro, Sombreado Leve e Efeito de Brilho/Pulsação */}
+                <div className="text-5xl font-black text-green-400 animate-pulse drop-shadow-lg shadow-green-500/50">
                     Por {formatCurrency(PROMO_PRODUCT.price)}
                 </div>
             </div>
