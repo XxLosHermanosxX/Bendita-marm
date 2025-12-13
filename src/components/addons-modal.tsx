@@ -32,10 +32,10 @@ const AddonCard = ({ item, type, onQuantityChange, currentQuantity }: AddonCardP
     const handleDecrement = () => onQuantityChange(item.id, Math.max(0, currentQuantity - 1));
 
     return (
-        <div className="flex items-center justify-between gap-2 p-2 border rounded-lg bg-secondary/50">
+        <div className="flex items-center justify-between gap-2 p-2 border rounded-lg bg-secondary/50 overflow-hidden">
             
-            {/* Left Section: Image and Text (Flex-1) */}
-            <div className="flex items-center gap-2 flex-1 min-w-0">
+            {/* Left Section: Image and Text (Flex-1, constrained) */}
+            <div className="flex items-center gap-2 flex-1 min-w-0 overflow-hidden">
                 {/* Imagem reduzida para h-12 w-12 */}
                 <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
                     <Image 
@@ -152,7 +152,7 @@ export const AddonsModal = () => {
 
     return (
         <Dialog open={isOpen} onOpenChange={closeModal}>
-            {/* Removendo w-[95%] e confiando no padding padrão do DialogContent para mobile */}
+            {/* Garantindo que o DialogContent não cause overflow horizontal */}
             <DialogContent className="sm:max-w-[600px] p-0 overflow-y-auto max-h-[90vh]">
                 <DialogHeader className="text-left p-6 pb-4 border-b">
                     <DialogTitle className="text-2xl font-bold text-foreground flex items-center gap-2">
