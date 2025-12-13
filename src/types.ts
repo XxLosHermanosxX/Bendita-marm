@@ -50,6 +50,13 @@ export interface PaymentMethod {
   };
 }
 
+// Define FreeAddon type for tracking selected free items
+export interface FreeAddon {
+  id: string;
+  name: string;
+  quantity: number;
+}
+
 export interface Order {
   id: string;
   date: string;
@@ -63,6 +70,7 @@ export interface Order {
     quantity: number;
     details?: any;
     notes?: string;
+    freeAddons?: FreeAddon[]; // Adicionado
   }>;
   subtotal: number;
   discount: number;
