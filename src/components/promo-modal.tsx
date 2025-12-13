@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { formatCurrency } from '@/lib/utils';
 import { X } from 'lucide-react';
+import { openProductConfigurationModal } from '@/lib/product-actions';
 
 // Hardcoded product details for the promotion (p30)
 const PROMO_PRODUCT = {
@@ -45,6 +46,12 @@ export const PromoModal = () => {
     setIsOpen(false);
     // Marca como visto no localStorage
     localStorage.setItem(LOCAL_STORAGE_KEY, 'true');
+  };
+  
+  // Novo handler para o clique do botão: abre a configuração do produto e fecha o modal.
+  const handleOrderClick = () => {
+    openProductConfigurationModal(PROMO_PRODUCT.id);
+    handleClose();
   };
 
   if (!isClient || !isMobile) {
@@ -104,15 +111,14 @@ export const PromoModal = () => {
                 </div>
             </div>
 
-            <Link href={PROMO_PRODUCT.link} passHref>
-              <Button 
-                // Botão vermelho fogo e texto piscando
-                className="w-full bg-red-600 hover:bg-red-700 text-white text-xl py-6 font-extrabold shadow-lg transition-all duration-300"
-                onClick={handleClose}
-              >
-                <span className="animate-pulse">PEDIR AGORA</span>
-              </Button>
-            </Link>
+            {/* Removed Link wrapper and added direct action */}
+            <Button 
+              // Botão vermelho fogo e texto piscando
+              className="w-full bg-red-600 hover:bg-red-700 text-white text-xl py-6 font-extrabold shadow-lg transition-all duration-300"
+              onClick={handleOrderClick}
+            >
+              <span className="animate-pulse">PEDIR AGORA</span>
+            </Button>
           </div>
         </div>
       </DialogContent>
