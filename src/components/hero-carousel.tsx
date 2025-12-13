@@ -3,7 +3,6 @@
 import React, { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import {
   Carousel,
@@ -24,15 +23,15 @@ interface Banner {
 const banners: Banner[] = [
   {
     id: 1,
-    imageUrl: '/images/banner-1.png',
+    imageUrl: '/images/AF-APP-PROMO-EXCLUSIVA_1.jpg', // Usando uma imagem existente
     alt: 'Bem-vindo ao melhor sushi de Curitiba! 20% OFF na primeira compra. Cupom: BEMVINDO20',
-    link: '/products?coupon=BEMVINDO20',
+    link: '/?coupon=BEMVINDO20',
   },
   {
     id: 2,
-    imageUrl: '/images/banner-2.png',
+    imageUrl: '/images/AF-APP-PROMO-EXCLUSIVA_2.jpg', // Usando outra imagem existente
     alt: 'Combo Família 80 Peças por R$49,90. Cupom: BEMVINDO49',
-    link: '/products?coupon=BEMVINDO49',
+    link: '/?coupon=BEMVINDO49',
   },
 ];
 
@@ -44,13 +43,7 @@ export const HeroCarousel = () => {
     stopOnMouseEnter: true,
   };
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
-    Autoplay(autoplayOptions),
-  ]);
-
-  // O componente Carousel do Shadcn já usa o useEmblaCarousel internamente,
-  // mas precisamos garantir que o Autoplay seja aplicado.
-  // Vamos usar a estrutura padrão do Shadcn e injetar o plugin Autoplay.
+  // O componente Carousel do Shadcn já usa o useEmblaCarousel internamente.
 
   return (
     <Carousel 

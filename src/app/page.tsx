@@ -4,9 +4,8 @@ import React, { useMemo, useState, useEffect } from "react";
 import { products, categories } from "@/data/products";
 import { Product } from "@/types";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { MenuLayout } from "@/components/menu-layout";
-import { DesktopMenuLayout } from "@/components/desktop-menu-layout";
 import { useSearchParams } from "next/navigation";
+import { HomePageLayout } from "@/components/home-page-layout"; // Novo import
 
 // Função para agrupar produtos por categoria
 const groupProductsByCategory = (products: Product[]) => {
@@ -21,7 +20,6 @@ const groupProductsByCategory = (products: Product[]) => {
 };
 
 export default function MenuPage() {
-  const isMobile = useIsMobile();
   const searchParams = useSearchParams();
   
   // Estado local para o termo de busca, inicializado pelo URL
@@ -59,20 +57,8 @@ export default function MenuPage() {
 
   const activeCategory = visibleCategories[0] || "";
 
-  if (isMobile) {
-    return (
-      <div className="pb-20"> {/* Adiciona padding para a barra de carrinho fixa */}
-        <MenuLayout
-          activeCategory={activeCategory}
-          visibleCategories={visibleCategories}
-          groupedProducts={groupedProducts}
-        />
-      </div>
-    );
-  }
-
   return (
-    <DesktopMenuLayout
+    <HomePageLayout
       searchTerm={searchTerm}
       setSearchTerm={setSearchTerm}
       filteredProducts={filteredProducts}

@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useSearchParams } from "next/navigation";
+import { HeroCarousel } from "./hero-carousel"; // Importando o carrossel
 
 // Helper component for category section
 const ProductCategorySection = React.forwardRef<HTMLDivElement, { category: string, products: Product[] }>(({ category, products }, ref) => {
@@ -39,6 +40,7 @@ interface DesktopMenuLayoutProps {
   activeCategory: string;
   visibleCategories: string[];
   groupedProducts: Record<string, Product[]>;
+  showCarousel: boolean; // Nova prop
 }
 
 export const DesktopMenuLayout = ({ 
@@ -47,7 +49,8 @@ export const DesktopMenuLayout = ({
   filteredProducts, 
   activeCategory, 
   visibleCategories, 
-  groupedProducts 
+  groupedProducts,
+  showCarousel
 }: DesktopMenuLayoutProps) => {
   
   const [currentActiveCategory, setCurrentActiveCategory] = useState(activeCategory);
@@ -119,6 +122,13 @@ export const DesktopMenuLayout = ({
   return (
     <div className="w-full">
       
+      {/* Carrossel Principal (Desktop) */}
+      {showCarousel && (
+        <div className="mb-6">
+          <HeroCarousel />
+        </div>
+      )}
+
       {/* Sticky Location and Delivery Info Bar (top-16 = 64px) */}
       <div className="sticky top-16 z-30">
         <LocationDeliveryInfo 

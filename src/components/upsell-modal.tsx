@@ -130,8 +130,9 @@ export const UpsellModal = ({ isOpen, onClose }: UpsellModalProps) => {
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[450px] w-[95%] max-w-full md:max-w-[450px] p-0 overflow-hidden data-[state=open]:slide-in-from-bottom data-[state=open]:sm:slide-in-from-right">
-                <DialogHeader className="p-6 pb-4 border-b bg-secondary/50">
+            {/* Ajustando o DialogContent para melhor responsividade e scroll no mobile */}
+            <DialogContent className="sm:max-w-[450px] w-[95%] max-w-full md:max-w-[450px] p-0 overflow-hidden data-[state=open]:slide-in-from-bottom data-[state=open]:sm:slide-in-from-right flex flex-col max-h-[90vh]">
+                <DialogHeader className="p-6 pb-4 border-b bg-secondary/50 flex-shrink-0">
                     <DialogTitle className="text-xl font-bold text-foreground flex items-center gap-2">
                         <ShoppingCart className="h-6 w-6 text-primary" /> Adicionado ao Carrinho!
                     </DialogTitle>
@@ -140,7 +141,8 @@ export const UpsellModal = ({ isOpen, onClose }: UpsellModalProps) => {
                     </p>
                 </DialogHeader>
 
-                <div className="p-6 space-y-6">
+                {/* Conteúdo com scroll */}
+                <div className="p-6 space-y-6 overflow-y-auto flex-1">
                     
                     {/* Seção de Adicionais Gratuitos */}
                     <div className="space-y-3 p-4 border rounded-lg bg-background">
@@ -158,31 +160,32 @@ export const UpsellModal = ({ isOpen, onClose }: UpsellModalProps) => {
                     <div className="space-y-4">
                         <h3 className="text-lg font-semibold text-foreground">Sugestões para o seu pedido:</h3>
                         
-                        <div className="space-y-3 max-h-64 overflow-y-auto pr-2">
+                        <div className="space-y-3">
                             {upsellProducts.map(product => (
                                 <UpsellCard key={product.id} product={product} />
                             ))}
                         </div>
                     </div>
+                </div>
 
-                    <div className="pt-4 flex justify-between gap-3 border-t">
-                        <Button 
-                            variant="outline" 
-                            onClick={onClose}
-                            className="flex-1"
-                        >
-                            Continuar Comprando
-                        </Button>
-                        <Button 
-                            className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
-                            onClick={() => {
-                                onClose();
-                                router.push('/checkout');
-                            }}
-                        >
-                            Finalizar Pedido ({totalCartItems} itens)
-                        </Button>
-                    </div>
+                {/* Rodapé fixo */}
+                <div className="p-6 pt-4 flex justify-between gap-3 border-t flex-shrink-0">
+                    <Button 
+                        variant="outline" 
+                        onClick={onClose}
+                        className="flex-1"
+                    >
+                        Continuar Comprando
+                    </Button>
+                    <Button 
+                        className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                        onClick={() => {
+                            onClose();
+                            router.push('/checkout');
+                        }}
+                    >
+                        Finalizar Pedido ({totalCartItems} itens)
+                    </Button>
                 </div>
             </DialogContent>
         </Dialog>

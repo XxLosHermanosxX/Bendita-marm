@@ -45,7 +45,7 @@ export const LocationModal = () => {
     clearLocation();
     setIsOpen(false);
     // Redirecting to products page as a fallback for manual input
-    router.push('/products');
+    router.push('/'); // Corrigido para a rota raiz
   };
 
   // We only render if we are on the client, location is not confirmed, and we have detected data.
