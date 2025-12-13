@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { MapPin, Clock, Car } from 'lucide-react'; // Importando Car para representar a distância
+import { MapPin, Clock, Bike } from 'lucide-react'; // Corrigido: usando Bike
 import { cn } from '@/lib/utils';
 import { useLocationStore, simulateIpDetection } from '@/store/use-location-store';
 
@@ -26,9 +26,7 @@ export const LocationDeliveryInfo = ({ onLocationChange }: LocationDeliveryInfoP
   const currentCity = city || fallback.detectedCity;
   const currentState = state || fallback.detectedState;
   const currentDeliveryTime = deliveryTime || fallback.detectedDeliveryTime;
-  const currentDistance = distance || fallback.detectedDistance; // Usando a distância
-
-  const cityEmoji = getCityEmoji(currentCity);
+  const currentDistance = distance || fallback.detectedDistance; 
 
   const handleLocationChange = () => {
     // Clear location to trigger the modal again on next page load/refresh
@@ -38,35 +36,27 @@ export const LocationDeliveryInfo = ({ onLocationChange }: LocationDeliveryInfoP
   };
 
   return (
-    <div className="w-full bg-background border-b border-border/50 shadow-sm h-12 flex items-center justify-between px-4">
+    <div className="w-full bg-background border-b border-border/50 shadow-sm h-12 flex items-center justify-start gap-4 px-4">
       
-      {/* Location Selector Button */}
+      {/* Location/Distance Info (1.6km de você) */}
       <Button 
         variant="ghost" 
         size="sm" 
         onClick={onLocationChange || handleLocationChange}
-        className="flex items-center gap-1 text-sm font-semibold text-foreground p-0 h-auto hover:bg-transparent"
+        className="flex items-center gap-1 text-sm font-semibold text-muted-foreground p-0 h-auto hover:bg-transparent"
       >
-        <MapPin className="h-4 w-4 text-primary" />
-        <span className="text-muted-foreground mr-1">Você está em:</span>
-        <span className="text-primary">
-          {currentCity} - {currentState} {cityEmoji}
-        </span>
+        <MapPin className="h-4 w-4 text-muted-foreground" />
+        <span className="font-bold text-foreground">{currentDistance.replace(' km', 'km')}</span>
+        <span className="text-muted-foreground font-normal">de você</span>
       </Button>
 
-      {/* Delivery Time and Distance */}
-      <div className="flex items-center gap-4">
-        {/* Delivery Time */}
-        <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
-          <Clock className="h-4 w-4 text-primary" />
-          <span>{currentDeliveryTime}</span>
-        </div>
-        
-        {/* Distance */}
-        <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
-          <Car className="h-4 w-4 text-primary" />
-          <span>{currentDistance}</span>
-        </div>
+      {/* Separator */}
+      <div className="h-6 w-px bg-border"></div>
+
+      {/* Delivery Time */}
+      <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
+        <Bike className="h-4 w-4 text-muted-foreground" />
+        <span className="font-bold text-foreground">{currentDeliveryTime.replace(' min', ' min')}</span>
       </div>
     </div>
   );
