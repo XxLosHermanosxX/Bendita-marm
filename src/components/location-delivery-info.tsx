@@ -75,36 +75,36 @@ export const LocationDeliveryInfo = ({ onLocationChange }: LocationDeliveryInfoP
     // Outer wrapper to handle sticky positioning and ensure the pill is centered
     <div className="w-full bg-background py-2 flex justify-center border-b border-border/50 shadow-sm">
       
-      {/* The Pill Container: Compact, rounded, bordered, and white background */}
-      <div className="flex items-center h-8 px-3 bg-white border border-border rounded-full shadow-md text-sm">
+      {/* The Pill Container: Increased size (h-10, px-4, text-base) */}
+      <div className="flex items-center h-10 px-4 bg-white border border-border rounded-full shadow-md text-base">
         
         {/* 1. Location (City Name) - Clickable */}
         <Button 
           variant="ghost" 
           size="sm" 
           onClick={onLocationChange || handleLocationChange}
-          className="flex items-center gap-1 text-sm font-semibold text-primary p-0 h-auto hover:bg-transparent flex-shrink-0"
+          className="flex items-center gap-1 text-base font-semibold text-primary p-0 h-auto hover:bg-transparent flex-shrink-0"
         >
-          <MapPin className="h-4 w-4 text-primary" />
+          <MapPin className="h-5 w-5 text-primary" /> {/* Ícone maior */}
           <span className="font-bold">{currentCity}</span>
         </Button>
 
         {/* Separator */}
-        <div className="h-4 w-px bg-border mx-2 flex-shrink-0"></div>
+        <div className="h-5 w-px bg-border mx-3 flex-shrink-0"></div> {/* Separador maior */}
 
         {/* 2. Distance Info (1.6km de você) */}
         <div className="flex items-center gap-1 text-muted-foreground flex-shrink-0">
-          <MapPin className="h-4 w-4 text-primary" /> 
+          <MapPin className="h-5 w-5 text-primary" /> {/* Ícone maior */}
           <span className="font-bold text-foreground">{currentDistance.replace(' km', 'km')}</span>
-          <span className="text-muted-foreground font-normal text-xs hidden sm:inline">de você</span>
+          <span className="text-muted-foreground font-normal text-sm hidden sm:inline">de você</span> {/* Fonte menor para 'de você' */}
         </div>
 
         {/* Separator */}
-        <div className="h-4 w-px bg-border mx-2 flex-shrink-0"></div>
+        <div className="h-5 w-px bg-border mx-3 flex-shrink-0"></div> {/* Separador maior */}
 
         {/* 3. Delivery Time (Dinâmico) */}
         <div className="flex items-center gap-1 text-muted-foreground flex-shrink-0">
-          <Bike className={cn("h-4 w-4", timeIconClasses[dynamicTime.color])} />
+          <Bike className={cn("h-5 w-5", timeIconClasses[dynamicTime.color])} /> {/* Ícone maior */}
           <span className={deliveryTimeClasses}>
             {currentDeliveryTime.replace(' min', ' min')}
           </span>
