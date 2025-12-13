@@ -36,36 +36,38 @@ export const LocationDeliveryInfo = ({ onLocationChange }: LocationDeliveryInfoP
   };
 
   return (
-    <div className="w-full bg-background border-b border-border/50 shadow-sm h-12 flex items-center justify-start gap-4 px-4">
-      
-      {/* 1. Location (City Name) */}
-      <Button 
-        variant="ghost" 
-        size="sm" 
-        onClick={onLocationChange || handleLocationChange}
-        className="flex items-center gap-1 text-sm font-semibold text-foreground p-0 h-auto hover:bg-transparent"
-      >
-        <MapPin className="h-4 w-4 text-primary" />
-        <span className="text-primary font-bold">{currentCity}</span>
-      </Button>
+    <div className="w-full bg-background border-b border-border/50 shadow-sm h-12 flex items-center px-4">
+      <div className="flex items-center justify-start gap-4 w-full overflow-x-auto whitespace-nowrap">
+        
+        {/* 1. Location (City Name) - Always visible and clickable */}
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={onLocationChange || handleLocationChange}
+          className="flex items-center gap-1 text-sm font-semibold text-foreground p-0 h-auto hover:bg-transparent flex-shrink-0"
+        >
+          <MapPin className="h-4 w-4 text-primary" />
+          <span className="text-primary font-bold">{currentCity}</span>
+        </Button>
 
-      {/* Separator */}
-      <div className="h-6 w-px bg-border"></div>
+        {/* Separator */}
+        <div className="h-6 w-px bg-border flex-shrink-0"></div>
 
-      {/* 2. Distance Info (1.6km de você) */}
-      <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
-        <span className="text-base">📍</span> {/* Emoji de mapa */}
-        <span className="font-bold text-foreground">{currentDistance.replace(' km', 'km')}</span>
-        <span className="text-muted-foreground font-normal">de você</span>
-      </div>
+        {/* 2. Distance Info (1.6km de você) */}
+        <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground flex-shrink-0">
+          <span className="text-base">📍</span> {/* Emoji de mapa */}
+          <span className="font-bold text-foreground">{currentDistance.replace(' km', 'km')}</span>
+          <span className="text-muted-foreground font-normal">de você</span>
+        </div>
 
-      {/* Separator */}
-      <div className="h-6 w-px bg-border"></div>
+        {/* Separator */}
+        <div className="h-6 w-px bg-border flex-shrink-0"></div>
 
-      {/* 3. Delivery Time */}
-      <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
-        <Bike className="h-4 w-4 text-muted-foreground" />
-        <span className="font-bold text-foreground">{currentDeliveryTime.replace(' min', ' min')}</span>
+        {/* 3. Delivery Time */}
+        <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground flex-shrink-0">
+          <Bike className="h-4 w-4 text-muted-foreground" />
+          <span className="font-bold text-foreground">{currentDeliveryTime.replace(' min', ' min')}</span>
+        </div>
       </div>
     </div>
   );
