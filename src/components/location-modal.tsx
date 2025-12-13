@@ -57,7 +57,10 @@ export const LocationModal = () => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[400px] p-8 text-center">
         <div className="space-y-6">
-          <SushiakiLogo className="h-12 w-12 text-primary mx-auto" />
+          {/* Usando a logo real, ajustando o tamanho do container para a proporção da imagem */}
+          <div className="mx-auto h-16 w-40">
+            <SushiakiLogo className="h-full w-full" />
+          </div>
           <h2 className="text-3xl font-bold text-foreground">
             Bateu a fome de Japa?
           </h2>

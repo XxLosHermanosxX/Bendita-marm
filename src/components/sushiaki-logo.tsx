@@ -1,4 +1,6 @@
-import { Fish } from 'lucide-react';
+"use client";
+
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
 interface SushiakiLogoProps {
@@ -6,7 +8,16 @@ interface SushiakiLogoProps {
 }
 
 export const SushiakiLogo = ({ className }: SushiakiLogoProps) => {
+  // Definindo um tamanho base que respeita a proporção da logo (mais larga que alta)
   return (
-    <Fish className={cn("text-primary", className)} />
+    <div className={cn("relative h-16 w-40", className)}>
+      <Image
+        src="/images/logo_sushiaki_full.png"
+        alt="Sushiaki Logo"
+        layout="fill"
+        objectFit="contain"
+        priority
+      />
+    </div>
   );
 };
