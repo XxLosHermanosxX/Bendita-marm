@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
 import { useLocationStore, simulateIpDetection } from '@/store/use-location-store';
@@ -66,6 +66,9 @@ export const LocationModal = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[400px] p-8 text-center">
+        <DialogHeader className="sr-only">
+          <DialogTitle>Confirmação de Localização</DialogTitle>
+        </DialogHeader>
         <div className="space-y-6">
           {/* Usando a logo real, ajustando o tamanho do container para a proporção da imagem */}
           <div className="mx-auto h-16 w-40">

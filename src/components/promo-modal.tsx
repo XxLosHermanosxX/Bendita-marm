@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { formatCurrency } from '@/lib/utils';
@@ -53,6 +53,9 @@ export const PromoModal = () => {
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[425px] p-0 overflow-hidden">
+        <DialogHeader className="sr-only">
+          <DialogTitle>Promoção Exclusiva</DialogTitle>
+        </DialogHeader>
         <div className="relative">
           {/* Close Button */}
           <Button
