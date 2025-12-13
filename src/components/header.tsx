@@ -197,7 +197,7 @@ export const Header = () => {
       {isMobile && totalCartItems > 0 && !isCheckoutPage && (
         <div className="fixed bottom-0 left-0 right-0 bg-red-600 p-4 z-40">
           <Button 
-            className="w-full bg-red-600 hover:bg-red-700 text-green-400 text-lg py-6 font-bold"
+            className="w-full bg-red-600 hover:bg-red-700 text-white text-lg py-6 font-bold"
             onClick={() => setIsCartOpen(true)}
           >
             Ver Carrinho ({totalCartItems} {totalCartItems === 1 ? 'item' : 'itens'}) - {formatCurrency(totalCartPrice)}
