@@ -21,7 +21,7 @@ export const PartnerLogosScroll = () => {
         {logos.map((logo, index) => (
           <div 
             key={index} 
-            className="flex-shrink-0 mx-8 flex items-center justify-center h-10"
+            className="flex-shrink-0 mx-4 flex items-center justify-center h-10" // Reduzindo mx-8 para mx-4
             style={{ width: logo.width }} // Define a largura para manter o espaçamento consistente
           >
             <Image
