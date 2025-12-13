@@ -7,12 +7,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { formatCurrency } from '@/lib/utils';
-import { Package, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 // Hardcoded product details for the promotion (p30)
 const PROMO_PRODUCT = {
   id: "p30",
   name: "Combinado Exclusivo 80 Peças",
+  originalPrice: 79.90, // Novo preço original
   price: 49.90,
   imageUrl: "/images/combinado-80-pecas.png",
   link: "/products?category=Exclusivos%20do%20App",
@@ -52,7 +53,8 @@ export const PromoModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[425px] p-0 overflow-hidden">
+      {/* Aumentando o arredondamento do DialogContent (rounded-[1.5rem]) */}
+      <DialogContent className="sm:max-w-[425px] p-0 overflow-hidden rounded-[1.5rem]">
         <DialogHeader className="sr-only">
           <DialogTitle>Promoção Exclusiva</DialogTitle>
         </DialogHeader>
@@ -61,7 +63,7 @@ export const PromoModal = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-2 right-2 z-10 bg-black/50 hover:bg-black/70 text-white rounded-full h-8 w-8"
+            className="absolute top-3 right-3 z-10 bg-black/50 hover:bg-black/70 text-white rounded-full h-8 w-8"
             onClick={handleClose}
           >
             <X className="h-4 w-4" />
@@ -73,30 +75,40 @@ export const PromoModal = () => {
               src={PROMO_PRODUCT.imageUrl}
               alt={PROMO_PRODUCT.name}
               layout="fill"
-              objectFit="cover"
+              // Ajustando objectFit para 'contain' ou 'cover' com foco no centro. 
+              // Usaremos 'cover' e garantiremos que a imagem esteja bem enquadrada.
+              objectFit="cover" 
               className="object-center"
             />
           </div>
 
           {/* Content */}
           <div className="p-6 text-center space-y-4">
-            <h3 className="text-2xl font-bold text-primary flex items-center justify-center gap-2">
-                <Package className="h-6 w-6" /> {PROMO_PRODUCT.name}
+            {/* Usando emoji de sushi e melhorando a fonte */}
+            <h3 className="text-2xl font-extrabold text-foreground flex items-center justify-center gap-2 font-serif">
+                🍣 {PROMO_PRODUCT.name}
             </h3>
             <p className="text-lg text-foreground">
               Aproveite o maior combinado da casa por um preço imperdível!
             </p>
             
-            <div className="text-3xl font-extrabold text-destructive">
-                {formatCurrency(PROMO_PRODUCT.price)}
+            {/* Preços Duplos: Cortado e Novo Preço em Destaque */}
+            <div className="flex flex-col items-center justify-center space-y-1">
+                <span className="text-lg text-gray-500 line-through">
+                    De {formatCurrency(PROMO_PRODUCT.originalPrice)}
+                </span>
+                <div className="text-4xl font-extrabold text-green-600">
+                    Por {formatCurrency(PROMO_PRODUCT.price)}
+                </div>
             </div>
 
             <Link href={PROMO_PRODUCT.link} passHref>
               <Button 
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6"
+                // Botão vermelho fogo e texto piscando
+                className="w-full bg-red-600 hover:bg-red-700 text-white text-xl py-6 font-extrabold shadow-lg transition-all duration-300"
                 onClick={handleClose}
               >
-                Pedir Agora
+                <span className="animate-pulse">PEDIR AGORA</span>
               </Button>
             </Link>
           </div>
