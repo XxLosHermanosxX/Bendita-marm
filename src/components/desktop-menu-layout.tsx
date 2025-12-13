@@ -175,7 +175,8 @@ export const DesktopMenuLayout = ({
               {filteredProducts.length} produtos encontrados
             </p>
             {visibleCategories.map((category) => {
-              const categoryProducts = groupedProducts[category].filter(p => filteredProducts.includes(p));
+              // Apenas pegamos os produtos já agrupados e filtrados
+              const categoryProducts = groupedProducts[category] || [];
               
               // Only render category section if it contains filtered products
               if (categoryProducts.length === 0) return null;
