@@ -91,5 +91,5 @@
 
 /* Utility class to apply the animation */
 .animate-scroll-x {
-  animation: scroll-x 30s linear infinite; /* Duração reduzida para 30s */
+  animation: scroll-x 15s linear infinite; /* Duração reduzida para 15s */
 }
