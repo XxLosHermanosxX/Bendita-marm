@@ -99,7 +99,7 @@ export const PromoModal = () => {
                     De {formatCurrency(PROMO_PRODUCT.originalPrice)}
                 </span>
                 {/* Novo Preço: Verde Claro, Sombreado Leve e Efeito de Brilho/Pulsação */}
-                <div className="text-4xl font-black text-green-400 animate-pulse drop-shadow-lg shadow-green-500/50">
+                <div className="text-3xl font-black text-green-400 animate-pulse drop-shadow-lg shadow-green-500/50">
                     Por {formatCurrency(PROMO_PRODUCT.price)}
                 </div>
             </div>
