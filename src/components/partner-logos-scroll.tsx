@@ -17,12 +17,13 @@ export const PartnerLogosScroll = () => {
 
   return (
     <div className="w-full overflow-hidden bg-secondary py-3 border-b border-border/50">
-      <div className="flex animate-scroll-x">
+      {/* Adicionando min-w-max para garantir que o container flex seja largo o suficiente para todo o conteúdo duplicado */}
+      <div className="flex animate-scroll-x min-w-max">
         {logos.map((logo, index) => (
           <div 
             key={index} 
-            className="flex-shrink-0 mx-4 flex items-center justify-center h-10" // Reduzindo mx-8 para mx-4
-            style={{ width: logo.width }} // Define a largura para manter o espaçamento consistente
+            className="flex-shrink-0 mx-4 flex items-center justify-center h-10"
+            style={{ width: logo.width }} 
           >
             <Image
               src={logo.src}
