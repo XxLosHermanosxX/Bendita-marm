@@ -84,8 +84,8 @@ export const PromoModal = () => {
           {/* Content */}
           {/* Aumentando o espaçamento para space-y-8 */}
           <div className="p-6 text-center space-y-8">
-            {/* Usando emoji de sushi e melhorando a fonte */}
-            <h3 className="text-2xl font-extrabold text-foreground flex items-center justify-center gap-2 font-serif">
+            {/* Usando emoji de sushi e fonte padrão bold */}
+            <h3 className="text-2xl font-extrabold text-foreground flex items-center justify-center gap-2">
                 🍣 {PROMO_PRODUCT.name}
             </h3>
             <p className="text-lg text-foreground">
@@ -93,8 +93,8 @@ export const PromoModal = () => {
             </p>
             
             {/* Preços Duplos: Cortado e Novo Preço em Destaque */}
-            {/* Adicionando mb-4 para garantir separação do botão */}
-            <div className="flex flex-col items-center justify-center space-y-2 mb-4">
+            {/* Aumentando mb-4 para mb-8 para subir o preço e separar do botão */}
+            <div className="flex flex-col items-center justify-center space-y-2 mb-8">
                 <span className="text-xl text-gray-500 line-through font-medium">
                     De {formatCurrency(PROMO_PRODUCT.originalPrice)}
                 </span>
