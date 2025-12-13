@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Product } from "@/types";
 import { LocationDeliveryInfo } from "@/components/location-delivery-info";
 import { toast } from "sonner";
+import { PartnerLogosScroll } from "./partner-logos-scroll"; // Importando o novo componente
 
 // Helper component for category section
 const ProductCategorySection = React.forwardRef<HTMLDivElement, { category: string, products: Product[] }>(({ category, products }, ref) => {
@@ -134,6 +135,9 @@ export const MenuLayout = ({ activeCategory: initialActiveCategory, visibleCateg
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
       </div>
+      
+      {/* Partner Logos Scroll (New Section) */}
+      <PartnerLogosScroll />
 
       {/* Product Sections */}
       <div className="p-4">
