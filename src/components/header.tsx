@@ -8,10 +8,10 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { CartDrawer } from "@/components/cart-drawer";
 import { useCartStore } from "@/store/use-cart-store";
-import { useRouter, usePathname } from "next/navigation"; // Importando usePathname
+import { useRouter, usePathname } from "next/navigation";
 import { BusinessHoursStatus } from "./business-hours-status";
 import { cn, formatCurrency } from "@/lib/utils";
-import { useSidebarToggle } from "@/hooks/use-sidebar-toggle"; // Importando o novo hook
+import { useSidebarToggle } from "@/hooks/use-sidebar-toggle";
 
 // Hardcoded business hours check (duplicated from BusinessHoursStatus for conditional rendering logic)
 const checkIsOpen = () => {
@@ -40,13 +40,13 @@ const checkIsOpen = () => {
 
 export const Header = () => {
   const isMobile = useIsMobile();
-  const { toggleSidebar } = useSidebarToggle(); // Usando o hook global
+  const { toggleSidebar } = useSidebarToggle();
   const totalCartItems = useCartStore((state) => state.getTotalItems());
-  const totalCartPrice = useCartStore((state) => state.getTotalPrice()); // Obtendo o preço total
+  const totalCartPrice = useCartStore((state) => state.getTotalPrice());
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(""); // Mantido para o mobile search
+  const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
-  const pathname = usePathname(); // Usando usePathname
+  const pathname = usePathname();
   const [isClient, setIsClient] = useState(false);
   const [isOpen, setIsOpen] = useState(true); 
 
@@ -195,9 +195,9 @@ export const Header = () => {
       
       {/* Persistent Cart Button for Mobile (Hidden on Checkout/PIX pages) */}
       {isMobile && totalCartItems > 0 && !isCheckoutPage && (
-        <div className="fixed bottom-0 left-0 right-0 bg-primary p-4 z-40">
+        <div className="fixed bottom-0 left-0 right-0 bg-red-600 p-4 z-40">
           <Button 
-            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6"
+            className="w-full bg-red-600 hover:bg-red-700 text-green-400 text-lg py-6 font-bold"
             onClick={() => setIsCartOpen(true)}
           >
             Ver Carrinho ({totalCartItems} {totalCartItems === 1 ? 'item' : 'itens'}) - {formatCurrency(totalCartPrice)}
