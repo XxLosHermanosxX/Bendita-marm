@@ -47,6 +47,7 @@ const AddonCard = ({ item, type, onQuantityChange, currentQuantity }: AddonCardP
                     />
                 </div>
                 {/* Bloco de Texto: min-w-0 e truncate para garantir compressão */}
+                {/* CORREÇÃO APLICADA AQUI: Adicionando flex-1 min-w-0 para forçar a compressão */}
                 <div className="flex-1 min-w-0">
                     <h4 className="text-sm font-semibold text-foreground truncate">{name}</h4>
                     <p className="text-xs text-muted-foreground line-clamp-1">{description}</p>
