@@ -32,8 +32,9 @@ const AddonCard = ({ item, type, onQuantityChange, currentQuantity }: AddonCardP
     const handleDecrement = () => onQuantityChange(item.id, Math.max(0, currentQuantity - 1));
 
     return (
-        <div className="flex items-center gap-3 p-3 border rounded-lg bg-secondary/50">
-            <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-md">
+        <div className="flex items-center gap-2 p-2 border rounded-lg bg-secondary/50">
+            {/* Imagem reduzida para h-12 w-12 */}
+            <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
                 <Image 
                     src={item.imageUrl}
                     alt={name}
@@ -45,31 +46,31 @@ const AddonCard = ({ item, type, onQuantityChange, currentQuantity }: AddonCardP
             {/* Flex-1 garante que este bloco ocupe o espaço restante */}
             <div className="flex-1 min-w-0">
                 <h4 className="text-sm font-semibold text-foreground truncate">{name}</h4>
-                <p className="text-xs text-muted-foreground line-clamp-2">{description}</p>
+                <p className="text-xs text-muted-foreground line-clamp-1">{description}</p> {/* line-clamp-1 para economizar espaço */}
                 {isPaid && (
                     <p className="text-xs font-medium text-primary mt-1">{formatCurrency(price)}</p>
                 )}
             </div>
             
-            {/* Controles de Quantidade: flex-shrink-0 para manter o tamanho fixo */}
-            <div className="flex items-center gap-2 flex-shrink-0">
+            {/* Controles de Quantidade: Botões reduzidos para h-6 w-6 */}
+            <div className="flex items-center gap-1 flex-shrink-0">
                 <Button
                     variant="outline"
                     size="icon"
-                    className="h-7 w-7"
+                    className="h-6 w-6"
                     onClick={handleDecrement}
                     disabled={currentQuantity === 0}
                 >
-                    <Minus className="h-4 w-4" />
+                    <Minus className="h-3 w-3" />
                 </Button>
                 <span className="text-sm font-medium w-4 text-center">{currentQuantity}</span>
                 <Button
                     variant="outline"
                     size="icon"
-                    className="h-7 w-7"
+                    className="h-6 w-6"
                     onClick={handleIncrement}
                 >
-                    <Plus className="h-4 w-4" />
+                    <Plus className="h-3 w-3" />
                 </Button>
             </div>
         </div>
