@@ -3,9 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { MapPin, Check } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { useLocationStore, simulateIpDetection } from '@/store/use-location-store';
 import { useRouter } from 'next/navigation';
+import { SushiakiLogo } from './sushiaki-logo';
 
 export const LocationModal = () => {
   const router = useRouter();
@@ -56,7 +57,7 @@ export const LocationModal = () => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[400px] p-8 text-center">
         <div className="space-y-6">
-          <MapPin className="h-12 w-12 text-primary mx-auto" />
+          <SushiakiLogo className="h-12 w-12 text-primary mx-auto" />
           <h2 className="text-3xl font-bold text-foreground">
             Bateu a fome de Japa?
           </h2>
