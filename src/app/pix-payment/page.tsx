@@ -12,6 +12,7 @@ import { formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/store/use-cart-store";
 import { createPixTransaction, pollPaymentStatus, formatTimeRemaining } from "@/lib/blackcatpay";
 import { Order } from "@/types";
+import Image from "next/image";
 
 // Helper function to format seconds into MM:SS
 const formatSecondsToTime = (totalSeconds: number): string => {
@@ -244,6 +245,15 @@ export default function PixPaymentPage() {
       <div className="container mx-auto p-4 md:p-6 min-h-[80vh]">
         <div className="max-w-2xl mx-auto space-y-6">
           <div className="text-center space-y-2">
+            {/* Adicionando a logo do PIX */}
+            <div className="relative h-10 w-24 mx-auto mb-2">
+                <Image 
+                    src="/images/pix-logo-full.png" 
+                    alt="Logo PIX" 
+                    layout="fill"
+                    objectFit="contain"
+                />
+            </div>
             <h1 className="text-3xl font-bold text-foreground">Pagamento via PIX</h1>
             <p className="text-muted-foreground">Copie a chave PIX para pagar</p>
           </div>
@@ -302,11 +312,12 @@ export default function PixPaymentPage() {
                 Chave PIX (Copia e Cola)
                 <Button
                   variant="ghost"
-                  size="sm"
+                  size="lg" // Aumentando o tamanho
                   onClick={handleCopyPixKey}
-                  className="text-primary hover:text-primary/80 animate-slow-pulse"
+                  // Cor verde escura e pulsação lenta
+                  className="text-green-700 hover:text-green-800 text-lg font-bold animate-slow-pulse"
                 >
-                  <Copy className="h-4 w-4 mr-2" />
+                  <Copy className="h-5 w-5 mr-2" />
                   Copiar Chave
                 </Button>
               </CardTitle>
@@ -323,7 +334,8 @@ export default function PixPaymentPage() {
               <Button 
                 variant="link" 
                 onClick={handleScrollToInstructions}
-                className="p-0 h-auto mt-4 text-primary font-semibold"
+                // Cor azul escura
+                className="p-0 h-auto mt-4 text-blue-800 hover:text-blue-900 font-semibold"
               >
                 Não sabe como pagar? Clique aqui!
               </Button>
@@ -388,31 +400,31 @@ export default function PixPaymentPage() {
             </div>
           )}
 
-          {/* Payment Instructions */}
-          <Card className="bg-white shadow-lg" ref={instructionsRef}>
-            <CardHeader>
+          {/* Payment Instructions - Alterado para fundo vermelho e texto branco */}
+          <Card className="bg-red-600 shadow-lg text-white" ref={instructionsRef}>
+            <CardHeader className="border-b border-red-700">
               <CardTitle className="text-xl font-semibold">Como pagar</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <ol className="space-y-3 text-muted-foreground">
+              <ol className="space-y-3 text-white">
                 <li className="flex items-start gap-2">
-                  <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">1</span>
+                  <span className="flex-shrink-0 w-5 h-5 rounded-full bg-white text-red-600 flex items-center justify-center text-xs font-bold">1</span>
                   <span>Abra o aplicativo do seu banco</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">2</span>
+                  <span className="flex-shrink-0 w-5 h-5 rounded-full bg-white text-red-600 flex items-center justify-center text-xs font-bold">2</span>
                   <span>Selecione a opção "Pagar com PIX" ou "PIX Copia e Cola"</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">3</span>
+                  <span className="flex-shrink-0 w-5 h-5 rounded-full bg-white text-red-600 flex items-center justify-center text-xs font-bold">3</span>
                   <span>Cole a chave PIX copiada acima</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">4</span>
+                  <span className="flex-shrink-0 w-5 h-5 rounded-full bg-white text-red-600 flex items-center justify-center text-xs font-bold">4</span>
                   <span>Confirme o pagamento no valor de {formatCurrency(transaction.amount)}</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">5</span>
+                  <span className="flex-shrink-0 w-5 h-5 rounded-full bg-white text-red-600 flex items-center justify-center text-xs font-bold">5</span>
                   <span>Aguarde a confirmação (geralmente instantânea)</span>
                 </li>
               </ol>
