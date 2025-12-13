@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, CheckCircle2 } from "lucide-react";
@@ -24,6 +24,9 @@ export const CheckoutLayout = () => {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
   const [showSummaryDrawer, setShowSummaryDrawer] = useState(false); // New state for drawer
   
+  const mainRef = useRef<HTMLDivElement>(null);
+  const previousStepRef = useRef(currentStep);
+  
   const subtotal = getTotalPrice();
   const deliveryFee = 10.00; // Exemplo de taxa de entrega
   const discount = 0; // Sem descontos por enquanto
@@ -35,6 +38,15 @@ export const CheckoutLayout = () => {
       router.push("/products");
     }
   }, [items, router]);
+
+  // Efeito para scroll automático ao mudar de etapa
+  useEffect(() => {
+    if (currentStep !== previousStepRef.current && mainRef.current) {
+      // Scroll para o topo da área principal
+      mainRef.current.scrollIntoView({ behavior: 'smooth' });
+      previousStepRef.current = currentStep;
+    }
+  }, [currentStep]);
 
   const handleNextStep = () => {
     setCurrentStep((prev) => prev + 1);
@@ -135,7 +147,7 @@ export const CheckoutLayout = () => {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Reduced top padding for closer proximity to header */}
-      <main className="flex-1 container mx-auto px-4 py-4 md:py-6">
+      <main ref={mainRef} className="flex-1 container mx-auto px-4 py-4 md:py-6">
         <div className="max-w-4xl mx-auto">
           
           {/* Header controls: Back button and Summary button */}
