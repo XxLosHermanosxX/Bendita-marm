@@ -36,35 +36,43 @@ export const LocationDeliveryInfo = ({ onLocationChange }: LocationDeliveryInfoP
   };
 
   return (
-    <div className="w-full bg-background border-b border-border/50 shadow-sm h-12 flex items-center px-4">
-      <div className="flex items-center justify-start gap-4 w-full overflow-x-auto whitespace-nowrap">
+    // Outer wrapper to handle sticky positioning and ensure the pill is centered
+    // Removendo a altura fixa e a borda inferior do container externo
+    <div className="w-full bg-background py-2 flex justify-center border-b border-border/50 shadow-sm">
+      
+      {/* The Pill Container: Compact, rounded, bordered, and white background */}
+      {/* Usando text-sm para compactação geral */}
+      <div className="flex items-center h-8 px-3 bg-white border border-border rounded-full shadow-md text-sm">
         
-        {/* 1. Location (City Name) - Always visible and clickable */}
+        {/* 1. Location (City Name) - Clickable */}
         <Button 
           variant="ghost" 
           size="sm" 
           onClick={onLocationChange || handleLocationChange}
-          className="flex items-center gap-1 text-sm font-semibold text-foreground p-0 h-auto hover:bg-transparent flex-shrink-0"
+          // Ajustando classes para o visual compacto dentro da 'pill'
+          className="flex items-center gap-1 text-sm font-semibold text-primary p-0 h-auto hover:bg-transparent flex-shrink-0"
         >
           <MapPin className="h-4 w-4 text-primary" />
-          <span className="text-primary font-bold">{currentCity}</span>
+          <span className="font-bold">{currentCity}</span>
         </Button>
 
         {/* Separator */}
-        <div className="h-6 w-px bg-border flex-shrink-0"></div>
+        <div className="h-4 w-px bg-border mx-2 flex-shrink-0"></div>
 
         {/* 2. Distance Info (1.6km de você) */}
-        <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground flex-shrink-0">
-          <span className="text-base">📍</span> {/* Emoji de mapa */}
+        <div className="flex items-center gap-1 text-muted-foreground flex-shrink-0">
+          {/* Usando MapPin para consistência visual e cor, como na imagem */}
+          <MapPin className="h-4 w-4 text-primary" /> 
           <span className="font-bold text-foreground">{currentDistance.replace(' km', 'km')}</span>
-          <span className="text-muted-foreground font-normal">de você</span>
+          {/* Ocultando 'de você' em telas muito pequenas para evitar quebra de linha */}
+          <span className="text-muted-foreground font-normal text-xs hidden sm:inline">de você</span>
         </div>
 
         {/* Separator */}
-        <div className="h-6 w-px bg-border flex-shrink-0"></div>
+        <div className="h-4 w-px bg-border mx-2 flex-shrink-0"></div>
 
         {/* 3. Delivery Time */}
-        <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground flex-shrink-0">
+        <div className="flex items-center gap-1 text-muted-foreground flex-shrink-0">
           <Bike className="h-4 w-4 text-muted-foreground" />
           <span className="font-bold text-foreground">{currentDeliveryTime.replace(' min', ' min')}</span>
         </div>
