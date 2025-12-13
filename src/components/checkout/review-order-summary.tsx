@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useCartStore } from "@/store/use-cart-store";
 import { formatCurrency } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
@@ -18,7 +18,20 @@ export const ReviewOrderSummary = ({ deliveryFee, discount }: ReviewOrderSummary
   const { items, getTotalPrice } = useCartStore();
   const subtotal = getTotalPrice();
   const total = subtotal + deliveryFee - discount;
-  const [isOpen, setIsOpen] = useState(false);
+  
+  // Começa aberto
+  const [isOpen, setIsOpen] = useState(true);
+
+  // Efeito para fechar após 5 segundos
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => {
+        setIsOpen(false);
+      }, 5000); // 5000 milissegundos = 5 segundos
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="rounded-lg border bg-card shadow-sm p-4">
@@ -39,7 +52,8 @@ export const ReviewOrderSummary = ({ deliveryFee, discount }: ReviewOrderSummary
 
       <div className="mt-2 flex justify-between text-sm font-medium">
         <span className="text-muted-foreground">Total:</span>
-        <span className="text-lg font-bold text-primary">{formatCurrency(total)}</span>
+        {/* Alterando a cor do total para verde */}
+        <span className="text-lg font-bold text-green-600">{formatCurrency(total)}</span>
       </div>
 
       <CollapsibleContent className="space-y-4 pt-4">
