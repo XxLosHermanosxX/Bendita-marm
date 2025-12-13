@@ -1,18 +1,18 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Product } from "@/types";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus, Utensils, Package } from "lucide-react";
-import { formatCurrency, cn } from "@/lib/utils"; // Importando cn
+import { formatCurrency, cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { useAddonsStore } from "@/store/use-addons-store"; // Importando o novo store
+import { useAddonsStore } from "@/store/use-addons-store";
 
 interface ProductModalProps {
   product: Product;
@@ -34,6 +34,13 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
   const [quantity, setQuantity] = useState(1);
   const [notes, setNotes] = useState("");
   const [selectedItems, setSelectedItems] = useState(INITIAL_COMBINED_ITEMS);
+  const [lastModifiedItem, setLastModifiedItem] = useState<keyof typeof INITIAL_COMBINED_ITEMS | null>(null);
+  
+  // Refs para cada item do combinado
+  const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  
+  // Ref para o container de scroll
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   
   // Verifica se o produto é o combinado de 80 peças
   const isCustomCombined = product.id === "p30";
@@ -43,11 +50,41 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
       // Resetar o estado ao abrir o modal
       setQuantity(1);
       setNotes("");
+      setLastModifiedItem(null);
       if (isCustomCombined) {
         setSelectedItems(INITIAL_COMBINED_ITEMS);
       }
     }
   }, [isOpen, isCustomCombined]);
+
+  // Efeito para scroll automático
+  useEffect(() => {
+    if (lastModifiedItem && itemRefs.current[lastModifiedItem] && scrollContainerRef.current) {
+      const itemElement = itemRefs.current[lastModifiedItem];
+      const container = scrollContainerRef.current;
+      
+      if (itemElement) {
+        // Calcular posição do item no container
+        const itemTop = itemElement.offsetTop;
+        const containerHeight = container.clientHeight;
+        const itemHeight = itemElement.clientHeight;
+        
+        // Rolar para centralizar o item
+        const scrollToPosition = itemTop - (containerHeight / 2) + (itemHeight / 2);
+        container.scrollTo({
+          top: scrollToPosition,
+          behavior: 'smooth'
+        });
+        
+        // Resetar o último item modificado após o scroll
+        const timer = setTimeout(() => {
+          setLastModifiedItem(null);
+        }, 1000);
+        
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [lastModifiedItem]);
 
   const totalPieces = useMemo(() => {
     if (!isCustomCombined) return 0;
@@ -81,8 +118,9 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
         }
       }
       
-      // If the resulting count is different, update the state
+      // Se a quantidade mudou, atualizar o último item modificado
       if (limitedCount !== currentCount) {
+        setLastModifiedItem(item);
         return { ...prev, [item]: limitedCount };
       }
       
@@ -125,7 +163,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] p-0 overflow-y-auto max-h-[90vh]">
+      <DialogContent className="sm:max-w-[600px] p-0 overflow-hidden max-h-[90vh] flex flex-col">
         <div className="relative h-64 w-full">
           <Image
             src={product.imageUrl}
@@ -146,7 +184,10 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
           </p>
         </DialogHeader>
 
-        <div className="p-6 pt-4 space-y-4">
+        <div 
+          ref={scrollContainerRef}
+          className="flex-1 overflow-y-auto p-6 pt-4 space-y-4"
+        >
           {/* Seção de Seleção de Itens para Combinado Personalizado */}
           {isCustomCombined && (
             <div className="space-y-4 border p-4 rounded-lg bg-secondary/50">
@@ -160,7 +201,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
                 </span>
               </div>
 
-              <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
+              <div className="space-y-4">
                 {Object.entries(INITIAL_COMBINED_ITEMS).map(([item, initialCount]) => {
                   const key = item as keyof typeof INITIAL_COMBINED_ITEMS;
                   const currentCount = selectedItems[key];
@@ -169,7 +210,11 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
                   const effectiveLimit = 80 - (totalPieces - currentCount);
 
                   return (
-                    <div key={item} className="space-y-2 border-b pb-3 last:border-b-0">
+                    <div 
+                      key={item} 
+                      ref={(el) => { itemRefs.current[item] = el; }}
+                      className="space-y-2 border-b pb-3 last:border-b-0"
+                    >
                       <Label className="text-sm font-semibold block">
                         {item} 
                         <span className="text-xs text-muted-foreground ml-2 font-normal">
