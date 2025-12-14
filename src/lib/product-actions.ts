@@ -1,12 +1,13 @@
 import { toast } from 'sonner';
-import { useProductModalStore } from '@/store/use-product-modal-store';
-import { Product } from '@/types';
 
 /**
- * Abre o modal de configuração do produto (ProductModal).
- * @param product O produto a ser configurado.
+ * Simula a abertura de um modal ou sheet para configuração do produto (ex: seleção de quantidade)
+ * antes de adicioná-lo ao carrinho.
+ * @param productId O ID do produto a ser configurado.
  */
-export const openProductConfigurationModal = (product: Product) => {
-  const { openModal } = useProductModalStore.getState();
-  openModal(product);
+export const openProductConfigurationModal = (productId: string) => {
+  // Esta função deve ser conectada à sua lógica real de configuração de produto.
+  // Por enquanto, ela registra no console e mostra um toast placeholder.
+  console.log(`Attempting to open configuration for product ID: ${productId}`);
+  toast.info(`Abrindo configuração para o produto ${productId}...`);
 };
