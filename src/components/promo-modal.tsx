@@ -9,14 +9,17 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { formatCurrency } from '@/lib/utils';
 import { X } from 'lucide-react';
 import { openProductConfigurationModal } from '@/lib/product-actions';
+import { Product } from '@/types'; // Importando o tipo Product
 
 // Hardcoded product details for the promotion (p30)
-const PROMO_PRODUCT = {
+const PROMO_PRODUCT: Product & { originalPrice: number, link: string } = {
   id: "p30",
   name: "Combinado Exclusivo 80 Peças",
-  originalPrice: 79.90, // Novo preço original
+  originalPrice: 79.90, 
   price: 49.90,
   imageUrl: "/images/combinado-80-pecas.png",
+  description: "Monte seu combinado de 80 peças com os itens mais vendidos.", // Adicionando descrição
+  category: "Exclusivos do App", // Adicionando a propriedade 'category'
   link: "/products?category=Exclusivos%20do%20App",
 };
 
@@ -50,7 +53,8 @@ export const PromoModal = () => {
   
   // Novo handler para o clique do botão: abre a configuração do produto e fecha o modal.
   const handleOrderClick = () => {
-    openProductConfigurationModal(PROMO_PRODUCT.id);
+    // Passa o objeto PROMO_PRODUCT completo
+    openProductConfigurationModal(PROMO_PRODUCT);
     handleClose();
   };
 
