@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { SplashScreen } from "@/components/splash-screen";
 import React, { Suspense } from "react"; // Importando React e Suspense
+import { SidebarProvider } from "@/hooks/use-sidebar-toggle"; // Importando o SidebarProvider
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,15 +18,6 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
-// metadata is now defined in src/app/metadata.ts
-// export const metadata: Metadata = {
-//   title: "Sushiaki Delivery",
-//   description: "O melhor sushi da cidade, entregue na sua porta!",
-//   icons: {
-//     icon: '/sushiaki-logo.png',
-//   },
-// };
 
 // Componente Wrapper para gerenciar o estado do splash screen
 const RootLayoutWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -58,9 +50,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Suspense fallback={<div>Carregando...</div>}>
-            <RootLayoutWrapper>{children}</RootLayoutWrapper>
-          </Suspense>
+          <SidebarProvider> {/* Adicionando SidebarProvider aqui */}
+            <Suspense fallback={<div>Carregando...</div>}>
+              <RootLayoutWrapper>{children}</RootLayoutWrapper>
+            </Suspense>
+          </SidebarProvider>
           <Toaster />
         </ThemeProvider>
       </body>
