@@ -10,6 +10,7 @@ import { useIsMobile } from "@/hooks/use-mobile"; // Importando useIsMobile
 import { LocationModal } from "../location-modal"; // Importando LocationModal
 import { AddonsModal } from "../addons-modal"; // Importando AddonsModal
 import { WhatsappButton } from "../whatsapp-button"; // Importando WhatsappButton
+import { ProductModalProvider } from "../product-modal-provider"; // NOVO: Importando ProductModalProvider
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -35,6 +36,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
         <PromoModal />
         <LocationModal />
         <AddonsModal />
+        <ProductModalProvider /> {/* Adicionado para gerenciar o ProductModal globalmente */}
         
         {/* Floating Buttons */}
         <WhatsappButton />
