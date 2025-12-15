@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { formatCurrency } from '@/lib/utils';
 import { X } from 'lucide-react';
-import { openProductConfigurationModal } from '@/lib/product-actions';
+import { openProductConfigurationModalById } from '@/lib/product-actions'; // Importando a nova função
 
 // Hardcoded product details for the promotion (p30)
 const PROMO_PRODUCT = {
@@ -50,7 +50,8 @@ export const PromoModal = () => {
   
   // Novo handler para o clique do botão: abre a configuração do produto e fecha o modal.
   const handleOrderClick = () => {
-    openProductConfigurationModal(PROMO_PRODUCT.id);
+    // Usamos a função que busca o produto pelo ID e abre o ProductModal
+    openProductConfigurationModalById(PROMO_PRODUCT.id);
     handleClose();
   };
 
