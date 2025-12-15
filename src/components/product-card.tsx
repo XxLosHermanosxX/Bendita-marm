@@ -7,26 +7,22 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/store/use-cart-store";
-import { ProductModal } from "./product-modal";
-import { useState } from "react";
-import { useAddonsStore } from "@/store/use-addons-store"; // Importando o novo store
+import { useAddonsStore } from "@/store/use-addons-store";
+import { openProductConfigurationModal } from '@/lib/product-actions'; // Importando a função global
 
 interface ProductCardProps {
   product: Product;
 }
 
 export const ProductCard = ({ product }: ProductCardProps) => {
-  const addItem = useCartStore((state) => state.addItem);
   const openAddonsModal = useAddonsStore((state) => state.openModal);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAddToCart = () => {
+    // Se o produto tiver variações ou for o combinado personalizado (p30), abre o modal de configuração global.
     if (product.variations && product.variations.length > 0 || product.id === "p30") {
-      // If product has variations or is the custom combo, open modal for configuration
-      setIsModalOpen(true);
+      openProductConfigurationModal(product);
     } else {
-      // For simple products, add directly to cart and open Addons Modal
-      // We pass the simple item structure to the Addons Modal for finalization
+      // Para produtos simples, adiciona diretamente ao carrinho e abre o modal de adicionais.
       openAddonsModal({
         product: product,
         quantity: 1,
@@ -72,13 +68,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           </div>
         </div>
       </div>
-      {isModalOpen && (
-        <ProductModal 
-          product={product} 
-          isOpen={isModalOpen} 
-          onClose={() => setIsModalOpen(false)} 
-        />
-      )}
+      {/* O ProductModal agora é gerenciado globalmente pelo ProductModalProvider */}
     </>
   );
 };
