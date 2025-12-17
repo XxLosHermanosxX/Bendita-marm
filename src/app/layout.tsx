@@ -4,7 +4,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import { Toaster } from "@/components/ui/sonner";
+// import { Toaster } from "@/components/ui/sonner"; // Removed Toaster import
 import { SplashScreen } from "@/components/splash-screen";
 import React, { Suspense } from "react"; // Importando React e Suspense
 
@@ -61,7 +61,7 @@ export default function RootLayout({
           <Suspense fallback={<div>Carregando...</div>}>
             <RootLayoutWrapper>{children}</RootLayoutWrapper>
           </Suspense>
-          <Toaster />
+          {/* Toaster component removed */}
         </ThemeProvider>
       </body>
     </html>
