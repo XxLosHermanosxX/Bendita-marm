@@ -9,7 +9,7 @@ import { UserDataForm } from "./user-data-form";
 import { PaymentForm } from "./payment-form";
 import { OrderSummaryDrawer } from "./order-summary-drawer";
 import { ReviewOrderSummary } from "./review-order-summary";
-import { DeliveryPromoModal } from "./delivery-promo-modal"; // Importando o novo modal
+import { DeliveryPromoModal } from "./delivery-promo-modal";
 import { Address, UserData, PaymentMethod, Order } from "@/types";
 import { useCartStore } from "@/store/use-cart-store";
 import { formatCurrency } from "@/lib/utils";
@@ -41,7 +41,7 @@ export const CheckoutLayout = () => {
 
   useEffect(() => {
     if (items.length === 0) {
-      toast.info("Seu carrinho está vazio. Adicione itens para continuar.");
+      // toast.info("Seu carrinho está vazio. Adicione itens para continuar."); // Toast disabled
       router.push("/products");
     }
   }, [items, router]);
@@ -49,8 +49,13 @@ export const CheckoutLayout = () => {
   // Efeito para scroll automático ao mudar de etapa
   useEffect(() => {
     if (currentStep !== previousStepRef.current && mainRef.current) {
-      // Scroll para o topo da área principal
-      mainRef.current.scrollIntoView({ behavior: 'smooth' });
+      if (currentStep === 4) {
+        // Scroll to the bottom of the page/container when reaching step 4
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      } else {
+        // Scroll to the top of the main area for steps 1, 2, 3
+        mainRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
       previousStepRef.current = currentStep;
     }
   }, [currentStep]);
@@ -77,7 +82,7 @@ export const CheckoutLayout = () => {
 
   const handlePlaceOrder = () => {
     if (!address || !userData || !paymentMethod || items.length === 0) {
-      toast.error("Por favor, complete todas as etapas antes de finalizar.");
+      // toast.error("Por favor, complete todas as etapas antes de finalizar."); // Toast disabled
       return;
     }
 
