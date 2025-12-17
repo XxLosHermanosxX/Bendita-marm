@@ -35,6 +35,7 @@ export default function AdminLoginPage() {
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     try {
+      // A rota de autenticação ainda define o cookie, mas o redirecionamento é imediato
       const response = await fetch('/api/admin/auth', {
         method: 'POST',
         headers: {
@@ -45,8 +46,8 @@ export default function AdminLoginPage() {
 
       if (response.ok) {
         toast.success('Login bem-sucedido! Redirecionando...');
-        // Força um refresh completo para garantir que o Server Component leia o cookie
-        window.location.href = '/admin'; 
+        // Redireciona para a página autenticada
+        router.push('/admin/autenticado'); 
       } else {
         const errorData = await response.json();
         toast.error(errorData.message || 'Credenciais inválidas.');
