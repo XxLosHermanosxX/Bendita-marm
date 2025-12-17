@@ -35,13 +35,15 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
       
       // Auto-scroll to bottom for 80-piece combo
       if (isCombo80 && contentRef.current) {
-        // Small delay to ensure content is rendered
+        // Use a slightly longer delay to ensure all content and layout calculations are complete
         setTimeout(() => {
-          contentRef.current?.scrollTo({
-            top: contentRef.current.scrollHeight,
-            behavior: 'smooth'
-          });
-        }, 100);
+          if (contentRef.current) {
+            contentRef.current.scrollTo({
+              top: contentRef.current.scrollHeight,
+              behavior: 'smooth'
+            });
+          }
+        }, 200); // Increased delay to 200ms
       }
     }
   }, [isOpen, isCombo80]);
