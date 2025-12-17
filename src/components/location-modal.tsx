@@ -17,6 +17,12 @@ type DetectedLocation = {
 };
 
 export const LocationModal = () => {
+  // The modal is currently disabled as requested by the user.
+  // It will always return null, preventing the dialog from opening.
+  return null;
+
+  /* 
+  // Original logic kept commented out for reference:
   const router = useRouter();
   const { isLocationConfirmed, setConfirmedLocation, clearLocation } = useLocationStore();
   const [isClient, setIsClient] = useState(false);
@@ -70,7 +76,6 @@ export const LocationModal = () => {
           <DialogTitle>Confirmação de Localização</DialogTitle>
         </DialogHeader>
         <div className="space-y-6">
-          {/* Usando a logo real, ajustando o tamanho do container para a proporção da imagem */}
           <div className="mx-auto h-16 w-40">
             <SushiakiLogo className="h-full w-full" />
           </div>
@@ -106,4 +111,5 @@ export const LocationModal = () => {
       </DialogContent>
     </Dialog>
   );
+  */
 };
