@@ -22,6 +22,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
   const [quantity, setQuantity] = useState(1);
   const [notes, setNotes] = useState("");
   const contentRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   // Check if the product is the 80-piece combo
   const isCombo80 = product.id === "p30";
@@ -169,6 +170,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
               </div>
               
               <Button 
+                ref={buttonRef}
                 onClick={handleContinue}
                 className="bg-primary hover:bg-primary/90 text-primary-foreground text-base px-6 py-6"
               >
