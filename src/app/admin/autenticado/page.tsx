@@ -1,9 +1,18 @@
 import { AdminDashboardClient } from '@/components/admin/admin-dashboard-client';
 
+// Definindo o tipo TrackingEvent para uso no Server Component
+interface TrackingEvent {
+    id: number;
+    timestamp: string;
+    event: string;
+    details: Record<string, any>;
+    ip: string;
+}
+
 export default async function AuthenticatedAdminPage() {
-    // O componente cliente agora é responsável por buscar os dados via API.
-    // Passamos um array vazio para satisfazer a tipagem inicial.
-    const initialEvents: any[] = []; 
+    // O módulo tracker-store foi removido. O componente cliente fará a busca inicial via API.
+    // Tipando explicitamente como array vazio de TrackingEvent
+    const initialEvents: TrackingEvent[] = []; 
 
     return (
         <div className="min-h-screen bg-secondary/50">

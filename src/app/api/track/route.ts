@@ -9,12 +9,15 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Event type is required' }, { status: 400 });
         }
 
+        // Attempt to get client IP
+        const ip = request.headers.get('x-forwarded-for') || (request as any).ip || 'unknown';
+
         const { error } = await supabase
             .from('tracking_events')
             .insert({
                 event: event,
                 details: details,
-                ip: (request as any).ip || request.headers.get('x-forwarded-for') || 'unknown',
+                ip: ip,
             });
 
         if (error) {
