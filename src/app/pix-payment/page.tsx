@@ -1,17 +1,16 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MainLayout } from "@/components/layout/main-layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { CheckCircle2, Clock, Copy, XCircle, ChevronUp, ChevronDown } from "lucide-react";
+import { CheckCircle2, Clock, Copy, QrCode, XCircle, AlertTriangle, ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
 import { formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/store/use-cart-store";
-import { createPixTransaction, pollPaymentStatus } from "@/lib/blackcatpay";
-import { usePixPaymentStore } from "@/store/use-pix-payment-store";
+import { createPixTransaction, pollPaymentStatus, formatTimeRemaining } from "@/lib/blackcatpay";
 import { Order } from "@/types";
 import Image from "next/image";
 
@@ -22,68 +21,74 @@ const formatSecondsToTime = (totalSeconds: number): string => {
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 };
 
-// Initial time for a new transaction (10 minutes)
-const INITIAL_TIME_SECONDS = 600;
-
 export default function PixPaymentPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { items, clearCart } = useCartStore();
-  const pixStore = usePixPaymentStore();
+  const { items, getTotalPrice, clearCart } = useCartStore();
 
+  const [orderData, setOrderData] = useState<Order | null>(null);
+  const [transaction, setTransaction] = useState<any>(null);
+  const [paymentStatus, setPaymentStatus] = useState<'pending' | 'approved' | 'declined' | 'expired' | 'error'>('pending');
+  
+  // State for the visual countdown timer (starts at 10 minutes = 600 seconds)
+  const INITIAL_TIME_SECONDS = 600;
+  const [secondsRemaining, setSecondsRemaining] = useState(INITIAL_TIME_SECONDS);
+  
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<{ message: string; details?: any; status?: number } | null>(null);
   const [showOrderSummary, setShowOrderSummary] = useState(false);
   
-  // Use store state for transaction details and timer
-  const { transactionId, pixKey, amount, orderData, status: paymentStatus, secondsRemaining } = pixStore;
-  const { updateStatus, updateSecondsRemaining, setTransaction, clearTransaction } = pixStore;
-  
-  // Ref for the section of instructions
-  const instructionsRef = useRef<HTMLDivElement>(null);
-  const pollingRef = useRef<(() => void) | null>(null);
+  // Ref para a seção de instruções
+  const instructionsRef = React.useRef<HTMLDivElement>(null);
 
   // Calculate time string from secondsRemaining
   const timeRemainingString = formatSecondsToTime(secondsRemaining);
 
-  // --- Core Logic: Transaction Creation and Polling ---
+  useEffect(() => {
+    // Parse order data from URL search params
+    try {
+      const orderParam = searchParams.get('order');
+      if (orderParam) {
+        const parsedOrder = JSON.parse(decodeURIComponent(orderParam));
+        setOrderData(parsedOrder);
 
-  const handlePaymentApproved = useCallback((data: any) => {
-    updateStatus('approved');
-    clearCart();
-    if (pollingRef.current) pollingRef.current();
-    // Redirect to confirmation page after a short delay
-    setTimeout(() => {
-      router.push("/order-confirmation");
-      clearTransaction();
-    }, 2000);
-  }, [updateStatus, clearCart, router, clearTransaction]);
+        // Create PIX transaction
+        createTransaction(parsedOrder);
+      } else {
+        setError({ message: "Nenhum dado de pedido encontrado" });
+        setIsLoading(false);
+      }
+    } catch (err) {
+      setError({ message: err instanceof Error ? err.message : "Dados do pedido inválidos" });
+      setIsLoading(false);
+      console.error("Error parsing order data:", err);
+    }
+  }, [searchParams]);
 
-  const handlePaymentError = useCallback((err: string) => {
-    updateStatus('error');
-    setError({ message: err });
-    if (pollingRef.current) pollingRef.current();
-  }, [updateStatus]);
+  // Effect for the visual countdown timer
+  useEffect(() => {
+    if (paymentStatus !== 'pending' || secondsRemaining <= 0) {
+      if (secondsRemaining <= 0 && paymentStatus === 'pending') {
+        setPaymentStatus('expired');
+      }
+      return;
+    }
 
-  const handlePaymentExpired = useCallback(() => {
-    updateStatus('expired');
-    if (pollingRef.current) pollingRef.current();
-  }, [updateStatus]);
+    const timer = setInterval(() => {
+      setSecondsRemaining(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
 
-  const startPolling = useCallback((id: string) => {
-    if (pollingRef.current) pollingRef.current(); // Stop any existing polling
-
-    const stopPolling = pollPaymentStatus(
-      id,
-      handlePaymentApproved,
-      handlePaymentError,
-      handlePaymentExpired
-    );
-    pollingRef.current = stopPolling;
-  }, [handlePaymentApproved, handlePaymentError, handlePaymentExpired]);
+    return () => clearInterval(timer);
+  }, [paymentStatus, secondsRemaining]);
 
 
-  const createTransaction = useCallback(async (order: Order) => {
+  const createTransaction = async (order: Order) => {
     try {
       setIsLoading(true);
       console.log("Creating transaction with order:", order);
@@ -91,24 +96,37 @@ export default function PixPaymentPage() {
       const result = await createPixTransaction(order);
 
       if (result.success) {
-        // Save transaction details to persistent store
-        setTransaction(
+        setTransaction(result);
+        setPaymentStatus('pending');
+        setSecondsRemaining(INITIAL_TIME_SECONDS); // Reset timer on successful creation
+
+        // Start polling for payment status
+        const stopPolling = pollPaymentStatus(
           result.transactionId,
-          result.pixKey,
-          result.amount!, 
-          order,
-          INITIAL_TIME_SECONDS
+          (data) => {
+            setPaymentStatus('approved');
+            setTransaction((prev: any) => ({ ...prev, paidAt: data.paidAt }));
+          },
+          (err) => {
+            setPaymentStatus('error');
+            setError({ message: err });
+          },
+          () => {
+            // This callback is usually for expiration based on API time, 
+            // but we rely on the visual timer for the 'expired' status change.
+          }
         );
-        
-        startPolling(result.transactionId);
+
+        return () => {
+          stopPolling();
+        };
       } else {
         setError({
           message: result.error || "Falha ao criar transação PIX",
           details: 'response' in result ? result.response : undefined,
           status: 'status' in result ? Number(result.status) : undefined
         });
-        updateStatus('error');
-        clearTransaction();
+        setPaymentStatus('error');
         console.error("Transaction creation failed:", result.error);
       }
     } catch (err) {
@@ -116,79 +134,17 @@ export default function PixPaymentPage() {
         message: err instanceof Error ? err.message : 'Erro desconhecido',
         details: err
       });
-      updateStatus('error');
-      clearTransaction();
+      setPaymentStatus('error');
       console.error("Unexpected error in createTransaction:", err);
     } finally {
       setIsLoading(false);
     }
-  }, [setTransaction, startPolling, updateStatus, clearTransaction]);
-
-  // --- Initialization Effect ---
-  useEffect(() => {
-    // 1. Check if we have a persistent transaction
-    if (transactionId && paymentStatus === 'pending' && secondsRemaining > 0) {
-      console.log("Resuming existing PIX transaction:", transactionId);
-      startPolling(transactionId);
-      setIsLoading(false);
-      return;
-    }
-    
-    // 2. If no persistent transaction, check URL for new order data
-    const orderParam = searchParams.get('order');
-    if (orderParam) {
-      try {
-        const parsedOrder = JSON.parse(decodeURIComponent(orderParam));
-        
-        // FIX: Clear URL parameter by replacing the current URL without the 'order' param
-        const newSearchParams = new URLSearchParams(searchParams.toString());
-        newSearchParams.delete('order');
-        router.replace(`/pix-payment?${newSearchParams.toString()}`);
-        
-        createTransaction(parsedOrder);
-      } catch (err) {
-        setError({ message: err instanceof Error ? err.message : "Dados do pedido inválidos" });
-        setIsLoading(false);
-        clearTransaction();
-        console.error("Error parsing order data:", err);
-      }
-    } else if (!transactionId) {
-      // 3. If no persistent data and no URL data, redirect home (or checkout)
-      console.log("No transaction data found, redirecting to checkout.");
-      router.replace('/checkout');
-    }
-    
-    // Cleanup polling on unmount
-    return () => {
-      if (pollingRef.current) pollingRef.current();
-    };
-  }, [searchParams, transactionId, paymentStatus, secondsRemaining, createTransaction, startPolling, router, clearTransaction]);
-
-
-  // --- Timer Effect ---
-  useEffect(() => {
-    if (paymentStatus !== 'pending' || secondsRemaining <= 0) {
-      if (secondsRemaining <= 0 && paymentStatus === 'pending') {
-        updateStatus('expired');
-        if (pollingRef.current) pollingRef.current();
-      }
-      return;
-    }
-
-    const timer = setInterval(() => {
-      updateSecondsRemaining(secondsRemaining - 1);
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [paymentStatus, secondsRemaining, updateSecondsRemaining, updateStatus]);
-
-
-  // --- Handlers ---
+  };
 
   const handleCopyPixKey = () => {
-    if (pixKey) {
-      navigator.clipboard.writeText(pixKey);
-      // Note: Toast notifications are globally disabled, but the function call remains.
+    if (transaction?.pixKey) {
+      navigator.clipboard.writeText(transaction.pixKey);
+      toast.success("Chave PIX copiada para a área de transferência!");
     }
   };
   
@@ -199,13 +155,11 @@ export default function PixPaymentPage() {
   };
 
   const handleBackToCheckout = () => {
-    clearTransaction();
     router.push("/checkout");
   };
 
   const handleGoToHome = () => {
     clearCart();
-    clearTransaction();
     router.push("/");
   };
 
@@ -215,9 +169,7 @@ export default function PixPaymentPage() {
     return (secondsRemaining / INITIAL_TIME_SECONDS) * 100;
   };
 
-  // --- Render Logic ---
-
-  if (isLoading || (!transactionId && !error)) {
+  if (isLoading) {
     return (
       <MainLayout>
         <div className="container mx-auto p-4 md:p-6 min-h-[80vh] flex items-center justify-center">
@@ -266,8 +218,7 @@ export default function PixPaymentPage() {
     );
   }
 
-  if (!pixKey || !amount || !orderData) {
-    // Should be caught by the initialization effect, but as a final safeguard:
+  if (!transaction || !transaction.pixKey) {
     return (
       <MainLayout>
         <div className="container mx-auto p-4 md:p-6 min-h-[80vh] flex items-center justify-center">
@@ -275,8 +226,8 @@ export default function PixPaymentPage() {
             <div className="bg-destructive/10 p-4 rounded-full inline-block">
               <XCircle className="h-12 w-12 text-destructive" />
             </div>
-            <h2 className="text-2xl font-bold text-destructive">Erro de Dados</h2>
-            <p className="text-muted-foreground">Dados da transação PIX não encontrados. Por favor, refaça o pedido.</p>
+            <h2 className="text-2xl font-bold text-destructive">Erro no Pagamento</h2>
+            <p className="text-muted-foreground">Não foi possível obter a chave PIX. Tente novamente.</p>
             <Button onClick={handleBackToCheckout} className="w-full">
               Voltar para o checkout
             </Button>
@@ -287,7 +238,7 @@ export default function PixPaymentPage() {
   }
 
   // Truncate PIX key for display
-  const truncatedPixKey = pixKey.substring(0, 40) + '...';
+  const truncatedPixKey = transaction.pixKey.substring(0, 40) + '...';
 
   return (
     <MainLayout>
@@ -414,7 +365,7 @@ export default function PixPaymentPage() {
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Valor total:</span>
                     <span className="text-xl font-bold text-primary">
-                      {formatCurrency(amount!)}
+                      {formatCurrency(transaction.amount)}
                     </span>
                   </div>
 
@@ -423,14 +374,14 @@ export default function PixPaymentPage() {
                   <div className="space-y-2">
                     <h4 className="font-semibold text-foreground">Itens do pedido:</h4>
                     <ul className="space-y-1 text-sm">
-                      {orderData!.items.map((item, index) => (
+                      {items.map((item, index) => (
                         <li key={index} className="flex justify-between">
                           <span className="text-muted-foreground">
-                            {item.quantity}x {item.name}
+                            {item.quantity}x {item.product.name}
                           </span>
                           <span className="font-medium">
                             {formatCurrency(
-                              item.quantity * (item.details?.selectedVariation?.option.price || item.price)
+                              item.quantity * (item.details?.selectedVariation?.option.price || item.product.price)
                             )}
                           </span>
                         </li>
@@ -470,7 +421,7 @@ export default function PixPaymentPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="flex-shrink-0 w-5 h-5 rounded-full bg-white text-red-600 flex items-center justify-center text-xs font-bold">4</span>
-                  <span>Confirme o pagamento no valor de {formatCurrency(amount!)}</span>
+                  <span>Confirme o pagamento no valor de {formatCurrency(transaction.amount)}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="flex-shrink-0 w-5 h-5 rounded-full bg-white text-red-600 flex items-center justify-center text-xs font-bold">5</span>
