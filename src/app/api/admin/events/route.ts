@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/client';
 
 export async function GET(request: NextRequest) {
     try {
-        const supabase = createClient();
         
         const { data, error } = await supabase
             .from('tracking_events')

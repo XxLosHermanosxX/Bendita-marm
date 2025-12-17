@@ -1,10 +1,9 @@
 import { AdminDashboardClient } from '@/components/admin/admin-dashboard-client';
-import { getTrackingEvents, TrackingEvent } from '@/lib/tracker-store';
 
 export default async function AuthenticatedAdminPage() {
-    // Fetch initial data on the server
-    // NOTE: This data is volatile and resets on server restart.
-    const initialEvents: TrackingEvent[] = getTrackingEvents();
+    // O componente cliente agora é responsável por buscar os dados via API.
+    // Passamos um array vazio para satisfazer a tipagem inicial.
+    const initialEvents: any[] = []; 
 
     return (
         <div className="min-h-screen bg-secondary/50">

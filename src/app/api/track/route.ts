@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/client';
 
 export async function POST(request: NextRequest) {
     try {
@@ -9,17 +9,12 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Event type is required' }, { status: 400 });
         }
 
-        const supabase = createClient();
-
-        // Attempt to get client IP
-        const ip = request.headers.get('x-forwarded-for') || request.ip || 'unknown';
-
         const { error } = await supabase
             .from('tracking_events')
             .insert({
                 event: event,
                 details: details,
-                ip: ip,
+                ip: (request as any).ip || request.headers.get('x-forwarded-for') || 'unknown',
             });
 
         if (error) {
