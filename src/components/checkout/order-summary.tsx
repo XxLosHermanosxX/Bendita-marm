@@ -75,7 +75,9 @@ export const OrderSummary = ({ deliveryFee, discount }: OrderSummaryProps) => {
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">Taxa de Entrega:</span>
-          <span className="font-medium">{formatCurrency(deliveryFee)}</span>
+          <span className="font-medium text-success font-bold">
+            {deliveryFee === 0 ? 'GRÁTIS' : formatCurrency(deliveryFee)}
+          </span>
         </div>
         {discount > 0 && (
           <div className="flex justify-between text-sm text-green-600">

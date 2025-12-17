@@ -7,28 +7,35 @@ import { ChevronLeft, CheckCircle2 } from "lucide-react";
 import { AddressForm } from "./address-form";
 import { UserDataForm } from "./user-data-form";
 import { PaymentForm } from "./payment-form";
-import { OrderSummaryDrawer } from "./order-summary-drawer"; // New import
-import { ReviewOrderSummary } from "./review-order-summary"; // New import
+import { OrderSummaryDrawer } from "./order-summary-drawer";
+import { ReviewOrderSummary } from "./review-order-summary";
+import { DeliveryPromoModal } from "./delivery-promo-modal"; // Importando o novo modal
 import { Address, UserData, PaymentMethod, Order } from "@/types";
 import { useCartStore } from "@/store/use-cart-store";
 import { formatCurrency } from "@/lib/utils";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 
+// Simulação: Assume que é o primeiro pedido até que tenhamos lógica de autenticação
+const IS_FIRST_ORDER_SIMULATION = true; 
+
 export const CheckoutLayout = () => {
   const router = useRouter();
-  const { items, getTotalPrice, clearCart } = useCartStore();
+  const { items, getTotalPrice } = useCartStore();
   const [currentStep, setCurrentStep] = useState(1);
   const [address, setAddress] = useState<Address | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
-  const [showSummaryDrawer, setShowSummaryDrawer] = useState(false); // New state for drawer
+  const [showSummaryDrawer, setShowSummaryDrawer] = useState(false);
+  
+  // Estado para a taxa de entrega, inicializada com o valor padrão
+  const [deliveryFee, setDeliveryFee] = useState(10.00); 
+  const [showDeliveryPromoModal, setShowDeliveryPromoModal] = useState(false); // Estado para o modal de promoção
   
   const mainRef = useRef<HTMLDivElement>(null);
   const previousStepRef = useRef(currentStep);
   
   const subtotal = getTotalPrice();
-  const deliveryFee = 10.00; // Exemplo de taxa de entrega
   const discount = 0; // Sem descontos por enquanto
   const total = subtotal + deliveryFee - discount; // Preço final
 
@@ -56,6 +63,18 @@ export const CheckoutLayout = () => {
     setCurrentStep((prev) => prev - 1);
   };
 
+  const handleAddressNext = (data: Address) => {
+    setAddress(data);
+    
+    // Lógica da Promoção de Entrega Grátis
+    if (IS_FIRST_ORDER_SIMULATION && deliveryFee > 0) {
+        setDeliveryFee(0.00);
+        setShowDeliveryPromoModal(true);
+    }
+    
+    handleNextStep();
+  };
+
   const handlePlaceOrder = () => {
     if (!address || !userData || !paymentMethod || items.length === 0) {
       toast.error("Por favor, complete todas as etapas antes de finalizar.");
@@ -74,7 +93,7 @@ export const CheckoutLayout = () => {
       })),
       subtotal: subtotal,
       discount: discount, // Usando o desconto calculado
-      deliveryFee: deliveryFee,
+      deliveryFee: deliveryFee, // Usando a taxa de entrega atualizada
       total: total, // Preço final
       status: "pending",
       address: address,
@@ -99,10 +118,7 @@ export const CheckoutLayout = () => {
         return (
           <AddressForm
             initialData={address}
-            onNext={(data: Address) => {
-              setAddress(data);
-              handleNextStep();
-            }}
+            onNext={handleAddressNext} // Usando o novo handler
           />
         );
       case 2:
@@ -354,6 +370,12 @@ export const CheckoutLayout = () => {
         onClose={() => setShowSummaryDrawer(false)}
         deliveryFee={deliveryFee}
         discount={discount}
+      />
+      
+      {/* Delivery Promo Modal */}
+      <DeliveryPromoModal
+        isOpen={showDeliveryPromoModal}
+        onClose={() => setShowDeliveryPromoModal(false)}
       />
     </div>
   );
