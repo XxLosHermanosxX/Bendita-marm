@@ -12,6 +12,7 @@ import { ReviewOrderSummary } from "./review-order-summary";
 import { DeliveryPromoModal } from "./delivery-promo-modal";
 import { Address, UserData, PaymentMethod, Order } from "@/types";
 import { useCartStore } from "@/store/use-cart-store";
+import { useCheckoutStore } from "@/store/use-checkout-store"; // Importando o novo store
 import { formatCurrency } from "@/lib/utils";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
@@ -21,32 +22,35 @@ const IS_FIRST_ORDER_SIMULATION = true;
 
 export const CheckoutLayout = () => {
   const router = useRouter();
-  const { items, getTotalPrice } = useCartStore();
-  const [currentStep, setCurrentStep] = useState(1);
-  const [address, setAddress] = useState<Address | null>(null);
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
-  const [showSummaryDrawer, setShowSummaryDrawer] = useState(false);
+  const { items, getTotalPrice, clearCart } = useCartStore();
   
-  // Estado para a taxa de entrega, inicializada com o valor padrão
+  // Usando o store persistente para gerenciar o estado do checkout
+  const { 
+    address, userData, paymentMethod, currentStep,
+    setAddress, setUserData, setPaymentMethod, setCurrentStep,
+    clearCheckout
+  } = useCheckoutStore();
+  
+  // Estado local para a taxa de entrega (não persistente, pode ser recalculada)
   const [deliveryFee, setDeliveryFee] = useState(10.00); 
-  const [showDeliveryPromoModal, setShowDeliveryPromoModal] = useState(false); // Estado para o modal de promoção
+  const [showSummaryDrawer, setShowSummaryDrawer] = useState(false);
+  const [showDeliveryPromoModal, setShowDeliveryPromoModal] = useState(false); 
   
   const mainRef = useRef<HTMLDivElement>(null);
   const previousStepRef = useRef(currentStep);
   
   const subtotal = getTotalPrice();
-  const discount = 0; // Sem descontos por enquanto
-  const total = subtotal + deliveryFee - discount; // Preço final
+  const discount = 0; 
+  const total = subtotal + deliveryFee - discount; 
 
+  // 1. Redirecionamento se o carrinho estiver vazio
   useEffect(() => {
     if (items.length === 0) {
-      // toast.info("Seu carrinho está vazio. Adicione itens para continuar."); // Toast disabled
       router.push("/products");
     }
   }, [items, router]);
 
-  // Efeito para scroll automático ao mudar de etapa
+  // 2. Scroll automático ao mudar de etapa
   useEffect(() => {
     if (currentStep !== previousStepRef.current && mainRef.current) {
       if (currentStep === 4) {
@@ -58,18 +62,21 @@ export const CheckoutLayout = () => {
       }
       previousStepRef.current = currentStep;
     }
+    // Atualiza o ref da etapa anterior
+    previousStepRef.current = currentStep;
   }, [currentStep]);
 
   const handleNextStep = () => {
-    setCurrentStep((prev) => prev + 1);
+    // O store já incrementa a etapa ao salvar os dados, mas precisamos de um fallback
+    setCurrentStep(currentStep + 1);
   };
 
   const handlePreviousStep = () => {
-    setCurrentStep((prev) => prev - 1);
+    setCurrentStep(currentStep - 1);
   };
 
   const handleAddressNext = (data: Address) => {
-    setAddress(data);
+    setAddress(data); // Salva e avança para step 2 no store
     
     // Lógica da Promoção de Entrega Grátis
     if (IS_FIRST_ORDER_SIMULATION && deliveryFee > 0) {
@@ -77,12 +84,20 @@ export const CheckoutLayout = () => {
         setShowDeliveryPromoModal(true);
     }
     
-    handleNextStep();
+    // Não precisamos chamar handleNextStep() aqui, pois setAddress já atualiza currentStep no store.
   };
+
+  const handleUserDataNext = (data: UserData) => {
+    setUserData(data); // Salva e avança para step 3 no store
+  };
+
+  const handlePaymentNext = (data: PaymentMethod) => {
+    setPaymentMethod(data); // Salva e avança para step 4 no store
+  };
+
 
   const handlePlaceOrder = () => {
     if (!address || !userData || !paymentMethod || items.length === 0) {
-      // toast.error("Por favor, complete todas as etapas antes de finalizar."); // Toast disabled
       return;
     }
 
@@ -97,9 +112,9 @@ export const CheckoutLayout = () => {
         notes: item.notes
       })),
       subtotal: subtotal,
-      discount: discount, // Usando o desconto calculado
-      deliveryFee: deliveryFee, // Usando a taxa de entrega atualizada
-      total: total, // Preço final
+      discount: discount, 
+      deliveryFee: deliveryFee, 
+      total: total, 
       status: "pending",
       address: address,
       customer: userData,
@@ -112,6 +127,10 @@ export const CheckoutLayout = () => {
       }
     };
 
+    // Clear checkout state and cart after placing the order
+    clearCheckout();
+    clearCart();
+
     // Redirect to PIX payment page with order data
     const orderData = encodeURIComponent(JSON.stringify(order));
     router.push(`/pix-payment?order=${orderData}`);
@@ -123,17 +142,14 @@ export const CheckoutLayout = () => {
         return (
           <AddressForm
             initialData={address}
-            onNext={handleAddressNext} // Usando o novo handler
+            onNext={handleAddressNext} 
           />
         );
       case 2:
         return (
           <UserDataForm
             initialData={userData}
-            onNext={(data: UserData) => {
-              setUserData(data);
-              handleNextStep();
-            }}
+            onNext={handleUserDataNext}
             onBack={handlePreviousStep}
           />
         );
@@ -141,27 +157,11 @@ export const CheckoutLayout = () => {
         return (
           <PaymentForm
             initialData={paymentMethod}
-            onNext={(data: PaymentMethod) => {
-              setPaymentMethod(data);
-              handleNextStep();
-            }}
+            onNext={handlePaymentNext}
           />
         );
       default:
         return null;
-    }
-  };
-
-  const isStepComplete = (step: number) => {
-    switch (step) {
-      case 1:
-        return !!address;
-      case 2:
-        return !!userData;
-      case 3:
-        return !!paymentMethod;
-      default:
-        return false;
     }
   };
 
