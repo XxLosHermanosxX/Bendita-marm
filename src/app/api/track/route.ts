@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { addTrackingEvent } from '@/lib/tracker-store';
+import { createClient } from '@/integrations/supabase/client';
 
 export async function POST(request: NextRequest) {
     try {
@@ -9,15 +9,23 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Event type is required' }, { status: 400 });
         }
 
-        // Attempt to get client IP (may be unreliable depending on deployment environment)
-        const ip = request.headers.get('x-forwarded-for') || (request as any).ip || 'unknown';
+        const supabase = createClient();
 
-        const fullDetails = {
-            ...details,
-            ip: ip,
-        };
+        // Attempt to get client IP
+        const ip = request.headers.get('x-forwarded-for') || request.ip || 'unknown';
 
-        addTrackingEvent(event, fullDetails);
+        const { error } = await supabase
+            .from('tracking_events')
+            .insert({
+                event: event,
+                details: details,
+                ip: ip,
+            });
+
+        if (error) {
+            console.error('Supabase insert error:', error);
+            return NextResponse.json({ error: 'Failed to save tracking event' }, { status: 500 });
+        }
 
         return NextResponse.json({ success: true });
     } catch (error) {

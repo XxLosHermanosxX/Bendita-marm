@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { TrackingEvent } from '@/lib/tracker-store';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, LogOut, Activity, MapPin, ShoppingCart, CheckCircle2 } from 'lucide-react';
@@ -10,6 +9,15 @@ import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
+
+// Definindo o tipo de evento (agora vem do Supabase)
+interface TrackingEvent {
+    id: number;
+    timestamp: string;
+    event: string;
+    details: Record<string, any>;
+    ip: string;
+}
 
 interface AdminDashboardClientProps {
     initialEvents: TrackingEvent[];
@@ -42,9 +50,18 @@ export const AdminDashboardClient = ({ initialEvents }: AdminDashboardClientProp
     const router = useRouter();
     const [events, setEvents] = useState(initialEvents);
     const [isLoading, setIsLoading] = useState(false);
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const scrollPositionRef = useRef(0); // Para armazenar a posição de scroll
 
+    // Função para buscar eventos do Supabase via API
     const fetchEvents = async () => {
         setIsLoading(true);
+        
+        // Salva a posição atual do scroll antes de buscar novos dados
+        if (scrollRef.current) {
+            scrollPositionRef.current = scrollRef.current.scrollTop;
+        }
+
         try {
             const response = await fetch('/api/admin/events');
             if (response.status === 401) {
@@ -64,12 +81,18 @@ export const AdminDashboardClient = ({ initialEvents }: AdminDashboardClientProp
             setIsLoading(false);
         }
     };
+    
+    // Efeito para restaurar a posição do scroll após a atualização dos dados
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollTop = scrollPositionRef.current;
+        }
+    }, [events]); // Roda sempre que a lista de eventos é atualizada
 
     const handleLogout = async () => {
         try {
             await fetch('/api/admin/logout', { method: 'POST' });
             toast.info('Saindo...');
-            // Redireciona após limpar o cookie
             router.push('/admin/login');
         } catch (error) {
             console.error('Logout failed:', error);
@@ -107,7 +130,7 @@ export const AdminDashboardClient = ({ initialEvents }: AdminDashboardClientProp
                     <CardTitle className="text-xl">Eventos Recentes ({events.length})</CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
-                    <div className="max-h-[70vh] overflow-y-auto">
+                    <div ref={scrollRef} className="max-h-[70vh] overflow-y-auto">
                         {events.length === 0 ? (
                             <div className="p-6 text-center text-muted-foreground">
                                 Nenhum evento rastreado ainda.
