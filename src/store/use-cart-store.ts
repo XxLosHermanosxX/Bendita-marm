@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { Product, FreeAddon } from '@/types';
 import { toast } from 'sonner';
-import { trackEvent } from '@/lib/tracker'; // Import tracker
 
 // Define a more specific type for selectedVariation
 interface SelectedVariationDetails {
@@ -37,19 +36,6 @@ interface CartStore {
 export const useCartStore = create<CartStore>((set, get) => ({
   items: [],
   addItem: (product, quantity, details, notes, freeAddons) => {
-    const itemPrice = details?.selectedVariation?.option.price || product.price;
-    const totalPrice = itemPrice * quantity;
-    
-    // --- Tracking Event ---
-    trackEvent('Add to Cart', { 
-        productId: product.id, 
-        productName: product.name, 
-        quantity: quantity,
-        totalPrice: totalPrice, // Adicionado o preço total do item
-        details: details,
-    });
-    // ----------------------
-
     set((state) => {
       // We need a unique identifier for items that are the same product but have different details/addons
       const itemIdentifier = (item: CartItem) => 

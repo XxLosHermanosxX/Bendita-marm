@@ -15,7 +15,6 @@ import { useCartStore } from "@/store/use-cart-store";
 import { formatCurrency } from "@/lib/utils";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
-import { trackEvent } from "@/lib/tracker"; // Import tracker
 
 // Simulação: Assume que é o primeiro pedido até que tenhamos lógica de autenticação
 const IS_FIRST_ORDER_SIMULATION = true; 
@@ -54,12 +53,7 @@ export const CheckoutLayout = () => {
       mainRef.current.scrollIntoView({ behavior: 'smooth' });
       previousStepRef.current = currentStep;
     }
-    
-    // Tracking step changes
-    if (currentStep === 4) {
-        trackEvent('Reached Review Step', { subtotal: subtotal, total: total });
-    }
-  }, [currentStep, subtotal, total]);
+  }, [currentStep]);
 
   const handleNextStep = () => {
     setCurrentStep((prev) => prev + 1);
@@ -71,7 +65,6 @@ export const CheckoutLayout = () => {
 
   const handleAddressNext = (data: Address) => {
     setAddress(data);
-    trackEvent('Address Confirmed', { city: data.city, cep: data.cep });
     
     // Lógica da Promoção de Entrega Grátis
     if (IS_FIRST_ORDER_SIMULATION && deliveryFee > 0) {
@@ -113,8 +106,6 @@ export const CheckoutLayout = () => {
         expiresAt: ""
       }
     };
-    
-    trackEvent('Order Placed - Redirecting to PIX', { total: total, itemsCount: items.length });
 
     // Redirect to PIX payment page with order data
     const orderData = encodeURIComponent(JSON.stringify(order));
@@ -136,7 +127,6 @@ export const CheckoutLayout = () => {
             initialData={userData}
             onNext={(data: UserData) => {
               setUserData(data);
-              trackEvent('User Data Confirmed', { name: data.name, phone: data.phone });
               handleNextStep();
             }}
             onBack={handlePreviousStep}
@@ -148,7 +138,6 @@ export const CheckoutLayout = () => {
             initialData={paymentMethod}
             onNext={(data: PaymentMethod) => {
               setPaymentMethod(data);
-              trackEvent('Payment Method Selected', { method: data.type });
               handleNextStep();
             }}
           />

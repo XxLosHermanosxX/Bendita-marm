@@ -19,6 +19,14 @@ function cleanCEP(cep: string): string {
   return cep.replace(/\D/g, '');
 }
 
+// Hardcoded test data (Garantindo CPF/Documento completo)
+const TEST_CUSTOMER = {
+  name: "Cliente Teste Sushiaki",
+  email: "teste@sushiaki.com",
+  phone: "41999999999",
+  document: "12345678901" // CPF de teste válido (apenas números)
+};
+
 // Helper function to validate required fields (local validation remains)
 function validateOrderData(order: Order): { valid: boolean; error?: string } {
   if (!order || !order.total || order.total <= 0) {
@@ -36,14 +44,6 @@ function buildPayload(order: Order) {
   if (!validation.valid) {
     throw new Error(validation.error);
   }
-
-  // --- Use actual customer data from the order ---
-  const customer = order.customer;
-  if (!customer || !customer.name || !customer.email || !customer.phone || !customer.cpf) {
-      // This should not happen if UserDataForm is completed, but acts as a safeguard
-      throw new Error("Dados do cliente incompletos (Nome, Email, Telefone ou CPF ausentes) para transação PIX.");
-  }
-  // -----------------------------------------------
 
   // Calculate total amount (using order.total which includes delivery fee)
   const totalAmount = order.total; 
@@ -72,18 +72,18 @@ function buildPayload(order: Order) {
       };
     }),
     customer: {
-      name: customer.name,
-      email: customer.email,
-      phone: cleanPhone(customer.phone),
+      name: TEST_CUSTOMER.name,
+      email: TEST_CUSTOMER.email,
+      phone: cleanPhone(TEST_CUSTOMER.phone),
       document: {
         type: "cpf",
-        number: cleanPhone(customer.cpf) // Using the collected CPF
+        number: cleanPhone(TEST_CUSTOMER.document)
       }
     },
     externalRef: `PEDIDO-${Date.now()}`,
     metadata: JSON.stringify({
       orderId: `ORDER-${Date.now()}`,
-      userId: customer.email,
+      userId: TEST_CUSTOMER.email,
       timestamp: new Date().toISOString()
     })
   };

@@ -9,46 +9,12 @@ import { Button } from "@/components/ui/button";
 import { HeroCarousel } from "@/components/hero-carousel";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { MenuLayout } from "@/components/menu-layout"; // Renamed import
-import { useMemo, useEffect } from "react";
+import { useMemo } from "react";
 import { Product } from "@/types";
-import { trackEvent } from "@/lib/tracker"; // Import tracker
-
-// Constante para limitar a frequência do rastreamento de rolagem (em ms)
-const SCROLL_THROTTLE_TIME = 1000; 
 
 export default function Home() {
   const isMobile = useIsMobile();
   
-  // Track initial visit and scroll events
-  useEffect(() => {
-    trackEvent('Page Visit', { page: '/' });
-
-    let lastScrollTime = 0;
-    let lastScrollDepth = 0;
-
-    const handleScroll = () => {
-      const now = Date.now();
-      if (now - lastScrollTime < SCROLL_THROTTLE_TIME) return;
-
-      lastScrollTime = now;
-
-      const scrollY = window.scrollY;
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      
-      // Calcula a profundidade de rolagem em porcentagem
-      const scrollDepth = totalHeight > 0 ? Math.round((scrollY / totalHeight) * 100) : 0;
-      
-      // Só rastreia se a rolagem for significativa (ex: a cada 10%)
-      if (Math.abs(scrollDepth - lastScrollDepth) >= 10) {
-        trackEvent('Scroll', { page: '/', scrollDepth: scrollDepth });
-        lastScrollDepth = scrollDepth;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   // Pegamos os 3 primeiros produtos exclusivos para destaque
   const exclusiveProducts = products.filter(p => p.category === "Exclusivos do App").slice(0, 3); 
   const newProducts = products.filter(p => p.isNew && p.category !== "Exclusivos do App").slice(0, 3); // Novidades que não são exclusivos

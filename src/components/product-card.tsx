@@ -6,9 +6,9 @@ import { Product } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
+import { useCartStore } from "@/store/use-cart-store";
 import { useAddonsStore } from "@/store/use-addons-store";
 import { openProductConfigurationModal } from '@/lib/product-actions'; // Importando a função global
-import { trackEvent } from "@/lib/tracker"; // Import tracker
 
 interface ProductCardProps {
   product: Product;
@@ -18,13 +18,6 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   const openAddonsModal = useAddonsStore((state) => state.openModal);
 
   const handleAddToCart = () => {
-    // Rastreia o clique no produto/botão
-    trackEvent('Open Product Modal', { 
-        productId: product.id, 
-        productName: product.name,
-        action: product.variations || product.id === "p30" ? 'Open Config Modal' : 'Open Addons Modal'
-    });
-
     // Se o produto tiver variações ou for o combinado personalizado (p30), abre o modal de configuração global.
     if (product.variations && product.variations.length > 0 || product.id === "p30") {
       openProductConfigurationModal(product);

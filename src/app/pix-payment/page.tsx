@@ -13,7 +13,6 @@ import { useCartStore } from "@/store/use-cart-store";
 import { createPixTransaction, pollPaymentStatus, formatTimeRemaining } from "@/lib/blackcatpay";
 import { Order } from "@/types";
 import Image from "next/image";
-import { trackEvent } from "@/lib/tracker"; // Import tracker
 
 // Helper function to format seconds into MM:SS
 const formatSecondsToTime = (totalSeconds: number): string => {
@@ -52,10 +51,6 @@ export default function PixPaymentPage() {
       if (orderParam) {
         const parsedOrder = JSON.parse(decodeURIComponent(orderParam));
         setOrderData(parsedOrder);
-        
-        // --- Tracking Event ---
-        trackEvent('Reached PIX Payment Page', { total: parsedOrder.total, orderId: parsedOrder.id });
-        // ----------------------
 
         // Create PIX transaction
         createTransaction(parsedOrder);
@@ -111,12 +106,10 @@ export default function PixPaymentPage() {
           (data) => {
             setPaymentStatus('approved');
             setTransaction((prev: any) => ({ ...prev, paidAt: data.paidAt }));
-            trackEvent('Payment Approved', { transactionId: result.transactionId, amount: order.total });
           },
           (err) => {
             setPaymentStatus('error');
             setError({ message: err });
-            trackEvent('Payment Failed', { transactionId: result.transactionId, error: err });
           },
           () => {
             // This callback is usually for expiration based on API time, 
@@ -134,7 +127,6 @@ export default function PixPaymentPage() {
           status: 'status' in result ? Number(result.status) : undefined
         });
         setPaymentStatus('error');
-        trackEvent('PIX Transaction Creation Failed', { error: result.error });
         console.error("Transaction creation failed:", result.error);
       }
     } catch (err) {
@@ -143,7 +135,6 @@ export default function PixPaymentPage() {
         details: err
       });
       setPaymentStatus('error');
-      trackEvent('PIX Transaction Creation Failed', { error: err instanceof Error ? err.message : 'unknown error' });
       console.error("Unexpected error in createTransaction:", err);
     } finally {
       setIsLoading(false);
@@ -154,7 +145,6 @@ export default function PixPaymentPage() {
     if (transaction?.pixKey) {
       navigator.clipboard.writeText(transaction.pixKey);
       toast.success("Chave PIX copiada para a área de transferência!");
-      trackEvent('PIX Key Copied');
     }
   };
   
