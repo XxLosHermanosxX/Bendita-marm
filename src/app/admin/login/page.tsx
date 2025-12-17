@@ -44,8 +44,9 @@ export default function AdminLoginPage() {
       });
 
       if (response.ok) {
-        toast.success('Login bem-sucedido!');
-        router.push('/admin');
+        toast.success('Login bem-sucedido! Redirecionando...');
+        // Força um refresh completo para garantir que o Server Component leia o cookie
+        window.location.href = '/admin'; 
       } else {
         const errorData = await response.json();
         toast.error(errorData.message || 'Credenciais inválidas.');
