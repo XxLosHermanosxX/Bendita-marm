@@ -71,19 +71,18 @@ export const Header = () => {
     }
   };
 
-  // If not client, render a basic header structure to avoid hydration mismatch
+  // If not client, render a basic, consistent header structure for SSR
   if (!isClient) {
     return (
       <header className="sticky top-0 z-50 w-full border-b bg-background shadow-sm">
-        <div className="container flex h-16 items-center justify-between px-4 md:px-6">
+        <div className="flex h-16 items-center px-4 md:px-6 relative justify-between">
+          {/* Left section: Placeholder for Menu/Logo */}
           <div className="flex items-center gap-2">
-            {isMobile && (
-              <Button variant="ghost" size="icon">
-                <Menu className="h-5 w-5" />
-              </Button>
-            )}
-            <Link href="/" className="flex items-center gap-2">
-              <div className="relative h-10 w-10">
+            <Button variant="ghost" size="icon" className="opacity-0 pointer-events-none md:hidden">
+              <Menu className="h-5 w-5" />
+            </Button>
+            <Link href="/" className="flex items-center">
+              <div className="relative h-12 w-12 md:h-14 md:w-14">
                 <Image 
                   src="/sushiaki-logo.png" 
                   alt="Sushiaki Logo" 
@@ -93,9 +92,13 @@ export const Header = () => {
               </div>
             </Link>
           </div>
+          {/* Right section: Placeholder for Cart/Profile */}
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="relative">
               <ShoppingCart className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="icon" className="hidden md:inline-flex opacity-0 pointer-events-none">
+              <User className="h-5 w-5" />
             </Button>
           </div>
         </div>
@@ -103,9 +106,10 @@ export const Header = () => {
     );
   }
 
+  // Client-side rendering (after hydration)
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background shadow-sm">
-      {/* Mobile: Prominent Closed Status Banner (if closed) */}
+      {/* Mobile: Prominent Closed Status Banner (if closed) - Renders only on client if mobile and closed */}
       {isMobile && !isOpen && (
         <div className="w-full bg-destructive/10 border-b border-destructive/30 p-2 text-center">
             <BusinessHoursStatus variant="mobile-closed" />
