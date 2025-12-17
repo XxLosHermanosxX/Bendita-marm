@@ -9,12 +9,18 @@ import { Button } from "@/components/ui/button";
 import { HeroCarousel } from "@/components/hero-carousel";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { MenuLayout } from "@/components/menu-layout"; // Renamed import
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { Product } from "@/types";
+import { trackEvent } from "@/lib/tracker"; // Import tracker
 
 export default function Home() {
   const isMobile = useIsMobile();
   
+  // Track initial visit
+  useEffect(() => {
+    trackEvent('Page Visit', { page: '/' });
+  }, []);
+
   // Pegamos os 3 primeiros produtos exclusivos para destaque
   const exclusiveProducts = products.filter(p => p.category === "Exclusivos do App").slice(0, 3); 
   const newProducts = products.filter(p => p.isNew && p.category !== "Exclusivos do App").slice(0, 3); // Novidades que não são exclusivos
