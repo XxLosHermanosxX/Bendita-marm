@@ -37,11 +37,15 @@ interface CartStore {
 export const useCartStore = create<CartStore>((set, get) => ({
   items: [],
   addItem: (product, quantity, details, notes, freeAddons) => {
+    const itemPrice = details?.selectedVariation?.option.price || product.price;
+    const totalPrice = itemPrice * quantity;
+    
     // --- Tracking Event ---
     trackEvent('Add to Cart', { 
         productId: product.id, 
         productName: product.name, 
         quantity: quantity,
+        totalPrice: totalPrice, // Adicionado o preço total do item
         details: details,
     });
     // ----------------------
