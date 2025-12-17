@@ -49,7 +49,7 @@ export const AdminDashboardClient = ({ initialEvents }: AdminDashboardClientProp
             const response = await fetch('/api/admin/events');
             if (response.status === 401) {
                 toast.error('Sessão expirada. Faça login novamente.');
-                router.push('/admin/login');
+                // Não redireciona aqui, o logout fará isso
                 return;
             }
             if (!response.ok) {
@@ -65,11 +65,16 @@ export const AdminDashboardClient = ({ initialEvents }: AdminDashboardClientProp
         }
     };
 
-    const handleLogout = () => {
-        // In a real app, we'd call a logout API route to clear the cookie.
-        // Here, we just redirect, relying on the user clearing the cookie or it expiring.
-        toast.info('Saindo...');
-        router.push('/admin/login');
+    const handleLogout = async () => {
+        try {
+            await fetch('/api/admin/logout', { method: 'POST' });
+            toast.info('Saindo...');
+            // Redireciona após limpar o cookie
+            router.push('/admin/login');
+        } catch (error) {
+            console.error('Logout failed:', error);
+            toast.error('Falha ao sair.');
+        }
     };
     
     // Set up polling to refresh data every 10 seconds

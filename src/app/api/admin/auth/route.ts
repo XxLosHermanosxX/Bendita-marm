@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 maxAge: 60 * 60 * 24, // 1 day
-                path: '/admin',
+                path: '/', // Alterado para '/' para garantir que seja lido em /admin
             });
             return response;
         } else {
