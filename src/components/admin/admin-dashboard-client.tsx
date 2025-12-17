@@ -157,9 +157,9 @@ export const AdminDashboardClient = ({ initialEvents }: AdminDashboardClientProp
         }
     };
     
-    // Set up polling to refresh data every 10 seconds
+    // Set up polling to refresh data every 5 seconds (was 10s)
     useEffect(() => {
-        const interval = setInterval(fetchEvents, 10000);
+        const interval = setInterval(fetchEvents, 5000);
         return () => clearInterval(interval);
     }, []);
 
