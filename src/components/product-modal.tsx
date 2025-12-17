@@ -1,11 +1,11 @@
 "use client";
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Product } from "@/types";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus, Utensils } from "lucide-react";
-import { formatCurrency, cn } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { useAddonsStore } from "@/store/use-addons-store";
@@ -21,6 +21,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
   const openAddonsModal = useAddonsStore((state) => state.openModal);
   const [quantity, setQuantity] = useState(1);
   const [notes, setNotes] = useState("");
+  const contentRef = useRef<HTMLDivElement>(null);
 
   // Check if the product is the 80-piece combo
   const isCombo80 = product.id === "p30";
@@ -30,8 +31,19 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
       // Reset state when modal opens
       setQuantity(1);
       setNotes("");
+      
+      // Auto-scroll to bottom for 80-piece combo
+      if (isCombo80 && contentRef.current) {
+        // Small delay to ensure content is rendered
+        setTimeout(() => {
+          contentRef.current?.scrollTo({
+            top: contentRef.current.scrollHeight,
+            behavior: 'smooth'
+          });
+        }, 100);
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, isCombo80]);
 
   const handleContinue = () => {
     // For the 80-piece combo, we'll pass the standard components in the description
@@ -72,7 +84,10 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
           </p>
         </DialogHeader>
         
-        <div className="flex-1 overflow-y-auto p-6 pt-4 space-y-4">
+        <div 
+          ref={contentRef}
+          className="flex-1 overflow-y-auto p-6 pt-4 space-y-4"
+        >
           {/* Special description for 80-piece combo */}
           {isCombo80 && (
             <div className="space-y-3 border p-4 rounded-lg bg-secondary/50">
