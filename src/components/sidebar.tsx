@@ -66,26 +66,7 @@ export const Sidebar = () => {
           );
         })}
       </nav>
-      <div className="mt-8 pt-4 border-t border-border">
-        <h3 className="text-md font-semibold mb-3 text-foreground">Filtros</h3>
-        <div className="space-y-4">
-          <div>
-            <p className="text-sm font-medium text-muted-foreground mb-2">Preço</p>
-            <div className="h-8 w-full bg-muted rounded-md flex items-center justify-center text-xs text-muted-foreground">
-              Slider de Preço
-            </div>
-          </div>
-          <div>
-            <p className="text-sm font-medium text-muted-foreground mb-2">Avaliação</p>
-            <div className="h-8 w-full bg-muted rounded-md flex items-center justify-center text-xs text-muted-foreground">
-              Filtro de Estrelas
-            </div>
-          </div>
-          <Button variant="outline" className="w-full">
-            Limpar Filtros
-          </Button>
-        </div>
-      </div>
+      {/* Removed Filters Section */}
     </div>
   );
 };
