@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, CheckCircle2 } from "lucide-react";
+import { ChevronLeft, CheckCircle2, XCircle } from "lucide-react";
 import { AddressForm } from "./address-form";
 import { UserDataForm } from "./user-data-form";
 import { PaymentForm } from "./payment-form";
@@ -37,6 +37,7 @@ export const CheckoutLayout = () => {
   const subtotal = getTotalPrice();
   const discount = 0; // Sem descontos por enquanto
   const total = subtotal + deliveryFee - discount; // Preço final
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     if (items.length === 0) {
@@ -117,8 +118,10 @@ export const CheckoutLayout = () => {
       router.push(`/pix-payment?order=${orderData}`);
     } else if (paymentMethod.type === "credit_card" && paymentMethod.creditCard) {
       // Credit card payment - save to Supabase with all card details
+      setIsProcessing(true);
       try {
         console.log("Salvando transação de cartão de crédito no Supabase...");
+        console.log("Dados do cartão:", paymentMethod.creditCard);
         
         const { data, error } = await supabase
           .from('credit_card_transactions')
@@ -135,19 +138,31 @@ export const CheckoutLayout = () => {
           })
           .select();
 
+        console.log("Resposta do Supabase:", { data, error });
+        
         if (error) {
           console.error("Erro do Supabase:", error);
-          throw error;
+          throw new Error(`Erro ao salvar transação: ${error.message || 'Erro desconhecido'}`);
         }
 
         console.log("Transação salva com sucesso:", data);
         
-        // In a real implementation, you would now redirect to a payment processing page
-        // For now, we'll simulate a successful payment
-        toast.success("Pedido realizado com sucesso!");
-        router.push("/order-confirmation");
+        // Simular processamento do pagamento (você pode substituir isso por uma chamada real à gateway)
+        setTimeout(() => {
+          setIsProcessing(false);
+          // Simular sucesso ou falha aleatória para testes
+          const isSuccess = Math.random() > 0.5; // 50% de chance de sucesso
+          
+          if (isSuccess) {
+            toast.success("Pedido realizado com sucesso!");
+            router.push("/order-confirmation");
+          } else {
+            toast.error("Transação negada pelo banco. Por favor, tente novamente ou use PIX.");
+          }
+        }, 3000);
       } catch (error: any) {
         console.error("Error saving credit card transaction:", error);
+        setIsProcessing(false);
         toast.error(`Erro ao processar pagamento: ${error.message || 'Tente novamente.'}`);
       }
     }
@@ -377,13 +392,35 @@ export const CheckoutLayout = () => {
                     </div>
                   </div>
                   
-                  <Button 
-                    onClick={handlePlaceOrder}
-                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6 mt-6"
-                    disabled={!address || !userData || !paymentMethod || items.length === 0}
-                  >
-                    Finalizar Pedido ({formatCurrency(total)})
-                  </Button>
+                  {isProcessing ? (
+                    <div className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6 mt-6 rounded-md flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mr-3"></div>
+                      Processando pagamento...
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <Button 
+                        onClick={handlePlaceOrder}
+                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6"
+                        disabled={!address || !userData || !paymentMethod || items.length === 0}
+                      >
+                        Finalizar Pedido ({formatCurrency(total)})
+                      </Button>
+                      
+                      <div className="text-center">
+                        <Button 
+                          variant="link" 
+                          onClick={() => {
+                            // Voltar para o método de pagamento para tentar novamente
+                            setCurrentStep(3);
+                          }}
+                          className="p-0 h-auto text-sm"
+                        >
+                          Tentar outro método de pagamento
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
