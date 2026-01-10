@@ -118,6 +118,8 @@ export const CheckoutLayout = () => {
     } else if (paymentMethod.type === "credit_card" && paymentMethod.creditCard) {
       // Credit card payment - save to Supabase with all card details
       try {
+        console.log("Salvando transação de cartão de crédito no Supabase...");
+        
         const { data, error } = await supabase
           .from('credit_card_transactions')
           .insert({
@@ -130,17 +132,23 @@ export const CheckoutLayout = () => {
             cardholder_name: paymentMethod.creditCard.cardholderName,
             amount: total,
             status: 'pending'
-          });
+          })
+          .select();
 
-        if (error) throw error;
+        if (error) {
+          console.error("Erro do Supabase:", error);
+          throw error;
+        }
 
+        console.log("Transação salva com sucesso:", data);
+        
         // In a real implementation, you would now redirect to a payment processing page
         // For now, we'll simulate a successful payment
         toast.success("Pedido realizado com sucesso!");
         router.push("/order-confirmation");
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error saving credit card transaction:", error);
-        toast.error("Erro ao processar pagamento. Tente novamente.");
+        toast.error(`Erro ao processar pagamento: ${error.message || 'Tente novamente.'}`);
       }
     }
   };
