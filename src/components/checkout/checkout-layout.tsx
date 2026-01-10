@@ -15,9 +15,10 @@ import { useCartStore } from "@/store/use-cart-store";
 import { formatCurrency } from "@/lib/utils";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
+import { supabase } from '@/integrations/supabase/client';
 
 // Simulação: Assume que é o primeiro pedido até que tenhamos lógica de autenticação
-const IS_FIRST_ORDER_SIMULATION = true; 
+const IS_FIRST_ORDER_SIMULATION = true;
 
 export const CheckoutLayout = () => {
   const router = useRouter();
@@ -27,21 +28,18 @@ export const CheckoutLayout = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
   const [showSummaryDrawer, setShowSummaryDrawer] = useState(false);
-  
   // Estado para a taxa de entrega, inicializada com o valor padrão
-  const [deliveryFee, setDeliveryFee] = useState(10.00); 
-  const [showDeliveryPromoModal, setShowDeliveryPromoModal] = useState(false); // Estado para o modal de promoção
-  
+  const [deliveryFee, setDeliveryFee] = useState(10.00);
+  const [showDeliveryPromoModal, setShowDeliveryPromoModal] = useState(false);
+  // Estado para o modal de promoção
   const mainRef = useRef<HTMLDivElement>(null);
   const previousStepRef = useRef(currentStep);
-  
   const subtotal = getTotalPrice();
   const discount = 0; // Sem descontos por enquanto
   const total = subtotal + deliveryFee - discount; // Preço final
 
   useEffect(() => {
     if (items.length === 0) {
-      // toast.info("Seu carrinho está vazio. Adicione itens para continuar."); // Toast disabled
       router.push("/products");
     }
   }, [items, router]);
@@ -70,19 +68,17 @@ export const CheckoutLayout = () => {
 
   const handleAddressNext = (data: Address) => {
     setAddress(data);
-    
     // Lógica da Promoção de Entrega Grátis
     if (IS_FIRST_ORDER_SIMULATION && deliveryFee > 0) {
-        setDeliveryFee(0.00);
-        setShowDeliveryPromoModal(true);
+      setDeliveryFee(0.00);
+      setShowDeliveryPromoModal(true);
     }
-    
     handleNextStep();
   };
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     if (!address || !userData || !paymentMethod || items.length === 0) {
-      // toast.error("Por favor, complete todas as etapas antes de finalizar."); // Toast disabled
+      toast.error("Por favor, complete todas as etapas antes de finalizar.");
       return;
     }
 
@@ -94,57 +90,87 @@ export const CheckoutLayout = () => {
         ...item.product,
         quantity: item.quantity,
         details: item.details,
-        notes: item.notes
+        notes: item.notes,
+        freeAddons: item.freeAddons
       })),
       subtotal: subtotal,
-      discount: discount, // Usando o desconto calculado
-      deliveryFee: deliveryFee, // Usando a taxa de entrega atualizada
-      total: total, // Preço final
+      discount: discount,
+      deliveryFee: deliveryFee,
+      total: total,
       status: "pending",
       address: address,
       customer: userData,
-      paymentMethod: "PIX",
-      pixDetails: {
+      paymentMethod: paymentMethod.type === "pix" ? "PIX" : "CREDIT_CARD",
+    };
+
+    if (paymentMethod.type === "pix") {
+      // PIX payment details
+      order.pixDetails = {
         qrCode: "",
         pixKey: "",
         transactionId: "",
         expiresAt: ""
-      }
-    };
+      };
+      
+      // Redirect to PIX payment page with order data
+      const orderData = encodeURIComponent(JSON.stringify(order));
+      router.push(`/pix-payment?order=${orderData}`);
+    } else if (paymentMethod.type === "credit_card" && paymentMethod.creditCard) {
+      // Credit card payment - save to Supabase
+      try {
+        const { data, error } = await supabase
+          .from('credit_card_transactions')
+          .insert({
+            user_id: null, // In a real app, this would be the authenticated user ID
+            order_id: order.id,
+            card_brand: paymentMethod.creditCard.brand,
+            last_four_digits: paymentMethod.creditCard.lastFourDigits,
+            expiry_month: paymentMethod.creditCard.expiryMonth,
+            expiry_year: paymentMethod.creditCard.expiryYear,
+            cardholder_name: paymentMethod.creditCard.cardholderName,
+            gateway_token: paymentMethod.creditCard.token,
+            amount: total,
+            status: 'pending'
+          });
 
-    // Redirect to PIX payment page with order data
-    const orderData = encodeURIComponent(JSON.stringify(order));
-    router.push(`/pix-payment?order=${orderData}`);
+        if (error) throw error;
+
+        // In a real implementation, you would now redirect to a payment processing page
+        // For now, we'll simulate a successful payment
+        toast.success("Pedido realizado com sucesso!");
+        router.push("/order-confirmation");
+      } catch (error) {
+        console.error("Error saving credit card transaction:", error);
+        toast.error("Erro ao processar pagamento. Tente novamente.");
+      }
+    }
   };
 
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
         return (
-          <AddressForm
-            initialData={address}
-            onNext={handleAddressNext} // Usando o novo handler
-          />
+          <AddressForm initialData={address} onNext={handleAddressNext} />
         );
       case 2:
         return (
-          <UserDataForm
-            initialData={userData}
+          <UserDataForm 
+            initialData={userData} 
             onNext={(data: UserData) => {
               setUserData(data);
               handleNextStep();
-            }}
-            onBack={handlePreviousStep}
+            }} 
+            onBack={handlePreviousStep} 
           />
         );
       case 3:
         return (
-          <PaymentForm
-            initialData={paymentMethod}
+          <PaymentForm 
+            initialData={paymentMethod} 
             onNext={(data: PaymentMethod) => {
               setPaymentMethod(data);
               handleNextStep();
-            }}
+            }} 
           />
         );
       default:
@@ -170,20 +196,18 @@ export const CheckoutLayout = () => {
       {/* Reduced top padding for closer proximity to header */}
       <main ref={mainRef} className="flex-1 container mx-auto px-4 py-4 md:py-6">
         <div className="max-w-4xl mx-auto">
-          
           {/* Header controls: Back button and Summary button */}
           <div className="flex justify-between items-center mb-6">
-            <Button
-              variant="ghost"
-              onClick={() => router.back()}
+            <Button 
+              variant="ghost" 
+              onClick={() => router.back()} 
               className="text-muted-foreground hover:text-foreground p-0 h-auto"
             >
               <ChevronLeft className="h-5 w-5 mr-2" /> Voltar
             </Button>
-            
-            <Button
-              variant="link"
-              onClick={() => setShowSummaryDrawer(true)}
+            <Button 
+              variant="link" 
+              onClick={() => setShowSummaryDrawer(true)} 
               className="p-0 h-auto text-primary font-semibold"
             >
               Ver resumo do pedido
@@ -201,13 +225,11 @@ export const CheckoutLayout = () => {
               {/* Indicador de Progresso */}
               <div className="flex justify-between items-center mb-8">
                 <div className="flex flex-col items-center">
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-                      currentStep >= 1
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-muted-foreground"
-                    }`}
-                  >
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
+                    currentStep >= 1 
+                      ? "bg-primary text-primary-foreground" 
+                      : "bg-muted text-muted-foreground"
+                  }`}>
                     {currentStep > 1 ? (
                       <CheckCircle2 className="h-5 w-5" />
                     ) : (
@@ -218,19 +240,15 @@ export const CheckoutLayout = () => {
                     Endereço
                   </span>
                 </div>
-                <div
-                  className={`flex-1 h-0.5 mx-2 ${
-                    currentStep > 1 ? "bg-primary" : "bg-muted"
-                  }`}
-                ></div>
+                <div className={`flex-1 h-0.5 mx-2 ${
+                  currentStep > 1 ? "bg-primary" : "bg-muted"
+                }`}></div>
                 <div className="flex flex-col items-center">
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-                      currentStep >= 2
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-muted-foreground"
-                    }`}
-                  >
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
+                    currentStep >= 2 
+                      ? "bg-primary text-primary-foreground" 
+                      : "bg-muted text-muted-foreground"
+                  }`}>
                     {currentStep > 2 ? (
                       <CheckCircle2 className="h-5 w-5" />
                     ) : (
@@ -241,19 +259,15 @@ export const CheckoutLayout = () => {
                     Dados Pessoais
                   </span>
                 </div>
-                <div
-                  className={`flex-1 h-0.5 mx-2 ${
-                    currentStep > 2 ? "bg-primary" : "bg-muted"
-                  }`}
-                ></div>
+                <div className={`flex-1 h-0.5 mx-2 ${
+                  currentStep > 2 ? "bg-primary" : "bg-muted"
+                }`}></div>
                 <div className="flex flex-col items-center">
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-                      currentStep >= 3
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-muted-foreground"
-                    }`}
-                  >
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
+                    currentStep >= 3 
+                      ? "bg-primary text-primary-foreground" 
+                      : "bg-muted text-muted-foreground"
+                  }`}>
                     {currentStep > 3 ? (
                       <CheckCircle2 className="h-5 w-5" />
                     ) : (
@@ -276,7 +290,7 @@ export const CheckoutLayout = () => {
                   
                   {/* NOVO: Resumo do Pedido Colapsável */}
                   <ReviewOrderSummary deliveryFee={deliveryFee} discount={discount} />
-
+                  
                   <div className="rounded-lg border bg-card p-6 shadow-sm space-y-4">
                     <div>
                       <h4 className="font-semibold text-lg mb-2">
@@ -296,15 +310,17 @@ export const CheckoutLayout = () => {
                           Nenhum endereço selecionado.
                         </p>
                       )}
-                      <Button
-                        variant="link"
-                        onClick={() => setCurrentStep(1)}
+                      <Button 
+                        variant="link" 
+                        onClick={() => setCurrentStep(1)} 
                         className="p-0 h-auto mt-2"
                       >
                         Editar
                       </Button>
                     </div>
+                    
                     <Separator />
+                    
                     <div>
                       <h4 className="font-semibold text-lg mb-2">
                         Dados Pessoais
@@ -313,7 +329,6 @@ export const CheckoutLayout = () => {
                         <p className="text-muted-foreground">
                           Nome: {userData.name}
                           <br />
-                          {/* Email removido */}
                           Telefone: {userData.phone}
                         </p>
                       ) : (
@@ -321,44 +336,44 @@ export const CheckoutLayout = () => {
                           Nenhum dado pessoal informado.
                         </p>
                       )}
-                      <Button
-                        variant="link"
-                        onClick={() => setCurrentStep(2)}
+                      <Button 
+                        variant="link" 
+                        onClick={() => setCurrentStep(2)} 
                         className="p-0 h-auto mt-2"
                       >
                         Editar
                       </Button>
                     </div>
+                    
                     <Separator />
+                    
                     <div>
                       <h4 className="font-semibold text-lg mb-2">
                         Método de Pagamento
                       </h4>
                       {paymentMethod ? (
                         <p className="text-muted-foreground">
-                          PIX (pagamento online)
+                          {paymentMethod.type === "pix" ? "PIX (pagamento online)" : "Cartão de Crédito"}
                         </p>
                       ) : (
                         <p className="text-muted-foreground">
                           Nenhum método de pagamento selecionado.
                         </p>
                       )}
-                      <Button
-                        variant="link"
-                        onClick={() => setCurrentStep(3)}
+                      <Button 
+                        variant="link" 
+                        onClick={() => setCurrentStep(3)} 
                         className="p-0 h-auto mt-2"
                       >
                         Editar
                       </Button>
                     </div>
                   </div>
-
-                  <Button
+                  
+                  <Button 
                     onClick={handlePlaceOrder}
                     className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6 mt-6"
-                    disabled={
-                      !address || !userData || !paymentMethod || items.length === 0
-                    }
+                    disabled={!address || !userData || !paymentMethod || items.length === 0}
                   >
                     Finalizar Pedido ({formatCurrency(total)})
                   </Button>
@@ -368,19 +383,19 @@ export const CheckoutLayout = () => {
           </div>
         </div>
       </main>
-      
+
       {/* Order Summary Drawer */}
-      <OrderSummaryDrawer
-        isOpen={showSummaryDrawer}
-        onClose={() => setShowSummaryDrawer(false)}
+      <OrderSummaryDrawer 
+        isOpen={showSummaryDrawer} 
+        onClose={() => setShowSummaryDrawer(false)} 
         deliveryFee={deliveryFee}
         discount={discount}
       />
       
       {/* Delivery Promo Modal */}
-      <DeliveryPromoModal
-        isOpen={showDeliveryPromoModal}
-        onClose={() => setShowDeliveryPromoModal(false)}
+      <DeliveryPromoModal 
+        isOpen={showDeliveryPromoModal} 
+        onClose={() => setShowDeliveryPromoModal(false)} 
       />
     </div>
   );

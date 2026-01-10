@@ -10,9 +10,9 @@ export interface Product {
     name: string;
     options: { label: string; price: number }[];
   }[];
-  originalPrice?: number; // For discounted items
-  isNew?: boolean; // Adicionado
-  isExclusive?: boolean; // Adicionado
+  originalPrice?: number;
+  isNew?: boolean;
+  isExclusive?: boolean;
 }
 
 export interface Address {
@@ -34,20 +34,31 @@ export interface UserData {
 
 export interface Coupon {
   code: string;
-  discount: number; // percentage or fixed amount - Adicionado
-  type: "percentage" | "fixed"; // Adicionado
+  discount: number;
+  type: "percentage" | "fixed";
   minOrderValue?: number;
   appliesTo?: "first_purchase" | "all";
 }
 
-// Nova interface para o método de pagamento
+// Nova interface para os detalhes do cartão de crédito
+export interface CreditCardDetails {
+  brand: string;
+  lastFourDigits: string;
+  expiryMonth: string;
+  expiryYear: string;
+  cardholderName: string;
+  token: string;
+}
+
+// Interface atualizada para o método de pagamento
 export interface PaymentMethod {
-  type: 'pix'; // Agora só PIX
+  type: 'pix' | 'credit_card';
   customerData?: {
     cpf: string;
     phone: string;
     email: string;
   };
+  creditCard?: CreditCardDetails;
 }
 
 // Define FreeAddon type for tracking selected free items
@@ -67,10 +78,6 @@ export interface Order {
     price: number;
     imageUrl: string;
     category: string;
-    quantity: number;
-    details?: any;
-    notes?: string;
-    freeAddons?: FreeAddon[]; // Adicionado
   }>;
   subtotal: number;
   discount: number;
@@ -79,11 +86,12 @@ export interface Order {
   status: "pending" | "paid" | "preparing" | "on_the_way" | "delivered" | "cancelled";
   address: Address;
   customer: UserData;
-  paymentMethod: "PIX";
+  paymentMethod: "PIX" | "CREDIT_CARD";
   pixDetails?: {
     qrCode: string;
     pixKey: string;
     transactionId: string;
     expiresAt: string;
   };
+  creditCardDetails?: CreditCardDetails;
 }
