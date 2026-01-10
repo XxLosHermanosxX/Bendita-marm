@@ -32,9 +32,11 @@ function validateOrderData(order: Order): { valid: boolean; error?: string } {
   if (!order || !order.total || order.total <= 0) {
     return { valid: false, error: "Valor do pedido inválido" };
   }
+  
   if (!order.items || order.items.length === 0) {
     return { valid: false, error: "Itens do pedido são obrigatórios" };
   }
+  
   return { valid: true };
 }
 
@@ -44,13 +46,12 @@ function buildPayload(order: Order) {
   if (!validation.valid) {
     throw new Error(validation.error);
   }
-
+  
   // Calculate total amount (using order.total which includes delivery fee)
-  const totalAmount = order.total; 
+  const totalAmount = order.total;
   const amountInCents = Math.round(totalAmount * 100);
-
   console.log(`Calculated total amount: R$${totalAmount.toFixed(2)} = ${amountInCents} cents`);
-
+  
   return {
     amount: amountInCents, // Total amount in cents (including delivery fee)
     currency: "BRL",
@@ -63,7 +64,6 @@ function buildPayload(order: Order) {
       const itemPrice = item.details?.selectedVariation?.option.price || item.price;
       const itemPriceInCents = Math.round(itemPrice * 100);
       console.log(`Item ${item.name}: R$${itemPrice.toFixed(2)} = ${itemPriceInCents} cents, quantity: ${item.quantity}`);
-
       return {
         title: item.name,
         quantity: item.quantity,
@@ -92,14 +92,14 @@ function buildPayload(order: Order) {
 export async function createPixTransaction(order: Order) {
   try {
     console.log("Creating PIX transaction with order:", order);
-
+    
     // Validate and build payload
     const payload = buildPayload(order);
     console.log("Enviando payload para Blackcat Pay:", JSON.stringify(payload, null, 2));
-
+    
     // Autenticação: Base64(SECRET_KEY + ':')
     const auth = btoa(SECRET_KEY + ':');
-
+    
     const response = await fetch(`${API_BASE_URL}/transactions`, {
       method: 'POST',
       headers: {
@@ -108,19 +108,19 @@ export async function createPixTransaction(order: Order) {
       },
       body: JSON.stringify(payload)
     });
-
+    
     console.log("API Response status:", response.status);
     const responseText = await response.text();
     console.log("API Response text:", responseText);
-
+    
     if (!response.ok) {
       let errorMessage = `Erro na API Blackcat Pay: ${response.status} ${response.statusText}`;
-
+      
       if (responseText) {
         try {
           const errorData = JSON.parse(responseText);
           console.error('BlackCatPay API Error:', errorData);
-
+          
           if (errorData.message) {
             errorMessage += `. Mensagem: ${errorData.message}`;
           } else if (errorData.error) {
@@ -128,7 +128,7 @@ export async function createPixTransaction(order: Order) {
           } else if (errorData.detail) {
             errorMessage += `. Detalhe: ${errorData.detail}`;
           }
-
+          
           // Try to extract field-specific errors
           if (errorData.errors) {
             const fieldErrors = Object.entries(errorData.errors)
@@ -141,19 +141,19 @@ export async function createPixTransaction(order: Order) {
           errorMessage += `. Resposta do servidor: ${responseText}`;
         }
       }
-
+      
       // Special handling for 424 status code
       if (response.status === 424) {
         errorMessage = `Erro na API Blackcat Pay: 424 Failed Dependency. Mensagem: Erro na adquirente. Este erro geralmente indica um problema com a adquirente de pagamentos. Por favor, entre em contato com o suporte da Blackcat Pay e forneça os seguintes detalhes: ${errorMessage}`;
       }
-
+      
       console.error(errorMessage);
       throw new Error(errorMessage);
     }
-
+    
     const data = JSON.parse(responseText);
     console.log("Transaction created successfully:", data);
-
+    
     // ✅ CORREÇÃO: Usar data.pix.qrcode como a chave PIX e definir qrCodeUrl como null
     return {
       success: true,
@@ -165,6 +165,7 @@ export async function createPixTransaction(order: Order) {
       amount: order.total,
       transactionData: data
     };
+    
   } catch (error) {
     console.error('Error in createPixTransaction:', error);
     return {
@@ -177,7 +178,7 @@ export async function createPixTransaction(order: Order) {
 export async function checkPaymentStatus(transactionId: string) {
   try {
     const auth = btoa(SECRET_KEY + ':');
-
+    
     const response = await fetch(`${API_BASE_URL}/transactions/${transactionId}`, {
       method: 'GET',
       headers: {
@@ -185,13 +186,13 @@ export async function checkPaymentStatus(transactionId: string) {
         'Content-Type': 'application/json'
       }
     });
-
+    
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       console.error('Error checking payment status:', errorData);
       throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
     }
-
+    
     const data = await response.json();
     return {
       success: true,
@@ -217,14 +218,14 @@ export function pollPaymentStatus(
   let pollingInterval: NodeJS.Timeout;
   let attempts = 0;
   const maxAttempts = 120; // 10 minutes at 5 second intervals
-
+  
   const checkStatus = async () => {
     attempts++;
     const result = await checkPaymentStatus(transactionId);
-
+    
     if (result.success) {
       console.log(`Payment status check ${attempts}:`, result.status);
-
+      
       if (result.status === 'approved') {
         console.log('✓ Pagamento confirmado!');
         clearInterval(pollingInterval);
@@ -240,6 +241,7 @@ export function pollPaymentStatus(
       }
     } else {
       console.error('Error checking payment status:', result.error);
+      
       if (attempts >= maxAttempts) {
         console.log('Timeout: Parou de verificar');
         clearInterval(pollingInterval);
@@ -247,10 +249,10 @@ export function pollPaymentStatus(
       }
     }
   };
-
+  
   // Start polling every 5 seconds
   pollingInterval = setInterval(checkStatus, 5000);
-
+  
   // Return function to stop polling
   return () => {
     clearInterval(pollingInterval);
@@ -261,13 +263,13 @@ export function formatTimeRemaining(expiresAt: string): string {
   const expiresDate = new Date(expiresAt);
   const now = new Date();
   const diff = expiresDate.getTime() - now.getTime();
-
+  
   if (diff <= 0) {
     return "00:00";
   }
-
+  
   const minutes = Math.floor(diff / (1000 * 60));
   const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
+  
   return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }

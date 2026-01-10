@@ -25,7 +25,6 @@ export default function PixPaymentPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { items, getTotalPrice, clearCart } = useCartStore();
-
   const [orderData, setOrderData] = useState<Order | null>(null);
   const [transaction, setTransaction] = useState<any>(null);
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'approved' | 'declined' | 'expired' | 'error'>('pending');
@@ -33,14 +32,13 @@ export default function PixPaymentPage() {
   // State for the visual countdown timer (starts at 10 minutes = 600 seconds)
   const INITIAL_TIME_SECONDS = 600;
   const [secondsRemaining, setSecondsRemaining] = useState(INITIAL_TIME_SECONDS);
-  
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<{ message: string; details?: any; status?: number } | null>(null);
   const [showOrderSummary, setShowOrderSummary] = useState(false);
   
   // Ref para a seção de instruções
   const instructionsRef = React.useRef<HTMLDivElement>(null);
-
+  
   // Calculate time string from secondsRemaining
   const timeRemainingString = formatSecondsToTime(secondsRemaining);
 
@@ -51,7 +49,6 @@ export default function PixPaymentPage() {
       if (orderParam) {
         const parsedOrder = JSON.parse(decodeURIComponent(orderParam));
         setOrderData(parsedOrder);
-
         // Create PIX transaction
         createTransaction(parsedOrder);
       } else {
@@ -73,7 +70,7 @@ export default function PixPaymentPage() {
       }
       return;
     }
-
+    
     const timer = setInterval(() => {
       setSecondsRemaining(prev => {
         if (prev <= 1) {
@@ -83,23 +80,22 @@ export default function PixPaymentPage() {
         return prev - 1;
       });
     }, 1000);
-
+    
     return () => clearInterval(timer);
   }, [paymentStatus, secondsRemaining]);
-
 
   const createTransaction = async (order: Order) => {
     try {
       setIsLoading(true);
       console.log("Creating transaction with order:", order);
-
+      
       const result = await createPixTransaction(order);
-
+      
       if (result.success) {
         setTransaction(result);
         setPaymentStatus('pending');
         setSecondsRemaining(INITIAL_TIME_SECONDS); // Reset timer on successful creation
-
+        
         // Start polling for payment status
         const stopPolling = pollPaymentStatus(
           result.transactionId,
@@ -112,11 +108,11 @@ export default function PixPaymentPage() {
             setError({ message: err });
           },
           () => {
-            // This callback is usually for expiration based on API time, 
+            // This callback is usually for expiration based on API time,
             // but we rely on the visual timer for the 'expired' status change.
           }
         );
-
+        
         return () => {
           stopPolling();
         };
@@ -147,7 +143,7 @@ export default function PixPaymentPage() {
       toast.success("Chave PIX copiada para a área de transferência!");
     }
   };
-  
+
   const handleScrollToInstructions = () => {
     if (instructionsRef.current) {
       instructionsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -193,7 +189,6 @@ export default function PixPaymentPage() {
             </div>
             <h2 className="text-2xl font-bold text-destructive">Erro no Pagamento</h2>
             <p className="text-muted-foreground">{error.message}</p>
-
             {error.details && (
               <div className="text-left text-sm text-muted-foreground bg-destructive/5 p-4 rounded-lg mt-4">
                 <h3 className="font-semibold text-destructive mb-2">Detalhes do erro:</h3>
@@ -203,7 +198,6 @@ export default function PixPaymentPage() {
                 )}
               </div>
             )}
-
             <div className="space-y-2">
               <Button onClick={handleBackToCheckout} className="w-full">
                 Tentar novamente
@@ -247,17 +241,12 @@ export default function PixPaymentPage() {
           <div className="text-center space-y-2">
             {/* Adicionando a logo do PIX */}
             <div className="relative h-10 w-24 mx-auto mb-2">
-                <Image 
-                    src="/images/pix-logo-full.png" 
-                    alt="Logo PIX" 
-                    layout="fill"
-                    objectFit="contain"
-                />
+              <Image src="/images/pix-logo-full.png" alt="Logo PIX" layout="fill" objectFit="contain" />
             </div>
             <h1 className="text-3xl font-bold text-foreground">Pagamento via PIX</h1>
             <p className="text-muted-foreground">Copie a chave PIX para pagar</p>
           </div>
-
+          
           {/* Payment Status */}
           <div className="flex justify-center">
             {paymentStatus === 'pending' && (
@@ -279,7 +268,7 @@ export default function PixPaymentPage() {
               </div>
             )}
           </div>
-
+          
           {/* Countdown Timer with Progress Bar */}
           {paymentStatus === 'pending' && (
             <div className="space-y-2">
@@ -294,31 +283,29 @@ export default function PixPaymentPage() {
                   Tempo restante para pagar
                 </p>
               </div>
-
+              
               {/* Progress Bar */}
               <div className="w-full bg-gray-200 rounded-full h-2.5">
-                <div
+                <div 
                   className="bg-primary h-2.5 rounded-full transition-all duration-1000 ease-linear"
                   style={{ width: `${calculateProgress()}%` }}
                 ></div>
               </div>
             </div>
           )}
-
+          
           {/* PIX Key Display - Simplified */}
           <Card className="bg-white shadow-lg">
             <CardHeader className="pb-3">
               <CardTitle className="text-xl font-semibold flex items-center justify-between">
                 Chave PIX (Copia e Cola)
-                <Button
-                  variant="ghost"
+                <Button 
+                  variant="ghost" 
                   size="lg" // Aumentando o tamanho
-                  onClick={handleCopyPixKey}
-                  // Cor verde escura e pulsação lenta
+                  onClick={handleCopyPixKey} // Cor verde escura e pulsação lenta
                   className="text-green-700 hover:text-green-800 text-lg font-bold animate-slow-pulse"
                 >
-                  <Copy className="h-5 w-5 mr-2" />
-                  Copiar Chave
+                  <Copy className="h-5 w-5 mr-2" /> Copiar Chave
                 </Button>
               </CardTitle>
             </CardHeader>
@@ -333,27 +320,26 @@ export default function PixPaymentPage() {
               </div>
               <Button 
                 variant="link" 
-                onClick={handleScrollToInstructions}
-                // Cor azul escura
+                onClick={handleScrollToInstructions} // Cor azul escura
                 className="p-0 h-auto mt-4 text-blue-800 hover:text-blue-900 font-semibold"
               >
                 Não sabe como pagar? Clique aqui!
               </Button>
             </CardContent>
           </Card>
-
+          
           {/* Order Summary Button (Right Side) */}
           <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-10">
-            <Button
-              variant="outline"
-              size="icon"
+            <Button 
+              variant="outline" 
+              size="icon" 
               className="rounded-full h-12 w-12 shadow-lg"
               onClick={() => setShowOrderSummary(!showOrderSummary)}
             >
               {showOrderSummary ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
             </Button>
           </div>
-
+          
           {/* Order Summary Modal */}
           {showOrderSummary && (
             <div className="fixed inset-0 bg-black/50 z-20 flex items-center justify-center p-4">
@@ -368,9 +354,7 @@ export default function PixPaymentPage() {
                       {formatCurrency(transaction.amount)}
                     </span>
                   </div>
-
                   <Separator />
-
                   <div className="space-y-2">
                     <h4 className="font-semibold text-foreground">Itens do pedido:</h4>
                     <ul className="space-y-1 text-sm">
@@ -388,18 +372,14 @@ export default function PixPaymentPage() {
                       ))}
                     </ul>
                   </div>
-
-                  <Button
-                    onClick={() => setShowOrderSummary(false)}
-                    className="w-full mt-4"
-                  >
+                  <Button onClick={() => setShowOrderSummary(false)} className="w-full mt-4">
                     Fechar
                   </Button>
                 </CardContent>
               </Card>
             </div>
           )}
-
+          
           {/* Payment Instructions - Alterado para fundo vermelho e texto branco */}
           <Card className="bg-red-600 shadow-lg text-white" ref={instructionsRef}>
             <CardHeader className="border-b border-red-700">
@@ -430,7 +410,7 @@ export default function PixPaymentPage() {
               </ol>
             </CardContent>
           </Card>
-
+          
           {/* Success Message (when approved) */}
           {paymentStatus === 'approved' && (
             <Card className="bg-success/5 border-success">
@@ -442,13 +422,16 @@ export default function PixPaymentPage() {
                 <p className="text-muted-foreground">
                   Seu pedido foi pago com sucesso e está sendo preparado.
                 </p>
-                <Button onClick={handleGoToHome} className="bg-success hover:bg-success/90 text-success-foreground">
+                <Button 
+                  onClick={handleGoToHome} 
+                  className="bg-success hover:bg-success/90 text-success-foreground"
+                >
                   Voltar para a página inicial
                 </Button>
               </CardContent>
             </Card>
           )}
-
+          
           {/* Expired Message */}
           {paymentStatus === 'expired' && (
             <Card className="bg-destructive/5 border-destructive">
