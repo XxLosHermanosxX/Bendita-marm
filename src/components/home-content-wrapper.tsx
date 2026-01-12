@@ -30,8 +30,10 @@ export const HomeContentWrapper = () => {
   const visibleCategories = useMemo(() => getVisibleCategories(groupedProducts), [groupedProducts]);
 
   // Data for desktop layout
-  const exclusiveProducts = products.filter(p => p.category === "Exclusivos do App").slice(0, 3); 
-  const newProducts = products.filter(p => p.isNew && p.category !== "Exclusivos do App").slice(0, 3);
+  // Destaque do Dia (m1)
+  const exclusiveProducts = products.filter(p => p.category === "Marmita Destaque do Dia").slice(0, 3); 
+  // Combos (c1)
+  const comboProducts = products.filter(p => p.category === "Combos").slice(0, 3);
 
   // Render nothing until isMobile is defined (i.e., client-side)
   if (isMobile === undefined) {
@@ -48,7 +50,7 @@ export const HomeContentWrapper = () => {
         
         {/* Full Menu for Mobile */}
         <MenuLayout 
-          activeCategory="Exclusivos do App"
+          activeCategory="Marmita Destaque do Dia" // Updated default category
           visibleCategories={visibleCategories}
           groupedProducts={groupedProducts}
         />
@@ -66,7 +68,7 @@ export const HomeContentWrapper = () => {
 
       <div className="container mx-auto p-4 md:p-6 pt-0">
         <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
-          Bem-vindo ao Sushiaki Delivery!
+          Bem-vindo à Bendita Marmita!
         </h1>
         
         {/* Seção de Produtos Exclusivos do App (Destaque) */}
@@ -74,10 +76,10 @@ export const HomeContentWrapper = () => {
           <section className="mb-8">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl md:text-2xl font-semibold text-primary">
-                🔥 Destaques Exclusivos do App
+                🔥 Destaque do Dia
               </h2>
-              <Link href="/products?category=Exclusivos%20do%20App" passHref>
-                <Button variant="link" className="text-primary p-0 h-auto">Ver todos</Button>
+              <Link href="/products?category=Marmita%20Destaque%20do%20Dia" passHref>
+                <Button variant="link" className="text-primary p-0 h-auto">Ver mais</Button>
               </Link>
             </div>
             {/* Exibindo apenas os 3 principais destaques */}
@@ -89,19 +91,19 @@ export const HomeContentWrapper = () => {
           </section>
         )}
 
-        {/* Seção de Novidades (Produtos que são novos, mas não exclusivos) */}
-        {newProducts.length > 0 && (
+        {/* Seção de Combos */}
+        {comboProducts.length > 0 && (
           <section className="mb-8">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl md:text-2xl font-semibold text-foreground">
-                Novidades
+                Combos Especiais
               </h2>
-              <Link href="/products?category=Novidades" passHref>
+              <Link href="/products?category=Combos" passHref>
                 <Button variant="link" className="text-primary p-0 h-auto">Ver todos</Button>
               </Link>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {newProducts.map(product => (
+              {comboProducts.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>

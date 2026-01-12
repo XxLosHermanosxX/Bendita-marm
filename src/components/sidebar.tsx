@@ -2,9 +2,8 @@
 import React from "react";
 import Link from "next/link";
 import { 
-  Star, Sparkles, Flame, ScrollText, 
-  Leaf, Gift, Utensils, Fish, Coffee, 
-  Package, Drumstick, GlassWater
+  Star, Utensils, Package, 
+  Soup, Coffee, Cake
 } from "lucide-react";
 import { categories } from "@/data/products";
 import { Button } from "@/components/ui/button";
@@ -13,35 +12,20 @@ import { cn } from "@/lib/utils";
 
 // Map categories to Lucide icons (using available icons)
 const categoryIcons: { [key: string]: React.ElementType } = {
-  "Exclusivos do App": Star,
-  "Prato do Dia": Sparkles,
-  "Pokes": Utensils,
-  "Pratos Quentes": Utensils,
-  "Teppan": Utensils,
-  "Niguiri": Fish,
-  "Temaki": ScrollText,
-  "Yakisoba": Utensils,
-  "Vegetarianos": Leaf,
-  "Especiais": Sparkles,
-  "Novidades": Gift,
-  "Soda": Coffee,
-  "Combinados": Package,
-  "Hossomaki": Fish,
-  "Uramaki": Fish,
-  "Sashimi": Fish,
-  "Hot Sushis": Flame,
-  "Tilápia Sushiaki": Fish,
-  "Street Food": Drumstick,
-  "Bebidas": GlassWater,
+  "Marmita Destaque do Dia": Star,
+  "Cardápio Principal": Utensils,
+  "Combos": Package,
+  "Sobremesas": Cake,
+  "Bebidas": Coffee,
 };
 
 export const Sidebar = () => {
   const searchParams = useSearchParams();
-  // Lê a categoria da URL. Se não houver, assume 'Exclusivos do App' como padrão.
-  const activeCategory = searchParams.get('category') || "Exclusivos do App"; 
+  // Lê a categoria da URL. Se não houver, assume 'Marmita Destaque do Dia' como padrão.
+  const activeCategory = searchParams.get('category') || "Marmita Destaque do Dia"; 
   
-  // Filtra a lista de categorias para remover 'Combinados'
-  const filteredCategories = categories.filter(c => c !== "Combinados");
+  // Filtra a lista de categorias para remover 'Combinados' (não existe mais)
+  const filteredCategories = categories;
 
   return (
     <div className="h-full flex flex-col p-4 bg-secondary/50">

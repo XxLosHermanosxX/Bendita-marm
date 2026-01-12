@@ -27,14 +27,14 @@ export const Footer = () => {
           <div className="flex flex-col items-center md:items-start space-y-4">
             <div className="relative h-16 w-32">
               <Image 
-                src="/images/sushiaki-logo-footer.png" 
-                alt="Sushiaki Logo" 
+                src="/bendita-logo.png" 
+                alt="Bendita Marmita Logo" 
                 layout="fill"
                 objectFit="contain"
               />
             </div>
             <div className="text-sm text-muted-foreground space-y-1">
-              <p className="font-semibold text-foreground">Parigot Comercio de Alimentos Ltda</p>
+              <p className="font-semibold text-foreground">Bendita Marmita Comércio de Alimentos Ltda</p>
               <p>47.801.438/0001-32</p>
             </div>
           </div>
@@ -89,7 +89,7 @@ export const Footer = () => {
         </div>
         
         <div className="mt-8 pt-4 border-t border-border text-center text-xs text-muted-foreground">
-          &copy; {new Date().getFullYear()} Sushiaki Delivery. Todos os direitos reservados.
+          &copy; {new Date().getFullYear()} Bendita Marmita. Todos os direitos reservados.
         </div>
       </div>
     </footer>

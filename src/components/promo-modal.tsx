@@ -10,17 +10,17 @@ import { formatCurrency } from '@/lib/utils';
 import { X } from 'lucide-react';
 import { openProductConfigurationModalById } from '@/lib/product-actions'; // Importando a nova função
 
-// Hardcoded product details for the promotion (p30)
+// Hardcoded product details for the promotion (c1)
 const PROMO_PRODUCT = {
-  id: "p30",
-  name: "Combinado Exclusivo 80 Peças",
-  originalPrice: 79.90, // Novo preço original
-  price: 49.90,
-  imageUrl: "/images/combinado-80-pecas.png",
-  link: "/products?category=Exclusivos%20do%20App",
+  id: "c1",
+  name: "Combo Bendito Completo",
+  originalPrice: 27.00, // Assuming R$ 17 + R$ 5 + R$ 5 = R$ 27.00
+  price: 20.00,
+  imageUrl: "/images/combo-placeholder.jpg",
+  link: "/products?category=Combos",
 };
 
-const LOCAL_STORAGE_KEY = 'sushiaki_promo_seen';
+const LOCAL_STORAGE_KEY = 'bendita_promo_seen'; // Updated key
 
 export const PromoModal = () => {
   const isMobile = useIsMobile();
@@ -94,10 +94,10 @@ export const PromoModal = () => {
           <div className="p-6 text-center space-y-8">
             {/* Usando emoji de sushi e fonte padrão bold */}
             <h3 className="text-2xl font-extrabold text-foreground flex items-center justify-center gap-2">
-                🍣 {PROMO_PRODUCT.name}
+                🍽️ {PROMO_PRODUCT.name}
             </h3>
             <p className="text-lg text-foreground">
-              Aproveite o maior combinado da casa por um preço imperdível!
+              Marmita do dia + Refri + Mousse por um preço imperdível!
             </p>
             
             {/* Preços Duplos: Cortado e Novo Preço em Destaque */}
@@ -107,7 +107,7 @@ export const PromoModal = () => {
                     De {formatCurrency(PROMO_PRODUCT.originalPrice)}
                 </span>
                 {/* Novo Preço: Verde Claro, Sombreado Leve e Efeito de Brilho/Pulsação */}
-                <div className="text-3xl font-black text-green-400 animate-pulse drop-shadow-lg shadow-green-500/50">
+                <div className="3xl font-black text-green-400 animate-pulse drop-shadow-lg shadow-green-500/50">
                     Por {formatCurrency(PROMO_PRODUCT.price)}
                 </div>
             </div>

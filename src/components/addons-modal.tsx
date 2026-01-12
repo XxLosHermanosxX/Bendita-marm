@@ -9,8 +9,7 @@ import { formatCurrency, cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { useAddonsStore } from "@/store/use-addons-store";
 import { useCartStore } from "@/store/use-cart-store";
-import { freeAddons, Addon } from "@/data/addons";
-import { beverageProducts } from "@/data/products/bebidas";
+import { freeAddons, paidAddons, Addon } from "@/data/addons";
 import { FreeAddon, Product } from "@/types";
 import { toast } from "sonner";
 
@@ -24,9 +23,10 @@ interface AddonCardProps {
 
 const AddonCard = ({ item, type, onQuantityChange, currentQuantity }: AddonCardProps) => {
     const isPaid = type === 'paid';
-    const price = isPaid ? (item as Product).price : 0;
+    // If type is 'paid', item is an Addon with a price property
+    const price = isPaid ? (item as Addon).price : 0; 
     const name = item.name;
-    const description = isPaid ? (item as Product).description : (item as Addon).description;
+    const description = item.description;
 
     const handleIncrement = () => onQuantityChange(item.id, currentQuantity + 1);
     const handleDecrement = () => onQuantityChange(item.id, Math.max(0, currentQuantity - 1));
@@ -46,7 +46,7 @@ const AddonCard = ({ item, type, onQuantityChange, currentQuantity }: AddonCardP
                 <div className="flex-1 min-w-0">
                     <h4 className="text-sm font-semibold text-foreground truncate">{name}</h4>
                     <p className="text-xs text-muted-foreground line-clamp-1">{description}</p>
-                    {isPaid && (
+                    {isPaid && price !== undefined && (
                         <p className="text-xs font-medium text-primary mt-1">{formatCurrency(price)}</p>
                     )}
                 </div>
@@ -130,8 +130,19 @@ export const AddonsModal = () => {
         Object.entries(paidSuggestionQuantities)
             .filter(([, quantity]) => quantity > 0)
             .forEach(([id, quantity]) => {
-                const product = beverageProducts.find(p => p.id === id);
-                if (product) {
+                // Find the paid addon/product
+                const paidAddon = paidAddons.find(p => p.id === id);
+                
+                if (paidAddon && paidAddon.price !== undefined) {
+                    // Create a temporary Product object from the paid addon structure
+                    const product: Product = {
+                        id: paidAddon.id,
+                        name: paidAddon.name,
+                        description: paidAddon.description,
+                        price: paidAddon.price,
+                        category: "Adicionais Pagos", // New temporary category
+                        imageUrl: paidAddon.imageUrl,
+                    };
                     // Adiciona o produto sugerido como um item separado no carrinho
                     cartStore.addItem(product, quantity);
                 }
@@ -141,8 +152,8 @@ export const AddonsModal = () => {
         closeModal();
     };
 
-    // Filter beverages to show only the first 3 as suggestions
-    const suggestedBeverages = beverageProducts.slice(0, 3);
+    // Use paidAddons as suggestions
+    const suggestedPaidAddons = paidAddons; 
 
     return (
         <Dialog open={isOpen} onOpenChange={closeModal}>
@@ -153,10 +164,10 @@ export const AddonsModal = () => {
                 {/* Header */}
                 <DialogHeader className="text-left p-5 pb-3 border-b flex-shrink-0">
                     <DialogTitle className="text-xl font-bold text-foreground flex items-center gap-2">
-                        <CheckCircle2 className="h-5 w-5 text-success" /> Item Adicionado!
+                        <CheckCircle2 className="h-5 w-5 text-success" /> Marmita Adicionada!
                     </DialogTitle>
                     <p className="text-sm text-muted-foreground mt-1">
-                        Turbine seu pedido com adicionais gratuitos e bebidas sugeridas.
+                        Turbine seu pedido com adicionais gratuitos e pagos.
                     </p>
                 </DialogHeader>
 
@@ -185,21 +196,21 @@ export const AddonsModal = () => {
 
                     <Separator />
 
-                    {/* Seção de Sugestões Pagas (Bebidas) */}
+                    {/* Seção de Sugestões Pagas (Adicionais) */}
                     <section className="space-y-3">
                         <h3 className="text-lg font-semibold text-foreground">
-                            Sugestões (Para Acompanhar)
+                            Adicionais Pagos (Para Turbinar)
                         </h3>
                         <p className="text-xs text-muted-foreground">
-                            Que tal uma bebida gelada para acompanhar seu sushi?
+                            Adicione porções extras para deixar sua marmita perfeita.
                         </p>
                         <div className="space-y-3">
-                            {suggestedBeverages.map(product => (
+                            {suggestedPaidAddons.map(addon => (
                                 <AddonCard
-                                    key={product.id}
-                                    item={product}
+                                    key={addon.id}
+                                    item={addon}
                                     type="paid"
-                                    currentQuantity={paidSuggestionQuantities[product.id] || 0}
+                                    currentQuantity={paidSuggestionQuantities[addon.id] || 0}
                                     onQuantityChange={handlePaidSuggestionQuantityChange}
                                 />
                             ))}

@@ -48,8 +48,8 @@ export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
         )}
       >
         <Image
-          src="/sushiaki-logo.png"
-          alt="Sushiaki Logo"
+          src="/bendita-logo.png"
+          alt="Bendita Marmita Logo"
           layout="fill"
           objectFit="contain"
           priority

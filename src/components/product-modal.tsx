@@ -24,8 +24,8 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
   const contentRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  // Check if the product is the 80-piece combo
-  const isCombo80 = product.id === "p30";
+  // Check if the product has variations (like the Combo Bendito or Refrigerante)
+  const hasVariations = product.variations && product.variations.length > 0;
 
   useEffect(() => {
     if (isOpen) {
@@ -33,37 +33,16 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
       setQuantity(1);
       setNotes("");
       
-      // Auto-scroll to bottom for 80-piece combo
-      if (isCombo80 && contentRef.current) {
-        // Use a slightly longer delay to ensure all content and layout calculations are complete
-        setTimeout(() => {
-          if (contentRef.current) {
-            contentRef.current.scrollTo({
-              top: contentRef.current.scrollHeight,
-              behavior: 'smooth'
-            });
-          }
-        }, 200); // Increased delay to 200ms
-      }
+      // No auto-scroll needed for the new menu structure
     }
-  }, [isOpen, isCombo80]);
+  }, [isOpen]);
 
   const handleContinue = () => {
-    // For the 80-piece combo, we'll pass the standard components in the description
-    const details = isCombo80 ? {
-      customItems: [
-        { name: "20 Uramaki Filadélfia", count: 20 },
-        { name: "20 Hot Filadélfia", count: 20 },
-        { name: "20 Uramaki Salmão Grelhado", count: 20 },
-        { name: "20 Hot Roll Tradicional", count: 20 }
-      ]
-    } : undefined;
-
     // Pass the configured item to the Addons Modal
     openAddonsModal({
       product: product,
       quantity: quantity,
-      details: details,
+      details: undefined, // No complex details needed for marmitas
       notes: notes,
     });
 
@@ -91,43 +70,23 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
           ref={contentRef}
           className="flex-1 overflow-y-auto p-6 pt-4 space-y-4"
         >
-          {/* Special description for 80-piece combo */}
-          {isCombo80 && (
-            <div className="space-y-3 border p-4 rounded-lg bg-secondary/50">
-              <h4 className="text-md font-semibold text-primary">
-                Combo Padrão (80 Peças)
-              </h4>
-              <ul className="text-sm space-y-1">
-                <li>• 20 Uramaki Filadélfia</li>
-                <li>• 20 Hot Filadélfia</li>
-                <li>• 20 Uramaki Salmão Grelhado</li>
-                <li>• 20 Hot Roll Tradicional</li>
-              </ul>
-              <p className="text-xs text-muted-foreground mt-2">
-                Este é nosso combo padrão especial. Aproveite!
-              </p>
-            </div>
-          )}
+          {/* Ingredients/Details (using description for marmitas) */}
+          <div className="space-y-2">
+            <h4 className="text-md font-semibold flex items-center gap-2">
+              <Utensils className="h-4 w-4 text-primary" />
+              Detalhes da Marmita
+            </h4>
+            <p className="text-sm text-muted-foreground">
+              {product.description}
+            </p>
+          </div>
 
-          {/* Ingredients (if not the 80-piece combo) */}
-          {!isCombo80 && product.ingredients && product.ingredients.length > 0 && (
-            <div className="space-y-2">
-              <h4 className="text-md font-semibold flex items-center gap-2">
-                <Utensils className="h-4 w-4 text-primary" />
-                Ingredientes
-              </h4>
-              <p className="text-sm text-muted-foreground">
-                {product.ingredients.join(", ")}
-              </p>
-            </div>
-          )}
-
-          {/* Simple Variations (if not the 80-piece combo) */}
-          {!isCombo80 && product.variations && product.variations.length > 0 && (
+          {/* Simple Variations (if they exist, e.g., Refrigerante flavor) */}
+          {hasVariations && product.variations && product.variations.length > 0 && (
             <div className="space-y-2">
               <h4 className="text-md font-semibold">Opções</h4>
               <p className="text-sm text-muted-foreground">
-                Selecione uma variação.
+                Selecione uma variação. (Implementação futura)
               </p>
             </div>
           )}
@@ -138,7 +97,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
           <div className="space-y-4">
             <div>
               <label htmlFor="notes" className="text-sm font-medium text-foreground block mb-2">
-                Observações (Ex: Sem cebolinha, sem tarê)
+                Observações (Ex: Sem feijão, mais arroz)
               </label>
               <Textarea 
                 id="notes" 

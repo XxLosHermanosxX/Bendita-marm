@@ -18,7 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import { supabase } from '@/integrations/supabase/client';
 
 // Simulação: Assume que é o primeiro pedido até que tenhamos lógica de autenticação
-const IS_FIRST_ORDER_SIMULATION = true;
+const IS_FIRST_ORDER_SIMULATION = false; // Frete é sempre grátis
 
 export const CheckoutLayout = () => {
   const router = useRouter();
@@ -28,8 +28,8 @@ export const CheckoutLayout = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
   const [showSummaryDrawer, setShowSummaryDrawer] = useState(false);
-  // Estado para a taxa de entrega, inicializada com o valor padrão
-  const [deliveryFee, setDeliveryFee] = useState(10.00);
+  // Estado para a taxa de entrega, inicializada com R$ 0.00 (Frete Grátis)
+  const [deliveryFee, setDeliveryFee] = useState(0.00);
   const [showDeliveryPromoModal, setShowDeliveryPromoModal] = useState(false);
   // Estado para o modal de promoção
   const mainRef = useRef<HTMLDivElement>(null);
@@ -69,11 +69,8 @@ export const CheckoutLayout = () => {
 
   const handleAddressNext = (data: Address) => {
     setAddress(data);
-    // Lógica da Promoção de Entrega Grátis
-    if (IS_FIRST_ORDER_SIMULATION && deliveryFee > 0) {
-      setDeliveryFee(0.00);
-      setShowDeliveryPromoModal(true);
-    }
+    // Garantindo que a taxa de entrega seja 0, conforme solicitado (Frete Grátis)
+    setDeliveryFee(0.00);
     handleNextStep();
   };
 

@@ -10,32 +10,21 @@ export const openProductConfigurationModal = (product: Product) => {
   useProductModalStore.getState().openModal(product);
 };
 
-// Função auxiliar para buscar o produto (simulação, pois não temos a API)
-const findProductById = (productId: string): Product | undefined => {
-    // Hardcoded product details for the promotion (p30) - Must match PROMO_PRODUCT structure
-    if (productId === "p30") {
-        return {
-            id: "p30",
-            name: "Combinado Exclusivo 80 Peças",
-            description: "Monte seu combinado de 80 peças com as opções mais populares.",
-            price: 49.90,
-            imageUrl: "/images/combinado-80-pecas.png",
-            category: "Exclusivos do App",
-            ingredients: [],
-            variations: [],
-        };
-    }
-    // Adicione lógica para outros produtos se necessário
-    return undefined;
-};
-
 /**
  * Abre o modal de configuração do produto pelo ID.
  * @param productId O ID do produto a ser configurado.
  */
 export const openProductConfigurationModalById = (productId: string) => {
-    const product = findProductById(productId);
-    if (product) {
+    // Lookup simulado para o Combo Bendito (c1)
+    if (productId === "c1") {
+        const product: Product = {
+            id: "c1",
+            name: "Combo Bendito",
+            description: "Marmita do dia + Refrigerante 600ml + Mousse de Brigadeiro.",
+            price: 20.00,
+            imageUrl: "/images/combo-placeholder.jpg",
+            category: "Combos",
+        };
         openProductConfigurationModal(product);
     } else {
         toast.error("Produto não encontrado para configuração.");

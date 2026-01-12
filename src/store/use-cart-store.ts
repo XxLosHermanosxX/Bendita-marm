@@ -102,7 +102,7 @@ export const useCartStore = create<CartStore>()(
       }, 0), // getSubtotal is the same as getTotalPrice for now
     }),
     {
-      name: 'sushiaki-cart-storage', // unique name for localStorage key
+      name: 'bendita-marmita-cart-storage', // Updated unique name for localStorage key
       storage: createJSONStorage(() => localStorage),
     }
   )

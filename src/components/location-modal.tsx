@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
 import { useLocationStore, simulateIpDetection } from '@/store/use-location-store';
 import { useRouter } from 'next/navigation';
-import { SushiakiLogo } from './sushiaki-logo';
+import { BenditaLogo } from './bendita-logo'; // Importação atualizada
 
 // Definindo o tipo para a localização detectada
 type DetectedLocation = { 
@@ -77,7 +77,7 @@ export const LocationModal = () => {
         </DialogHeader>
         <div className="space-y-6">
           <div className="mx-auto h-16 w-40">
-            <SushiakiLogo className="h-full w-full" />
+            <BenditaLogo className="h-full w-full" />
           </div>
           <h2 className="text-3xl font-bold text-foreground">
             Bateu a fome de Japa?

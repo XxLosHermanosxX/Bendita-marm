@@ -27,13 +27,13 @@ export const SidebarSheet = () => {
           <div className="flex items-center gap-3 mb-4">
             <div className="relative h-10 w-10 flex-shrink-0">
               <Image 
-                src="/sushiaki-logo.png" 
-                alt="Sushiaki Logo" 
+                src="/bendita-logo.png" 
+                alt="Bendita Marmita Logo" 
                 layout="fill"
                 objectFit="contain"
               />
             </div>
-            <h3 className="text-xl font-bold text-foreground">Sushiaki</h3>
+            <h3 className="text-xl font-bold text-foreground">Bendita Marmita</h3>
           </div>
           
           {/* Unit Information */}

@@ -93,7 +93,7 @@ export const useLocationStore = create<LocationState>()(
       },
     }),
     {
-      name: 'sushiaki-location-storage',
+      name: 'bendita-marmita-location-storage', // Updated storage key
       storage: createJSONStorage(() => localStorage),
       // Garante que a distância seja gerada apenas na primeira vez que o store é inicializado
       onRehydrateStorage: (state) => {

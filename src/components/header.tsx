@@ -84,8 +84,8 @@ export const Header = () => {
             <Link href="/" className="flex items-center">
               <div className="relative h-12 w-12 md:h-14 md:w-14">
                 <Image 
-                  src="/sushiaki-logo.png" 
-                  alt="Sushiaki Logo" 
+                  src="/bendita-logo.png" 
+                  alt="Bendita Marmita Logo" 
                   layout="fill"
                   objectFit="contain"
                 />
@@ -151,8 +151,8 @@ export const Header = () => {
                   isMobile ? "h-12 w-12" : "h-14 w-14" // Aumentando a logo no desktop para h-14 w-14
                 )}>
                   <Image 
-                    src="/sushiaki-logo.png" 
-                    alt="Sushiaki Logo" 
+                    src="/bendita-logo.png" 
+                    alt="Bendita Marmita Logo" 
                     layout="fill"
                     objectFit="contain"
                   />

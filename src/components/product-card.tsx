@@ -18,16 +18,8 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   const openAddonsModal = useAddonsStore((state) => state.openModal);
 
   const handleAddToCart = () => {
-    // Se o produto tiver variações ou for o combinado personalizado (p30), abre o modal de configuração global.
-    if (product.variations && product.variations.length > 0 || product.id === "p30") {
-      openProductConfigurationModal(product);
-    } else {
-      // Para produtos simples, adiciona diretamente ao carrinho e abre o modal de adicionais.
-      openAddonsModal({
-        product: product,
-        quantity: 1,
-      });
-    }
+    // Para todos os produtos, abrimos o modal de configuração/adicionais.
+    openProductConfigurationModal(product);
   };
 
   return (

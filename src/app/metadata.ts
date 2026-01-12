@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Sushiaki Curitiba",
-  description: "O melhor sushi da cidade, entregue na sua porta!",
+  title: "Bendita Marmita",
+  description: "Bendita seja a fome… que chegou a Bendita Marmita!",
   icons: {
-    icon: '/sushiaki-logo.png',
+    icon: '/bendita-logo.png',
   },
 };
