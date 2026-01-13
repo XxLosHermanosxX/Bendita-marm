@@ -63,6 +63,7 @@ export const HeroCarousel = () => {
                     fill
                     className="object-cover object-center"
                     priority
+                    quality={100} // High quality
                     sizes="100vw"
                   />
                 </div>
@@ -75,6 +76,7 @@ export const HeroCarousel = () => {
                     fill
                     className="object-cover object-center"
                     priority
+                    quality={100} // High quality
                     sizes="100vw"
                   />
                 </div>
