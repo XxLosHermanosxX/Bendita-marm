@@ -8,7 +8,12 @@ export interface Product {
   ingredients?: string[];
   variations?: {
     name: string;
-    options: { label: string; price: number }[];
+    options: {
+        label: string; 
+        price: number;
+        imageUrl?: string;
+        description?: string;
+    }[];
   }[];
   originalPrice?: number;
   isNew?: boolean;
@@ -73,6 +78,7 @@ export interface OrderItem extends Product {
   details?: any;
   notes?: string;
   freeAddons?: FreeAddon[];
+  selectedVariations?: { [key: string]: any }; // To store selected options
 }
 
 export interface Order {
