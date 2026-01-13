@@ -14,13 +14,13 @@ export const freeAddons: Addon[] = [
         id: "a1",
         name: "Farofa Extra",
         description: "Farofa crocante (Cortesia da casa)",
-        imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/1p0yj6ba_Farofa_Extra.png",
+        imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/02jlqc4w_Farofa_Extra.png",
     },
     {
         id: "a2",
         name: "Maionese Caseira",
         description: "Maionese temperada (Cortesia da casa)",
-        imageUrl: "/images/maionese-placeholder.png",
+        imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/1s22g8s8_Maionese_Caseira.png",
     },
     {
         id: "a3",
@@ -49,7 +49,7 @@ export const paidAddons: Addon[] = [
         id: "p_a2",
         name: "Mandioca Frita",
         description: "Porção de mandioca frita",
-        imageUrl: "/images/mandioca-placeholder.png",
+        imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/ljkoekri_Mandioca_Frita.png",
         price: 8.00,
     },
     {
