@@ -38,8 +38,8 @@ export const WhatsappButton = () => {
         mobileOffset
       )}
     >
-      {/* Removido shadow-xl para evitar o quadrado transparente em volta */}
-      <div className="relative h-14 w-14 md:h-16 md:w-16 hover:scale-105 transition-transform drop-shadow-xl">
+      {/* Adicionado opacity-90 para transparência e hover:opacity-100 para ficar nítido ao passar o mouse */}
+      <div className="relative h-14 w-14 md:h-16 md:w-16 hover:scale-105 transition-all drop-shadow-xl opacity-90 hover:opacity-100">
         <Image
           src="https://customer-assets.emergentagent.com/job_github-link-2/artifacts/atzszp87_file_00000000b328720ea80bbf3931e4fbd6.png"
           alt="WhatsApp Sushiaki"
