@@ -30,7 +30,7 @@ export const marmitaProducts: Product[] = [
     description: "Frango macio ao molho cremoso, arroz soltinho e batata palha crocante.",
     price: MARMITA_PRICE,
     category: "Cardápio Principal",
-    imageUrl: "/images/marmita-placeholder-3.jpg",
+    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/skqxkw0x_Strogonoff_de_Frango.png",
   },
   {
     id: "m4",
@@ -62,7 +62,7 @@ export const marmitaProducts: Product[] = [
     description: "Frango empanado e crocante, arroz branco, feijão e purê de batata.",
     price: MARMITA_PRICE,
     category: "Cardápio Principal",
-    imageUrl: "/images/marmita-placeholder-7.jpg",
+    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/6lps6u70_Frango_a_Milanesa.png",
   },
   {
     id: "m8",
@@ -78,7 +78,7 @@ export const marmitaProducts: Product[] = [
     description: "Carne moída bem temperada, arroz branco, feijão e legumes.",
     price: MARMITA_PRICE,
     category: "Cardápio Principal",
-    imageUrl: "/images/marmita-placeholder-9.jpg",
+    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/4w69imcl_Carne_Moida_Caseira.png",
   },
   {
     id: "m10",
@@ -86,7 +86,7 @@ export const marmitaProducts: Product[] = [
     description: "Frango empanado com molho de tomate e queijo derretido, arroz branco e purê.",
     price: MARMITA_PRICE,
     category: "Cardápio Principal",
-    imageUrl: "/images/marmita-placeholder-10.jpg",
+    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/by7zodro_Parmegiana_de_Frango.png",
   },
   {
     id: "m11",
@@ -94,7 +94,7 @@ export const marmitaProducts: Product[] = [
     description: "Feijão encorpado com carnes selecionadas, arroz branco e farofa.",
     price: MARMITA_PRICE,
     category: "Cardápio Principal",
-    imageUrl: "/images/marmita-placeholder-11.jpg",
+    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/l1dewkaw_Feijoada_Simples.png",
   },
   
   // Combos
