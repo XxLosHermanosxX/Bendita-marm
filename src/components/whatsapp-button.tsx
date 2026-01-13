@@ -8,8 +8,8 @@ import { usePathname } from 'next/navigation';
 import { useCartStore } from '@/store/use-cart-store';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-// Número de telefone: (41) 98444-0032
-const WHATSAPP_NUMBER = '5541984440032';
+// Número de telefone atualizado: (41) 99233-2483
+const WHATSAPP_NUMBER = '5541992332483';
 const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}`;
 
 export const WhatsappButton = () => {
@@ -38,7 +38,8 @@ export const WhatsappButton = () => {
         mobileOffset
       )}
     >
-      <div className="relative h-14 w-14 md:h-16 md:w-16 shadow-xl hover:scale-105 transition-transform">
+      {/* Removido shadow-xl para evitar o quadrado transparente em volta */}
+      <div className="relative h-14 w-14 md:h-16 md:w-16 hover:scale-105 transition-transform drop-shadow-xl">
         <Image
           src="https://customer-assets.emergentagent.com/job_github-link-2/artifacts/atzszp87_file_00000000b328720ea80bbf3931e4fbd6.png"
           alt="WhatsApp Sushiaki"
