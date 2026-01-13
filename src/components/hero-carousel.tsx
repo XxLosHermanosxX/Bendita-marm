@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -15,24 +15,22 @@ import {
 
 interface Banner {
   id: number;
-  imageUrl: string;
+  desktopUrl: string;
+  mobileUrl: string;
   alt: string;
   link: string;
 }
 
-// Hardcoded banner data
+// Banners atualizados com as imagens enviadas
 const banners: Banner[] = [
   {
     id: 1,
-    imageUrl: '/images/banner-1.png',
-    alt: 'Bem-vindo ao melhor sushi de Curitiba! 20% OFF na primeira compra. Cupom: BEMVINDO20',
-    link: '/products?coupon=BEMVINDO20',
-  },
-  {
-    id: 2,
-    imageUrl: '/images/banner-2.png',
-    alt: 'Combo Família 80 Peças por R$49,90. Cupom: BEMVINDO49',
-    link: '/products?coupon=BEMVINDO49',
+    // Imagem mais larga (3:1) para Desktop
+    desktopUrl: 'https://customer-assets.emergentagent.com/job_github-link-2/artifacts/wj3dr1nd_IMG-20260113-WA0000%281%29.jpg',
+    // Imagem mais alta (16:9) para Mobile
+    mobileUrl: 'https://customer-assets.emergentagent.com/job_github-link-2/artifacts/t483yxmu_IMG-20260113-WA0002%281%29.jpg',
+    alt: 'Bendita Marmita - As melhores marmitas de Curitiba! Bendita seja sua fome!',
+    link: '/products',
   },
 ];
 
@@ -44,35 +42,43 @@ export const HeroCarousel = () => {
     stopOnMouseEnter: true,
   };
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
-    Autoplay(autoplayOptions),
-  ]);
-
-  // O componente Carousel do Shadcn já usa o useEmblaCarousel internamente,
-  // mas precisamos garantir que o Autoplay seja aplicado.
-  // Vamos usar a estrutura padrão do Shadcn e injetar o plugin Autoplay.
-
   return (
     <Carousel 
       className="w-full"
       opts={{ loop: true }}
-      plugins={[Autoplay(autoplayOptions)]} // Injetando o plugin Autoplay
+      plugins={[Autoplay(autoplayOptions)]} 
     >
-      {/* Overriding default Shadcn carousel padding/margins for full width */}
       <CarouselContent className="-ml-0">
         {banners.map((banner) => (
           <CarouselItem key={banner.id} className="pl-0">
-            <Link href={banner.link} className="block">
-              {/* Ajustando a proporção: 16:9 no mobile, 3:1 no desktop */}
+            <Link href={banner.link} className="block w-full">
+              {/* Container responsivo: Aspect ratio muda conforme o breakpoint */}
               <div className="relative w-full aspect-video md:aspect-[3/1]">
-                <Image
-                  src={banner.imageUrl}
-                  alt={banner.alt}
-                  layout="fill"
-                  objectFit="cover" // Usando cover para preencher o novo aspect-ratio
-                  className="object-center"
-                  priority
-                />
+                
+                {/* Imagem Mobile (Visível apenas em telas pequenas) */}
+                <div className="block md:hidden w-full h-full relative">
+                  <Image
+                    src={banner.mobileUrl}
+                    alt={banner.alt}
+                    fill
+                    className="object-cover object-center"
+                    priority
+                    sizes="100vw"
+                  />
+                </div>
+
+                {/* Imagem Desktop (Visível apenas em telas médias ou maiores) */}
+                <div className="hidden md:block w-full h-full relative">
+                  <Image
+                    src={banner.desktopUrl}
+                    alt={banner.alt}
+                    fill
+                    className="object-cover object-center"
+                    priority
+                    sizes="100vw"
+                  />
+                </div>
+
               </div>
             </Link>
           </CarouselItem>
