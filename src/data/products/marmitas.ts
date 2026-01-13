@@ -15,6 +15,41 @@ export const marmitaProducts: Product[] = [
     isExclusive: true,
   },
   
+  // Combos - MOVED TO TOP as requested
+  {
+    id: "c1",
+    name: "Combo Bendito",
+    description: "Sua marmita favorita + Refrigerante 600ml + Mousse de Brigadeiro. Deixe sua refeição completa!",
+    price: 20.00,
+    category: "Combos",
+    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/cqsth8y8_Combo_Bendito.png",
+    variations: [
+        {
+            name: "Escolha sua Marmita",
+            options: [
+                { label: "Strogonoff de Carne", price: 20.00 },
+                { label: "Strogonoff de Frango", price: 20.00 },
+                { label: "Bife Acebolado", price: 20.00 },
+                { label: "Carne de Panela", price: 20.00 },
+                { label: "Frango Grelhado", price: 20.00 },
+                { label: "Frango à Milanesa", price: 20.00 },
+                { label: "Linguiça Acebolada", price: 20.00 },
+                { label: "Carne Moída Caseira", price: 20.00 },
+                { label: "Parmegiana de Frango", price: 20.00 },
+                { label: "Feijoada Simples", price: 20.00 },
+            ]
+        },
+        {
+            name: "Escolha seu Refrigerante",
+            options: [
+                { label: "Coca-Cola", price: 0 },
+                { label: "Guaraná", price: 0 },
+                { label: "Fanta Laranja", price: 0 },
+            ]
+        }
+    ]
+  },
+
   // Cardápio Principal (10 opções)
   {
     id: "m2",
@@ -95,16 +130,6 @@ export const marmitaProducts: Product[] = [
     price: MARMITA_PRICE,
     category: "Cardápio Principal",
     imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/l1dewkaw_Feijoada_Simples.png",
-  },
-  
-  // Combos
-  {
-    id: "c1",
-    name: "Combo Bendito",
-    description: "Marmita do dia + Refrigerante 600ml + Mousse de Brigadeiro. Deixe sua refeição completa!",
-    price: 20.00,
-    category: "Combos",
-    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/cqsth8y8_Combo_Bendito.png",
   },
   
   // Sobremesas
