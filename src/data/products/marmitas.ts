@@ -54,7 +54,7 @@ export const marmitaProducts: Product[] = [
     description: "Filé de frango temperado e grelhado, arroz, feijão e legumes refogados.",
     price: MARMITA_PRICE,
     category: "Cardápio Principal",
-    imageUrl: "/images/marmita-placeholder-6.jpg",
+    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/5x4od10y_Frango_Grelhado.png",
   },
   {
     id: "m7",
