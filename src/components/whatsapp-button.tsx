@@ -38,13 +38,14 @@ export const WhatsappButton = () => {
         mobileOffset
       )}
     >
-      <div className="relative h-14 w-14 md:h-16 md:w-16 shadow-xl rounded-full overflow-hidden hover:scale-105 transition-transform bg-green-500/60">
+      <div className="relative h-14 w-14 md:h-16 md:w-16 shadow-xl hover:scale-105 transition-transform">
         <Image
-          src="/images/whatsapp-sushiaki.png"
+          src="https://customer-assets.emergentagent.com/job_github-link-2/artifacts/atzszp87_file_00000000b328720ea80bbf3931e4fbd6.png"
           alt="WhatsApp Sushiaki"
           layout="fill"
-          objectFit="cover"
+          objectFit="contain"
           priority
+          quality={100}
         />
       </div>
     </Link>
