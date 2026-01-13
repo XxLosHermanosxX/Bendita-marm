@@ -124,7 +124,7 @@ export const marmitaProducts: Product[] = [
     description: "Coca-Cola, Guaraná, Fanta.",
     price: 5.00,
     category: "Bebidas",
-    imageUrl: "/images/refri-placeholder.jpg",
+    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/7pvph1jr_Refrigerante_600ml.png",
     variations: [
         {
             name: "Sabor",
