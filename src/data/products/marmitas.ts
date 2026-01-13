@@ -3,6 +3,9 @@ import { Product } from "@/types";
 // Base price for all main marmitas
 const MARMITA_PRICE = 17.00;
 
+// Helper to find marmita details by name or ID (simulated since we're defining it in the same file)
+// We will manually construct the combo options to ensure they have the correct data
+
 export const marmitaProducts: Product[] = [
   // Destaque do Dia (Strogonoff de Carne)
   {
@@ -27,24 +30,89 @@ export const marmitaProducts: Product[] = [
         {
             name: "Escolha sua Marmita",
             options: [
-                { label: "Strogonoff de Carne", price: 20.00 },
-                { label: "Strogonoff de Frango", price: 20.00 },
-                { label: "Bife Acebolado", price: 20.00 },
-                { label: "Carne de Panela", price: 20.00 },
-                { label: "Frango Grelhado", price: 20.00 },
-                { label: "Frango à Milanesa", price: 20.00 },
-                { label: "Linguiça Acebolada", price: 20.00 },
-                { label: "Carne Moída Caseira", price: 20.00 },
-                { label: "Parmegiana de Frango", price: 20.00 },
-                { label: "Feijoada Simples", price: 20.00 },
+                { 
+                    label: "Strogonoff de Carne", 
+                    price: 0,
+                    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/ebflpj7x_Strogonoff_de_Carne.png",
+                    description: "Carne suculenta, molho cremoso, arroz branco e batata palha."
+                },
+                { 
+                    label: "Strogonoff de Frango", 
+                    price: 0,
+                    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/skqxkw0x_Strogonoff_de_Frango.png",
+                    description: "Frango macio ao molho cremoso, arroz soltinho e batata palha crocante."
+                },
+                { 
+                    label: "Bife Acebolado", 
+                    price: 0,
+                    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/gxau2xby_Bife_Acebolado.png",
+                    description: "Bife grelhado, suculento, com cebola dourada, arroz branco, feijão e farofa."
+                },
+                { 
+                    label: "Carne de Panela", 
+                    price: 0,
+                    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/usw765fs_Carne_de_Panela.png",
+                    description: "Carne cozida lentamente, bem macia, com molho encorpado, arroz branco e feijão."
+                },
+                { 
+                    label: "Frango Grelhado", 
+                    price: 0,
+                    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/5x4od10y_Frango_Grelhado.png",
+                    description: "Filé de frango temperado e grelhado, arroz, feijão e legumes refogados."
+                },
+                { 
+                    label: "Frango à Milanesa", 
+                    price: 0,
+                    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/6lps6u70_Frango_a_Milanesa.png",
+                    description: "Frango empanado e crocante, arroz branco, feijão e purê de batata."
+                },
+                { 
+                    label: "Linguiça Acebolada", 
+                    price: 0,
+                    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/rglugpdw_Linguica_Acebolada.png",
+                    description: "Linguiça suculenta com cebola, arroz branco, feijão e couve refogada."
+                },
+                { 
+                    label: "Carne Moída Caseira", 
+                    price: 0,
+                    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/4w69imcl_Carne_Moida_Caseira.png",
+                    description: "Carne moída bem temperada, arroz branco, feijão e legumes."
+                },
+                { 
+                    label: "Parmegiana de Frango", 
+                    price: 0,
+                    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/by7zodro_Parmegiana_de_Frango.png",
+                    description: "Frango empanado com molho de tomate e queijo derretido, arroz branco e purê."
+                },
+                { 
+                    label: "Feijoada Simples", 
+                    price: 0,
+                    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/l1dewkaw_Feijoada_Simples.png",
+                    description: "Feijão encorpado com carnes selecionadas, arroz branco e farofa."
+                },
             ]
         },
         {
             name: "Escolha seu Refrigerante",
             options: [
-                { label: "Coca-Cola", price: 0 },
-                { label: "Guaraná", price: 0 },
-                { label: "Fanta Laranja", price: 0 },
+                { 
+                    label: "Coca-Cola", 
+                    price: 0,
+                    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/7pvph1jr_Refrigerante_600ml.png",
+                    description: "Coca-Cola Original 600ml"
+                },
+                { 
+                    label: "Guaraná", 
+                    price: 0,
+                    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/7pvph1jr_Refrigerante_600ml.png", // Using same placeholder for now or if user provided specific
+                    description: "Guaraná Antarctica 600ml"
+                },
+                { 
+                    label: "Fanta Laranja", 
+                    price: 0,
+                    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/7pvph1jr_Refrigerante_600ml.png", // Using same placeholder
+                    description: "Fanta Laranja 600ml"
+                },
             ]
         }
     ]
@@ -139,7 +207,7 @@ export const marmitaProducts: Product[] = [
     description: "Cremoso, geladinho e com aquele gostinho de chocolate que fecha a refeição com chave de ouro.",
     price: 5.00,
     category: "Sobremesas",
-    imageUrl: "/images/mousse-placeholder.jpg",
+    imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/lqs74zk8_48964560-f06b-11f0-9dc5-d9bf6d168bd4.png",
   },
   
   // Bebidas (Refrigerante 600ml)
