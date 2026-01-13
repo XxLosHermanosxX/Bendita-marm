@@ -14,7 +14,7 @@ export const freeAddons: Addon[] = [
         id: "a1",
         name: "Farofa Extra",
         description: "Farofa crocante (Cortesia da casa)",
-        imageUrl: "/images/farofa-placeholder.png",
+        imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/1p0yj6ba_Farofa_Extra.png",
     },
     {
         id: "a2",
@@ -26,13 +26,13 @@ export const freeAddons: Addon[] = [
         id: "a3",
         name: "Pimenta Extra",
         description: "Molho de pimenta (Cortesia da casa)",
-        imageUrl: "/images/pimenta-placeholder.png",
+        imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/9lrw8p7m_Pimenta_Extra.png",
     },
     {
         id: "a4",
         name: "Talheres Extra",
         description: "Talheres descartáveis (Cortesia da casa)",
-        imageUrl: "/images/hashi.png", // Reusing hashi icon as placeholder for cutlery
+        imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/r25tj4sp_Talheres_Extra.png",
     },
 ];
 
@@ -42,7 +42,7 @@ export const paidAddons: Addon[] = [
         id: "p_a1",
         name: "Carne Adicional",
         description: "Porção extra de carne",
-        imageUrl: "/images/carne-extra-placeholder.png",
+        imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/vt6ovulh_Carne_Adicional.png",
         price: 5.00,
     },
     {
@@ -56,7 +56,7 @@ export const paidAddons: Addon[] = [
         id: "p_a3",
         name: "Batata Palha Extra",
         description: "Pacote extra de batata palha",
-        imageUrl: "/images/batata-palha-placeholder.png",
+        imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/a3pnwah8_Batata_Palha_Extra.png",
         price: 3.00,
     },
 ];
