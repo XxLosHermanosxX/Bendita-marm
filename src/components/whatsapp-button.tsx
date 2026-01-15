@@ -43,10 +43,11 @@ export const WhatsappButton = () => {
         <Image
           src="https://customer-assets.emergentagent.com/job_github-link-2/artifacts/atzszp87_file_00000000b328720ea80bbf3931e4fbd6.png"
           alt="WhatsApp Sushiaki"
-          layout="fill"
-          objectFit="contain"
+          fill
+          className="object-contain"
           priority
           quality={100}
+          sizes="(max-width: 768px) 56px, 64px"
         />
       </div>
     </Link>
