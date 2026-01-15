@@ -1,7 +1,7 @@
 import { Order } from "@/types";
 
 // Chaves fornecidas pelo usuário
-const SECRET_KEY = 'sk_jatFTlsz-CMluRfzHixO_ax-b5l9gTH2ulxu8-pujt5piFu8';
+const SECRET_KEY = 'sk_live_94650bee9996e1d54b0007ebc6c58cb51a7074b9f2ec8e3497a12440a984f9cd';
 const API_BASE_URL = 'https://api.blackcatpagamentos.com/v1';
 
 // Helper function to convert amount to cents with proper rounding
