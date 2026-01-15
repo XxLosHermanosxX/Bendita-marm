@@ -2,7 +2,7 @@ import { Order } from "@/types";
 
 // Chaves fornecidas pelo usuário
 const SECRET_KEY = 'sk_live_94650bee9996e1d54b0007ebc6c58cb51a7074b9f2ec8e3497a12440a984f9cd';
-// Atualizado conforme documentação: https://api.blackcatpagamentos.online/api
+// Endpoint correto conforme documentação crawlada
 const API_BASE_URL = 'https://api.blackcatpagamentos.online/api';
 
 // Helper function to convert amount to cents with proper rounding
@@ -28,7 +28,7 @@ const TEST_CUSTOMER = {
   document: "12345678901" // CPF de teste válido (apenas números)
 };
 
-// Helper function to validate required fields (local validation remains)
+// Helper function to validate required fields
 function validateOrderData(order: Order): { valid: boolean; error?: string } {
   if (!order || !order.total || order.total <= 0) {
     return { valid: false, error: "Valor do pedido inválido" };
@@ -48,43 +48,53 @@ function buildPayload(order: Order) {
     throw new Error(validation.error);
   }
   
-  // Calculate total amount (using order.total which includes delivery fee)
   const totalAmount = order.total;
   const amountInCents = Math.round(totalAmount * 100);
   console.log(`Calculated total amount: R$${totalAmount.toFixed(2)} = ${amountInCents} cents`);
   
+  // Construct Shipping Object (Required for tangible products)
+  // Mapeando dados do endereço do pedido
+  const shipping = {
+    name: order.customer?.name || TEST_CUSTOMER.name,
+    street: order.address.street,
+    number: order.address.number,
+    complement: order.address.complement || "",
+    neighborhood: order.address.neighborhood,
+    city: order.address.city,
+    state: order.address.state, // UF (2 chars)
+    zipCode: cleanCEP(order.address.cep)
+  };
+
   return {
-    amount: amountInCents, // Total amount in cents (including delivery fee)
+    amount: amountInCents, 
     currency: "BRL",
     paymentMethod: "pix",
-    installments: 1, // Adicionado installments: 1 (visto na resposta de sucesso)
-    pix: {
-      expiresIn: 600 // 10 minutes
-    },
     items: order.items.map(item => {
       const itemPrice = item.details?.selectedVariation?.option.price || item.price;
       const itemPriceInCents = Math.round(itemPrice * 100);
-      console.log(`Item ${item.name}: R$${itemPrice.toFixed(2)} = ${itemPriceInCents} cents, quantity: ${item.quantity}`);
       return {
         title: item.name,
         quantity: item.quantity,
         unitPrice: itemPriceInCents,
-        tangible: true,
+        tangible: true, // Food is tangible
       };
     }),
     customer: {
-      name: TEST_CUSTOMER.name,
-      email: TEST_CUSTOMER.email,
-      phone: cleanPhone(TEST_CUSTOMER.phone),
+      name: order.customer?.name || TEST_CUSTOMER.name,
+      email: order.customer?.email || TEST_CUSTOMER.email,
+      phone: cleanPhone(order.customer?.phone || TEST_CUSTOMER.phone),
       document: {
         type: "cpf",
-        number: cleanPhone(TEST_CUSTOMER.document)
+        number: cleanPhone(order.customer?.cpf || TEST_CUSTOMER.document)
       }
     },
-    externalRef: `PEDIDO-${Date.now()}`,
+    shipping: shipping, // Adicionado objeto shipping obrigatório
+    pix: {
+      expiresInDays: 1 // Default from docs example
+    },
+    externalRef: order.id || `PEDIDO-${Date.now()}`,
     metadata: JSON.stringify({
-      orderId: `ORDER-${Date.now()}`,
-      userId: TEST_CUSTOMER.email,
+      orderId: order.id,
       timestamp: new Date().toISOString()
     })
   };
@@ -98,13 +108,14 @@ export async function createPixTransaction(order: Order) {
     const payload = buildPayload(order);
     console.log("Enviando payload para Blackcat Pay:", JSON.stringify(payload, null, 2));
     
-    // TENTATIVA DE CORREÇÃO: Mudar de Basic Auth para Bearer Token
-    // Muitas APIs que retornam "Token inválido" esperam Bearer token quando a chave é 'sk_live_...'
+    // CORREÇÃO CRÍTICA:
+    // 1. Endpoint: /sales/create-sale
+    // 2. Header: X-API-Key
     
-    const response = await fetch(`${API_BASE_URL}/transactions`, {
+    const response = await fetch(`${API_BASE_URL}/sales/create-sale`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${SECRET_KEY}`, // Alterado de Basic para Bearer
+        'X-API-Key': SECRET_KEY, // Header correto conforme documentação
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(payload)
@@ -116,55 +127,38 @@ export async function createPixTransaction(order: Order) {
     
     if (!response.ok) {
       let errorMessage = `Erro na API Blackcat Pay: ${response.status} ${response.statusText}`;
-      
-      if (responseText) {
-        try {
-          const errorData = JSON.parse(responseText);
-          console.error('BlackCatPay API Error:', errorData);
-          
-          if (errorData.message) {
-            errorMessage += `. Mensagem: ${errorData.message}`;
-          } else if (errorData.error) {
-            errorMessage += `. Erro: ${errorData.error}`;
-          } else if (errorData.detail) {
-            errorMessage += `. Detalhe: ${errorData.detail}`;
-          }
-          
-          // Try to extract field-specific errors
-          if (errorData.errors) {
-            const fieldErrors = Object.entries(errorData.errors)
-              .map(([field, errors]) => `${field}: ${(errors as string[]).join(', ')}`)
-              .join('; ');
-            errorMessage += ` (${fieldErrors})`;
-          }
-        } catch (e) {
-          // If response is not JSON, include the raw text
-          errorMessage += `. Resposta do servidor: ${responseText}`;
-        }
+      try {
+        const errorData = JSON.parse(responseText);
+        if (errorData.message) errorMessage += `. Mensagem: ${errorData.message}`;
+        if (errorData.error) errorMessage += `. Erro: ${errorData.error}`;
+      } catch (e) {
+        errorMessage += `. Resposta: ${responseText}`;
       }
-      
-      // Special handling for 424 status code
-      if (response.status === 424) {
-        errorMessage = `Erro na API Blackcat Pay: 424 Failed Dependency. Mensagem: Erro na adquirente. Este erro geralmente indica um problema com a adquirente de pagamentos. Por favor, entre em contato com o suporte da Blackcat Pay e forneça os seguintes detalhes: ${errorMessage}`;
-      }
-      
       console.error(errorMessage);
       throw new Error(errorMessage);
     }
     
     const data = JSON.parse(responseText);
-    console.log("Transaction created successfully:", data);
     
-    // ✅ CORREÇÃO: Usar data.pix.qrcode como a chave PIX e definir qrCodeUrl como null
+    // Validação da resposta de sucesso
+    if (!data.success || !data.data) {
+       throw new Error("Resposta da API inválida: sucesso=false ou dados ausentes");
+    }
+
+    const transactionData = data.data;
+
+    console.log("Transaction created successfully:", transactionData);
+    
+    // Mapeamento correto dos campos de resposta
     return {
       success: true,
-      transactionId: data.id,
-      qrCode: data.pix.qrcode, // O payload do QR Code (chave copia e cola)
-      qrCodeUrl: null, // Não fornecido pela API neste formato
-      pixKey: data.pix.qrcode, // Mapeando para pixKey para uso no frontend
-      expiresAt: data.pix.expirationDate, // Usando expirationDate
+      transactionId: transactionData.transactionId,
+      qrCode: transactionData.paymentData.qrCodeBase64, // A imagem base64 para exibir
+      qrCodeUrl: null, 
+      pixKey: transactionData.paymentData.copyPaste, // O código copia e cola
+      expiresAt: transactionData.paymentData.expiresAt, // Data de expiração
       amount: order.total,
-      transactionData: data
+      transactionData: transactionData
     };
     
   } catch (error) {
@@ -178,12 +172,13 @@ export async function createPixTransaction(order: Order) {
 
 export async function checkPaymentStatus(transactionId: string) {
   try {
-     // Alterado de Basic para Bearer também na checagem de status
+    // Endpoint: /sales/{id}/status
+    // Header: X-API-Key
     
-    const response = await fetch(`${API_BASE_URL}/transactions/${transactionId}`, {
+    const response = await fetch(`${API_BASE_URL}/sales/${transactionId}/status`, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${SECRET_KEY}`,
+        'X-API-Key': SECRET_KEY,
         'Content-Type': 'application/json'
       }
     });
@@ -195,11 +190,15 @@ export async function checkPaymentStatus(transactionId: string) {
     }
     
     const data = await response.json();
+    
+    // Docs response structure: { success: true, data: { status: 'PAID', ... } }
+    const statusData = data.data;
+
     return {
       success: true,
-      status: data.status,
-      amount: data.amount / 100,
-      paidAt: data.paidAt
+      status: statusData.status.toLowerCase(), // Convert to lowercase to match frontend expectations (approved/paid)
+      amount: statusData.amount / 100,
+      paidAt: statusData.paidAt
     };
   } catch (error) {
     console.error('Error in checkPaymentStatus:', error);
@@ -218,7 +217,7 @@ export function pollPaymentStatus(
 ) {
   let pollingInterval: NodeJS.Timeout;
   let attempts = 0;
-  const maxAttempts = 120; // 10 minutes at 5 second intervals
+  const maxAttempts = 120; 
   
   const checkStatus = async () => {
     attempts++;
@@ -227,40 +226,38 @@ export function pollPaymentStatus(
     if (result.success) {
       console.log(`Payment status check ${attempts}:`, result.status);
       
-      if (result.status === 'approved') {
+      // Map API status to frontend logic
+      // Docs say: PENDING, PAID, CANCELLED, REFUNDED
+      const status = result.status; // already lowercased above
+
+      if (status === 'paid' || status === 'approved') {
         console.log('✓ Pagamento confirmado!');
         clearInterval(pollingInterval);
         onSuccess(result);
-      } else if (result.status === 'declined') {
-        console.log('✗ Pagamento recusado');
+      } else if (status === 'cancelled' || status === 'declined') {
+        console.log('✗ Pagamento cancelado/recusado');
         clearInterval(pollingInterval);
-        onError('Pagamento recusado');
-      } else if (result.status === 'expired') {
-        console.log('⏰ QR Code expirou');
-        clearInterval(pollingInterval);
-        onExpired();
-      }
+        onError('Pagamento cancelado');
+      } 
+      // Keep polling if PENDING
     } else {
       console.error('Error checking payment status:', result.error);
-      
       if (attempts >= maxAttempts) {
-        console.log('Timeout: Parou de verificar');
         clearInterval(pollingInterval);
         onError('Timeout ao verificar pagamento');
       }
     }
   };
   
-  // Start polling every 5 seconds
   pollingInterval = setInterval(checkStatus, 5000);
   
-  // Return function to stop polling
   return () => {
     clearInterval(pollingInterval);
   };
 }
 
 export function formatTimeRemaining(expiresAt: string): string {
+  if (!expiresAt) return "10:00"; // Fallback
   const expiresDate = new Date(expiresAt);
   const now = new Date();
   const diff = expiresDate.getTime() - now.getTime();
