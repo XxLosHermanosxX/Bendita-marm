@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -16,11 +15,10 @@ const PROMO_PRODUCT = {
   name: "Combo Bendito Completo",
   originalPrice: 27.00, // Assuming R$ 17 + R$ 5 + R$ 5 = R$ 27.00
   price: 20.00,
-  imageUrl: "/images/combo-placeholder.jpg",
-  link: "/products?category=Combos",
+  imageUrl: "https://customer-assets.emergentagent.com/job_github-link-2/artifacts/cqsth8y8_Combo_Bendito.png",
 };
 
-const LOCAL_STORAGE_KEY = 'bendita_promo_seen'; // Updated key
+const LOCAL_STORAGE_KEY = 'bendita_promo_seen_v2'; // Updated key to force new view
 
 export const PromoModal = () => {
   const isMobile = useIsMobile();
@@ -29,18 +27,19 @@ export const PromoModal = () => {
 
   useEffect(() => {
     setIsClient(true);
-    if (isMobile) {
-      // Verifica se o usuário já viu o modal nesta sessão
-      const hasSeenPromo = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (!hasSeenPromo) {
-        // Atraso para garantir que a tela de splash termine
-        const timer = setTimeout(() => {
-          setIsOpen(true);
-        }, 3000); 
-        return () => clearTimeout(timer);
-      }
+    // Verificação de ambiente móvel ou desktop agora, para mostrar em ambos se necessário,
+    // mas o pedido foi "ao entrar no site", então vou deixar geral, não apenas mobile.
+    
+    // Verifica se o usuário já viu o modal nesta sessão
+    const hasSeenPromo = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (!hasSeenPromo) {
+      // Atraso para garantir que a tela de splash termine
+      const timer = setTimeout(() => {
+        setIsOpen(true);
+      }, 3000); 
+      return () => clearTimeout(timer);
     }
-  }, [isMobile]);
+  }, [isMobile]); // Trigger on mount
 
   const handleClose = () => {
     setIsOpen(false);
@@ -55,7 +54,7 @@ export const PromoModal = () => {
     handleClose();
   };
 
-  if (!isClient || !isMobile) {
+  if (!isClient) {
     return null;
   }
 
@@ -86,28 +85,29 @@ export const PromoModal = () => {
               // Ajustando objectFit para 'cover' com foco no centro.
               objectFit="cover" 
               className="object-center"
+              quality={100}
             />
           </div>
 
           {/* Content */}
           {/* Aumentando o espaçamento para space-y-8 */}
-          <div className="p-6 text-center space-y-8">
+          <div className="p-6 text-center space-y-6">
             {/* Usando emoji de sushi e fonte padrão bold */}
             <h3 className="text-2xl font-extrabold text-foreground flex items-center justify-center gap-2">
                 🍽️ {PROMO_PRODUCT.name}
             </h3>
-            <p className="text-lg text-foreground">
+            <p className="text-base text-foreground">
               Marmita do dia + Refri + Mousse por um preço imperdível!
             </p>
             
             {/* Preços Duplos: Cortado e Novo Preço em Destaque */}
             {/* Aumentando mb-4 para mb-8 para subir o preço e separar do botão */}
-            <div className="flex flex-col items-center justify-center space-y-2 mb-8">
+            <div className="flex flex-col items-center justify-center space-y-2 mb-6">
                 <span className="text-xl text-gray-500 line-through font-medium">
                     De {formatCurrency(PROMO_PRODUCT.originalPrice)}
                 </span>
                 {/* Novo Preço: Verde Claro, Sombreado Leve e Efeito de Brilho/Pulsação */}
-                <div className="3xl font-black text-green-400 animate-pulse drop-shadow-lg shadow-green-500/50">
+                <div className="text-4xl font-black text-green-600 animate-pulse drop-shadow-md">
                     Por {formatCurrency(PROMO_PRODUCT.price)}
                 </div>
             </div>
@@ -115,10 +115,10 @@ export const PromoModal = () => {
             {/* Removed Link wrapper and added direct action */}
             <Button 
               // Botão vermelho fogo e texto piscando
-              className="w-full bg-red-600 hover:bg-red-700 text-white text-xl py-6 font-extrabold shadow-lg transition-all duration-300"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-xl py-6 font-extrabold shadow-lg transition-all duration-300"
               onClick={handleOrderClick}
             >
-              <span className="animate-pulse">PEDIR AGORA</span>
+              <span className="">PEDIR AGORA!</span>
             </Button>
           </div>
         </div>
