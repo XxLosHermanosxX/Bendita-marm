@@ -76,39 +76,35 @@ export const HomeContentWrapper = () => {
           <section className="mb-8">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl md:text-2xl font-semibold text-primary">
-                🔥 Destaque do Dia
+                🔥 Destaque do Dia & Combos
               </h2>
-              <Link href="/products?category=Marmita%20Destaque%20do%20Dia" passHref>
-                <Button variant="link" className="text-primary p-0 h-auto">Ver mais</Button>
-              </Link>
             </div>
-            {/* Exibindo apenas os 3 principais destaques */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            {/* Exibindo Destaques + Combos na mesma linha (grid) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              
+              {/* Destaque do Dia */}
               {exclusiveProducts.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}
-            </div>
-          </section>
-        )}
 
-        {/* Seção de Combos */}
-        {comboProducts.length > 0 && (
-          <section className="mb-8">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl md:text-2xl font-semibold text-foreground">
-                Combos Especiais
-              </h2>
-              <Link href="/products?category=Combos" passHref>
-                <Button variant="link" className="text-primary p-0 h-auto">Ver todos</Button>
-              </Link>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Combos (agora junto com o destaque) */}
               {comboProducts.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
           </section>
         )}
+
+        {/* Seção de Combos (Se houver mais, pode manter separado, mas o usuário pediu junto) */}
+        {/* O código acima já exibe o combo junto. Se quiser remover a seção separada de combos: */}
+        {/* 
+        {comboProducts.length > 0 && (
+          <section className="mb-8">
+            ...
+          </section>
+        )}
+        */}
 
         <div className="text-center mt-8">
           <Link href="/products" passHref>
