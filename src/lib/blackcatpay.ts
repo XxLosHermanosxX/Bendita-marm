@@ -98,15 +98,13 @@ export async function createPixTransaction(order: Order) {
     const payload = buildPayload(order);
     console.log("Enviando payload para Blackcat Pay:", JSON.stringify(payload, null, 2));
     
-    // Autenticação: Base64(SECRET_KEY + ':')
-    // Nota: Se continuar dando 401, pode ser necessário verificar se é Bearer Token.
-    // Mas por enquanto mantendo Basic Auth conforme padrão de chaves 'sk_'
-    const auth = btoa(SECRET_KEY + ':');
+    // TENTATIVA DE CORREÇÃO: Mudar de Basic Auth para Bearer Token
+    // Muitas APIs que retornam "Token inválido" esperam Bearer token quando a chave é 'sk_live_...'
     
     const response = await fetch(`${API_BASE_URL}/transactions`, {
       method: 'POST',
       headers: {
-        'Authorization': `Basic ${auth}`,
+        'Authorization': `Bearer ${SECRET_KEY}`, // Alterado de Basic para Bearer
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(payload)
@@ -180,12 +178,12 @@ export async function createPixTransaction(order: Order) {
 
 export async function checkPaymentStatus(transactionId: string) {
   try {
-    const auth = btoa(SECRET_KEY + ':');
+     // Alterado de Basic para Bearer também na checagem de status
     
     const response = await fetch(`${API_BASE_URL}/transactions/${transactionId}`, {
       method: 'GET',
       headers: {
-        'Authorization': `Basic ${auth}`,
+        'Authorization': `Bearer ${SECRET_KEY}`,
         'Content-Type': 'application/json'
       }
     });
