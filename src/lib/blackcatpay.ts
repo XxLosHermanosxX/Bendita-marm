@@ -2,7 +2,8 @@ import { Order } from "@/types";
 
 // Chaves fornecidas pelo usuário
 const SECRET_KEY = 'sk_live_94650bee9996e1d54b0007ebc6c58cb51a7074b9f2ec8e3497a12440a984f9cd';
-const API_BASE_URL = 'https://api.blackcatpagamentos.com/v1';
+// Atualizado conforme documentação: https://api.blackcatpagamentos.online/api
+const API_BASE_URL = 'https://api.blackcatpagamentos.online/api';
 
 // Helper function to convert amount to cents with proper rounding
 function amountToCents(amount: number): number {
@@ -98,6 +99,8 @@ export async function createPixTransaction(order: Order) {
     console.log("Enviando payload para Blackcat Pay:", JSON.stringify(payload, null, 2));
     
     // Autenticação: Base64(SECRET_KEY + ':')
+    // Nota: Se continuar dando 401, pode ser necessário verificar se é Bearer Token.
+    // Mas por enquanto mantendo Basic Auth conforme padrão de chaves 'sk_'
     const auth = btoa(SECRET_KEY + ':');
     
     const response = await fetch(`${API_BASE_URL}/transactions`, {
