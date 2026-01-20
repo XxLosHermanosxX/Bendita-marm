@@ -117,13 +117,14 @@ export const AddonsModal = () => {
                 };
             });
 
-        // 2. Add the original item to the cart (with free addons attached)
+        // 2. Add the original item to the cart (with free addons and selected variations attached)
         cartStore.addItem(
             itemToConfigure.product,
             itemToConfigure.quantity,
             itemToConfigure.details,
             itemToConfigure.notes,
-            selectedFreeAddons // Passando os adicionais gratuitos
+            selectedFreeAddons, // Passando os adicionais gratuitos
+            itemToConfigure.selectedVariations // Passando as variações selecionadas
         );
 
         // 3. Add suggested paid items to the cart

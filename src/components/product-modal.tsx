@@ -59,7 +59,7 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
       quantity: quantity,
       details: undefined,
       notes: notes,
-      selectedVariations: selectedVariations,
+      selectedVariations: { ...selectedVariations },
     });
 
     // Close the current modal

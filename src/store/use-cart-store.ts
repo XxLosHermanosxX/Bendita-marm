@@ -21,11 +21,19 @@ interface CartItem {
   };
   notes?: string;
   freeAddons?: FreeAddon[]; // Added FreeAddons
+  selectedVariations?: { [key: string]: any };
 }
 
 interface CartStore {
   items: CartItem[];
-  addItem: (product: Product, quantity: number, details?: { selectedVariation?: SelectedVariationDetails, customItems?: { name: string; count: number }[] }, notes?: string, freeAddons?: FreeAddon[]) => void;
+  addItem: (
+    product: Product, 
+    quantity: number, 
+    details?: { selectedVariation?: SelectedVariationDetails, customItems?: { name: string; count: number }[] }, 
+    notes?: string, 
+    freeAddons?: FreeAddon[],
+    selectedVariations?: { [key: string]: any }
+  ) => void;
   removeItem: (productId: string, details?: { selectedVariation?: SelectedVariationDetails, customItems?: { name: string; count: number }[] }) => void;
   updateItemQuantity: (productId: string, newQuantity: number, details?: { selectedVariation?: SelectedVariationDetails, customItems?: { name: string; count: number }[] }) => void;
   clearCart: () => void;
@@ -38,13 +46,13 @@ export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
-      addItem: (product, quantity, details, notes, freeAddons) => {
+      addItem: (product, quantity, details, notes, freeAddons, selectedVariations) => {
         set((state) => {
           // We need a unique identifier for items that are the same product but have different details/addons
           const itemIdentifier = (item: CartItem) => 
-            `${item.product.id}-${JSON.stringify(item.details)}-${JSON.stringify(item.freeAddons)}`;
+            `${item.product.id}-${JSON.stringify(item.details)}-${JSON.stringify(item.freeAddons)}-${JSON.stringify(item.selectedVariations)}`;
           
-          const newItem: CartItem = { product, quantity, details, notes, freeAddons };
+          const newItem: CartItem = { product, quantity, details, notes, freeAddons, selectedVariations };
 
           // Check if an identical item already exists (same product ID, same details, same free addons)
           const existingItemIndex = state.items.findIndex(
