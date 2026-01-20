@@ -9,6 +9,7 @@ interface ItemDetails {
         customItems?: { name: string; count: number }[];
     };
     notes?: string;
+    selectedVariations?: { [key: string]: any };
 }
 
 interface AddonsStore {
