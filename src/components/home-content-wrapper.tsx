@@ -63,7 +63,8 @@ export const HomeContentWrapper = () => {
     }
     setCepStatus('loading');
     setTimeout(() => {
-      if (cep.startsWith("80") || cep.startsWith("81") || cep.startsWith("82")) {
+      // CEPs de Foz do Iguaçu começam com 858
+      if (cep.startsWith("858")) {
         setCepStatus('success');
         toast.success("Ótima notícia! Atendemos sua região.");
       } else {
@@ -122,7 +123,7 @@ export const HomeContentWrapper = () => {
             </div>
             {cepStatus === 'success' && (
               <div className="flex items-center gap-2 text-green-600 font-medium text-xs">
-                <CheckCircle2 className="h-4 w-4" /> Atendemos sua região (30-45 min)
+                <CheckCircle2 className="h-4 w-4" /> Atendemos Foz do Iguaçu (30-45 min)
               </div>
             )}
             {cepStatus === 'error' && (
@@ -139,7 +140,7 @@ export const HomeContentWrapper = () => {
             { icon: Clock, label: "30-45 min", sub: "Entrega" },
             { icon: Star, label: "4.8/5.0", sub: "Avaliações" },
             { icon: ShieldCheck, label: "R$ 30", sub: "Mínimo" },
-            { icon: ShieldCheck, label: "Garantia", sub: "Satisfação" },
+            { icon: MapPin, label: "Foz do Iguaçu", sub: "Cobertura" },
           ].map((info, i) => (
             <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-secondary/30 border border-border">
               <info.icon className="h-5 w-5 text-primary shrink-0" />
@@ -164,7 +165,7 @@ export const HomeContentWrapper = () => {
             <h2 className="text-xl font-bold text-center">O Que Dizem Nossos Clientes</h2>
             <div className="flex overflow-x-auto gap-4 pb-4 snap-x no-scrollbar">
               {[
-                { name: "Ana P.", text: "A melhor marmita de Curitiba! Sempre quente." },
+                { name: "Ana P.", text: "A melhor marmita de Foz! Sempre quente." },
                 { name: "Carlos E.", text: "Entrega rápida e tempero incrível." },
                 { name: "Mariana S.", text: "Virei cliente fiel, excelente custo benefício!" },
               ].map((testimony, i) => (
@@ -249,7 +250,7 @@ export const HomeContentWrapper = () => {
               { icon: Clock, label: "30-45 min", sub: "Entrega Rápida" },
               { icon: Star, label: "4.8 Estrelas", sub: "500+ Pedidos" },
               { icon: ShieldCheck, label: "R$ 30", sub: "Pedido Mínimo" },
-              { icon: ShieldCheck, label: "Dinheiro de Volta", sub: "Garantia 24h" },
+              { icon: MapPin, label: "Foz do Iguaçu", sub: "Cobertura Total" },
             ].map((info, i) => (
               <div key={i} className="flex flex-col items-center justify-center p-4 rounded-xl bg-secondary/20 border border-border text-center">
                 <info.icon className="h-7 w-7 text-primary mb-2" />
@@ -311,13 +312,13 @@ export const HomeContentWrapper = () => {
       </div>
 
       {/* Seção de Depoimentos & FAQ Desktop */}
-      <div className="mt-20 border-t pt-16">
+      <div className="container mx-auto px-6 mt-20 border-t pt-16">
         <div className="grid md:grid-cols-2 gap-16">
           <section className="space-y-8">
-            <h2 className="text-3xl font-bold italic">"A SushiAki mudou meus almoços..."</h2>
+            <h2 className="text-3xl font-bold italic">"A Bendita Marmita mudou meus almoços..."</h2>
             <div className="grid gap-6">
               {[
-                { name: "Ana Paula", text: "A melhor marmita de Curitiba! Sempre quente e muito bem servida.", rating: 5 },
+                { name: "Ana Paula", text: "A melhor marmita de Foz do Iguaçu! Sempre quente e muito bem servida.", rating: 5 },
                 { name: "Carlos Eduardo", text: "Entrega super rápida e o tempero é incrível. Recomendo muito!", rating: 5 },
               ].map((testimony, i) => (
                 <div key={i} className="bg-card border rounded-xl p-6 space-y-3 shadow-sm">
@@ -345,7 +346,7 @@ export const HomeContentWrapper = () => {
               <AccordionItem value="faq-2" className="border-b-2">
                 <AccordionTrigger className="text-lg hover:no-underline">Qual o raio de atendimento?</AccordionTrigger>
                 <AccordionContent className="text-muted-foreground py-4">
-                  Atendemos toda a região central de Curitiba e bairros vizinhos em um raio de até 10km. Use nosso verificador de CEP acima para confirmar!
+                  Atendemos toda Foz do Iguaçu e região em um raio de até 10km. Use nosso verificador de CEP acima para confirmar!
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="faq-3" className="border-b-2">
