@@ -153,8 +153,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.17)
       use-sound:
-        specifier: ^5.0.0
-        version: 5.0.0(react@19.2.1)
+        specifier: ^4.0.1
+        version: 4.0.1(react@19.2.1)
       vaul:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@19.1.5(@types/react@19.1.5))(@types/react@19.1.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -2098,8 +2098,8 @@ packages:
       '@types/react':
         optional: true
 
-  use-sound@5.0.0:
-    resolution: {integrity: sha512-MNHT3FFC5HxNCrgZtrnpIMJI2cw/0D2xismcrtyht8BTuF5FhFhb57xO/jlQr2xJaFrc/0btzRQvGyHQwB7PVA==}
+  use-sound@4.0.1:
+    resolution: {integrity: sha512-hykJ86kNcu6y/FzlSHcQxhjSGMslZx2WlfLpZNoPbvueakv4OF3xPxEtGV2YmculrIaH0tPp9LtG4jgy17xMWg==}
     peerDependencies:
       react: '>=16.8'
 
@@ -4073,7 +4073,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.1.5
 
-  use-sound@5.0.0(react@19.2.1):
+  use-sound@4.0.1(react@19.2.1):
     dependencies:
       howler: 2.2.4
       react: 19.2.1

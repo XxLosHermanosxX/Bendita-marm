@@ -6,7 +6,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 // import { Toaster } from "@/components/ui/sonner"; // Removed Toaster import
 import { SplashScreen } from "@/components/splash-screen";
-import React, { Suspense } from "react"; // Importando React e Suspense
+import React, { Suspense, useEffect, useState } from "react"; // Importando React e Suspense
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +29,14 @@ const geistMono = Geist_Mono({
 
 // Componente Wrapper para gerenciar o estado do splash screen
 const RootLayoutWrapper = ({ children }: { children: React.ReactNode }) => {
-  const [showSplash, setShowSplash] = React.useState(true);
+  const [showSplash, setShowSplash] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   return (
     <>
