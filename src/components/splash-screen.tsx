@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+// @ts-expect-error - use-sound does not export types correctly in some Next.js environments
 import useSound from 'use-sound';
 
 interface SplashScreenProps {
