@@ -8,7 +8,8 @@ import { Address } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { MapPin, Compass, Search } from "lucide-react";
+import { MapPin, Compass, Apple, CreditCard } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 // Esquema de validação com Zod
 const AddressSchema = z.object({
@@ -19,6 +20,7 @@ const AddressSchema = z.object({
   neighborhood: z.string().min(1, "Bairro é obrigatório"),
   city: z.string().min(1, "Cidade é obrigatória"),
   state: z.string().min(2, "Estado é obrigatório"),
+  saveAddress: z.boolean(),
 });
 
 type AddressFormValues = z.infer<typeof AddressSchema>;
@@ -35,14 +37,15 @@ export const AddressForm = ({ initialData, onNext }: AddressFormProps) => {
 
   const form = useForm<AddressFormValues>({
     resolver: zodResolver(AddressSchema),
-    defaultValues: initialData || {
-      cep: "",
-      street: "",
-      number: "",
-      complement: "",
-      neighborhood: "",
-      city: "",
-      state: "",
+    defaultValues: {
+      cep: initialData?.cep || "",
+      street: initialData?.street || "",
+      number: initialData?.number || "",
+      complement: initialData?.complement || "",
+      neighborhood: initialData?.neighborhood || "",
+      city: initialData?.city || "",
+      state: initialData?.state || "",
+      saveAddress: true,
     },
   });
 
@@ -153,15 +156,28 @@ export const AddressForm = ({ initialData, onNext }: AddressFormProps) => {
   };
 
   const onSubmit: SubmitHandler<AddressFormValues> = (data) => {
-    onNext(data);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { saveAddress, ...addressData } = data;
+    onNext(addressData as Address);
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <h3 className="text-xl font-semibold flex items-center gap-2 text-primary">
-          <MapPin className="h-5 w-5" /> 1. Endereço de Entrega
-        </h3>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <h3 className="text-xl font-semibold flex items-center gap-2 text-primary">
+            <MapPin className="h-5 w-5" /> 1. Endereço de Entrega
+          </h3>
+          
+          <div className="flex gap-2">
+            <Button type="button" variant="outline" size="sm" className="h-9 px-3 gap-2 border-primary/20 hover:bg-primary/5">
+              <Apple className="h-4 w-4" /> Pay
+            </Button>
+            <Button type="button" variant="outline" size="sm" className="h-9 px-3 gap-2 border-primary/20 hover:bg-primary/5">
+              <CreditCard className="h-4 w-4" /> Google Pay
+            </Button>
+          </div>
+        </div>
 
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -300,13 +316,33 @@ export const AddressForm = ({ initialData, onNext }: AddressFormProps) => {
                   </FormItem>
                 )}
               />
+
+                <FormField
+                  control={form.control}
+                  name="saveAddress"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>
+                          Salvar este endereço para as próximas compras
+                        </FormLabel>
+                      </div>
+                    </FormItem>
+                  )}
+                />
             </div>
           )}
         </div>
 
         <div className="flex justify-end pt-4">
-          <Button type="submit" className="bg-primary hover:bg-primary/90 text-lg py-6">
-            Continuar
+          <Button type="submit" className="w-full md:w-auto bg-primary hover:bg-primary/90 text-lg py-6 px-12">
+            Continuar para Pagamento
           </Button>
         </div>
       </form>
