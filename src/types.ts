@@ -73,6 +73,8 @@ export interface FreeAddon {
   quantity: number;
 }
 
+export type Category = string;
+
 export interface OrderItem extends Product {
   quantity: number;
   details?: any;

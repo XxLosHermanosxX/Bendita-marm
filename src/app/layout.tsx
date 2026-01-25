@@ -7,6 +7,8 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 // import { Toaster } from "@/components/ui/sonner"; // Removed Toaster import
 import { SplashScreen } from "@/components/splash-screen";
 import React, { Suspense, useEffect, useState } from "react"; // Importando React e Suspense
+import { ProductModalProvider } from "@/components/product-modal-provider";
+import { AddonsModal } from "@/components/addons-modal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -57,18 +59,19 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden bg-[#f8f9fa]`}
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="light" // Forçando o tema claro como padrão
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
           <Suspense fallback={<div>Carregando...</div>}>
             <RootLayoutWrapper>{children}</RootLayoutWrapper>
           </Suspense>
-          {/* Toaster component removed */}
+          <ProductModalProvider />
+          <AddonsModal />
         </ThemeProvider>
       </body>
     </html>

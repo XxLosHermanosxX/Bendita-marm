@@ -11,17 +11,16 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { 
+  CheckCircle2, 
   ChevronLeft, 
-  MapPin, 
   CreditCard, 
+  Loader2, 
+  Lock, 
   QrCode, 
   ShieldCheck, 
-  Clock, 
-  Truck,
-  CheckCircle2,
-  Loader2,
-  Apple,
-  Smartphone
+  Smartphone, 
+  Truck, 
+  Zap
 } from "lucide-react";
 import { useCartStore } from "@/store/use-cart-store";
 import { formatCurrency } from "@/lib/utils";
@@ -248,32 +247,34 @@ export const SimplifiedCheckout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-12">
+    <div className="min-h-screen bg-[#f8f9fa] pb-12">
       {/* Header Fixo */}
-      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b">
+      <header className="sticky top-0 z-50 bg-[#005A8D] border-b border-[#005A8D]/20 shadow-lg">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between max-w-2xl">
-          <Button variant="ghost" size="sm" onClick={() => router.back()} className="gap-2 h-9">
+          <Button variant="ghost" size="sm" onClick={() => router.back()} className="text-white hover:bg-white/10 gap-2 h-9">
             <ChevronLeft className="h-4 w-4" /> Voltar
           </Button>
-          <h1 className="font-bold text-lg">Finalizar Pedido</h1>
-          <div className="w-20" /> {/* Spacer */}
+          <div className="relative h-10 w-24">
+            <Image src="/images/logo_plantao_smash.png" alt="Logo" fill className="object-contain brightness-0 invert" />
+          </div>
+          <div className="w-20" />
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8 max-w-[500px]">
-        {/* Banner de Segurança no Topo */}
-        <div className="mb-8 flex items-center justify-center gap-3 bg-green-500/10 text-green-700 p-3 rounded-xl border border-green-500/20">
-          <ShieldCheck className="h-5 w-5 shrink-0" />
-          <span className="text-xs font-bold uppercase tracking-wide">Checkout 100% Seguro & Criptografado</span>
+        {/* Banner de Segurança */}
+        <div className="mb-8 flex items-center justify-center gap-3 bg-[#005A8D]/10 text-[#005A8D] p-4 rounded-[1.5rem] border border-[#005A8D]/20 shadow-sm">
+          <Lock className="h-5 w-5 shrink-0" />
+          <span className="text-[10px] font-black uppercase tracking-wider">Checkout Seguro de Emergência</span>
         </div>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             {/* Seção: Dados Pessoais */}
             <section className="space-y-4">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="bg-primary text-primary-foreground rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold shadow-sm">1</span>
-                <h2 className="font-bold text-xl">Seus Dados</h2>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="bg-[#FF6B00] text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-black shadow-lg">1</span>
+                <h2 className="font-black text-xl text-[#005A8D] uppercase">Identificação</h2>
               </div>
               
               <div className="grid grid-cols-1 gap-4">
@@ -282,9 +283,9 @@ export const SimplifiedCheckout = () => {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-xs font-bold uppercase text-muted-foreground">Nome Completo</FormLabel>
+                      <FormLabel className="text-[10px] font-black uppercase text-muted-foreground">Nome do Paciente/Cliente</FormLabel>
                       <FormControl>
-                        <Input placeholder="Como no seu documento" className="h-12 border-2 focus-visible:ring-primary" {...field} />
+                        <Input placeholder="Nome Completo" className="h-14 border-2 rounded-xl focus-visible:ring-[#005A8D]" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -295,7 +296,7 @@ export const SimplifiedCheckout = () => {
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-xs font-bold uppercase text-muted-foreground">WhatsApp para Contato</FormLabel>
+                      <FormLabel className="text-[10px] font-black uppercase text-muted-foreground">WhatsApp para Contato</FormLabel>
                       <FormControl>
                         <Input 
                           placeholder="(45) 99999-9999" 
@@ -315,9 +316,9 @@ export const SimplifiedCheckout = () => {
 
             {/* Seção: Endereço */}
             <section className="space-y-4">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="bg-primary text-primary-foreground rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold shadow-sm">2</span>
-                <h2 className="font-bold text-xl">Onde Entregamos?</h2>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="bg-[#FF6B00] text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-black shadow-lg">2</span>
+                <h2 className="font-black text-xl text-[#005A8D] uppercase">Local de Entrega</h2>
               </div>
 
               <FormField
@@ -325,7 +326,7 @@ export const SimplifiedCheckout = () => {
                 name="cep"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs font-bold uppercase text-muted-foreground">CEP da Residência</FormLabel>
+                    <FormLabel className="text-[10px] font-black uppercase text-muted-foreground">CEP da Residência</FormLabel>
                     <FormControl>
                       <Input 
                         placeholder="85850-000" 
@@ -357,7 +358,7 @@ export const SimplifiedCheckout = () => {
                     name="street"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-xs font-bold uppercase text-muted-foreground">Rua/Avenida</FormLabel>
+                        <FormLabel className="text-[10px] font-black uppercase text-muted-foreground">Rua/Avenida</FormLabel>
                         <FormControl>
                           <Input className="h-12 border-2" {...field} />
                         </FormControl>
@@ -372,7 +373,7 @@ export const SimplifiedCheckout = () => {
                       name="number"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-xs font-bold uppercase text-muted-foreground">Número</FormLabel>
+                          <FormLabel className="text-[10px] font-black uppercase text-muted-foreground">Número</FormLabel>
                           <FormControl>
                             <Input placeholder="Ex: 123" className="h-12 border-2" {...field} />
                           </FormControl>
@@ -385,7 +386,7 @@ export const SimplifiedCheckout = () => {
                       name="neighborhood"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-xs font-bold uppercase text-muted-foreground">Bairro</FormLabel>
+                          <FormLabel className="text-[10px] font-black uppercase text-muted-foreground">Bairro</FormLabel>
                           <FormControl>
                             <Input className="h-12 border-2" {...field} />
                           </FormControl>
@@ -400,7 +401,7 @@ export const SimplifiedCheckout = () => {
                     name="complement"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-xs font-bold uppercase text-muted-foreground">Complemento (opcional)</FormLabel>
+                        <FormLabel className="text-[10px] font-black uppercase text-muted-foreground">Complemento (opcional)</FormLabel>
                         <FormControl>
                           <Input placeholder="Ex: Apto 202, Bloco B" className="h-12 border-2" {...field} />
                         </FormControl>
@@ -409,13 +410,12 @@ export const SimplifiedCheckout = () => {
                     )}
                   />
 
-                  <div className="flex items-center gap-3 text-sm font-bold text-green-700 bg-green-50 p-4 rounded-xl border border-green-200">
-                    <Truck className="h-5 w-5" />
+                  <div className="flex items-center gap-3 text-sm font-bold text-[#005A8D] bg-[#005A8D]/5 p-5 rounded-2xl border border-[#005A8D]/10">
+                    <Truck className="h-6 w-6 text-[#FF6B00]" />
                     <div className="flex flex-col">
-                      <span>Foz do Iguaçu - PR</span>
-                      <span className="text-[10px] uppercase tracking-tighter opacity-70">Entrega Expressa Grátis</span>
+                      <span className="uppercase">C.D.E / Foz do Iguaçu</span>
+                      <span className="text-[10px] uppercase font-black text-[#FF6B00]">Prioridade Máxima de Entrega</span>
                     </div>
-                    <CheckCircle2 className="ml-auto h-5 w-5" />
                   </div>
                 </div>
               )}
@@ -425,9 +425,9 @@ export const SimplifiedCheckout = () => {
 
             {/* Seção: Pagamento */}
             <section className="space-y-6">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="bg-primary text-primary-foreground rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold shadow-sm">3</span>
-                <h2 className="font-bold text-xl">Pagamento Seguro</h2>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="bg-[#FF6B00] text-white rounded-xl w-8 h-8 flex items-center justify-center text-sm font-black shadow-lg">3</span>
+                <h2 className="font-black text-xl text-[#005A8D] uppercase">Pagamento</h2>
               </div>
 
               {/* Express Checkout - Unified for both */}
@@ -602,17 +602,17 @@ export const SimplifiedCheckout = () => {
             <div className="space-y-6">
               <Button 
                 type="submit" 
-                className="w-full h-16 text-xl font-black shadow-[0_10px_20px_rgba(0,0,0,0.1)] hover:shadow-primary/30 transition-all active:scale-95"
+                className="w-full h-18 py-8 text-xl font-black rounded-2xl bg-[#FF6B00] hover:bg-[#FF6B00]/90 shadow-[0_15px_30px_rgba(255,107,0,0.3)] transition-all active:scale-95"
                 disabled={isProcessing}
               >
                 {isProcessing ? (
                   <>
                     <Loader2 className="h-6 w-6 mr-2 animate-spin" />
-                    PROCESSANDO...
+                    SALVANDO...
                   </>
                 ) : (
                   <>
-                    CONFIRMAR E PAGAR AGORA
+                    EMITIR PEDIDO AGORA
                   </>
                 )}
               </Button>

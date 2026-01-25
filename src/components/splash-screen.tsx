@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 // @ts-expect-error - use-sound does not export types correctly in some Next.js environments
 import useSound from 'use-sound';
+import { motion } from 'framer-motion';
 
 interface SplashScreenProps {
   onFinish: () => void;
@@ -12,23 +13,12 @@ interface SplashScreenProps {
 
 export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
   const [isVisible, setIsVisible] = useState(true);
-  // Atualizando o caminho do som para o novo arquivo
   const [play] = useSound('/sounds/sword-slice-2.mp3', { volume: 0.5 });
 
   useEffect(() => {
-    // 1. Toca o som imediatamente
     play();
-
-    // 2. Inicia a animação de fade-out e movimento após um pequeno atraso
-    const animationTimeout = setTimeout(() => {
-      setIsVisible(false);
-    }, 1000); // 1 segundo para a logo aparecer
-
-    // 3. Esconde o componente completamente após a duração da animação (ex: 1.5s)
-    const hideTimeout = setTimeout(() => {
-      onFinish();
-    }, 2500); // 2.5 segundos total (1s visível + 1.5s de transição)
-
+    const animationTimeout = setTimeout(() => setIsVisible(false), 1500);
+    const hideTimeout = setTimeout(() => onFinish(), 3000);
     return () => {
       clearTimeout(animationTimeout);
       clearTimeout(hideTimeout);
@@ -38,24 +28,24 @@ export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
   return (
     <div
       className={cn(
-        "fixed inset-0 z-[999] flex items-center justify-center bg-background transition-all duration-1500 ease-in-out",
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full"
+        "fixed inset-0 z-[999] flex items-center justify-center bg-[#005A8D] transition-all duration-1500 ease-in-out",
+        isVisible ? "opacity-100" : "opacity-0"
       )}
     >
-      <div
-        className={cn(
-          "relative h-24 w-24 transition-all duration-1500 ease-in-out",
-          isVisible ? "scale-100" : "scale-150" // Aumenta a escala enquanto some
-        )}
+      <motion.div
+        initial={{ scale: 0.5, rotate: -10 }}
+        animate={{ scale: isVisible ? 1 : 1.5, rotate: 0 }}
+        transition={{ duration: 1 }}
+        className="relative h-48 w-48"
       >
         <Image
-          src="/bendita-logo.png"
-          alt="Bendita Marmita Logo"
-          layout="fill"
-          objectFit="contain"
+          src="/images/logo_plantao_smash.png"
+          alt="Plantão do Smash"
+          fill
+          className="object-contain"
           priority
         />
-      </div>
+      </motion.div>
     </div>
   );
 };
