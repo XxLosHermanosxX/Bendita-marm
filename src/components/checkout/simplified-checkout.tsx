@@ -261,25 +261,6 @@ export const SimplifiedCheckout = () => {
       </header>
 
       <main className="container mx-auto px-4 py-6 max-w-2xl">
-        {/* Express Checkout (Mock) */}
-        <div className="mb-6 space-y-3">
-          <p className="text-sm text-muted-foreground text-center">Checkout rápido</p>
-          <div className="flex gap-3">
-            <Button variant="outline" className="flex-1 h-12 gap-2" disabled>
-              <Apple className="h-5 w-5" /> Apple Pay
-            </Button>
-            <Button variant="outline" className="flex-1 h-12 gap-2" disabled>
-              <Smartphone className="h-5 w-5" /> Google Pay
-            </Button>
-          </div>
-          <div className="relative">
-            <Separator />
-            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-3 text-xs text-muted-foreground">
-              ou preencha abaixo
-            </span>
-          </div>
-        </div>
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {/* Seção: Dados Pessoais */}
@@ -439,6 +420,29 @@ export const SimplifiedCheckout = () => {
                 <CreditCard className="h-4 w-4" /> Pagamento
               </h2>
 
+              {/* Express Checkout moved here and updated */}
+              <div className="space-y-3 pt-2">
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Pagamento expresso</p>
+                <div className="flex gap-3">
+                  <Button variant="outline" className="flex-1 h-12 p-0 overflow-hidden border-2 hover:bg-secondary/50" disabled>
+                    <div className="relative h-6 w-16">
+                      <Image src="/images/apple-pay-logo.png" alt="Apple Pay" fill className="object-contain" />
+                    </div>
+                  </Button>
+                  <Button variant="outline" className="flex-1 h-12 p-0 overflow-hidden border-2 hover:bg-secondary/50" disabled>
+                    <div className="relative h-6 w-16">
+                      <Image src="/images/google-pay-logo.png" alt="Google Pay" fill className="object-contain" />
+                    </div>
+                  </Button>
+                </div>
+                <div className="relative py-2">
+                  <Separator />
+                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-3 text-[10px] text-muted-foreground uppercase font-bold">
+                    Ou selecione abaixo
+                  </span>
+                </div>
+              </div>
+
               <FormField
                 control={form.control}
                 name="paymentType"
@@ -470,7 +474,14 @@ export const SimplifiedCheckout = () => {
               />
 
               {paymentType === "credit_card" && (
-                <div className="space-y-4 p-4 border rounded-xl bg-card animate-in fade-in slide-in-from-top-2">
+                <div className="space-y-4 p-4 border-2 rounded-xl bg-card animate-in fade-in slide-in-from-top-2">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="text-sm font-bold">Dados do Cartão</h4>
+                    <div className="relative h-5 w-24">
+                      <Image src="/images/pagseguro-logo-new.png" alt="PagSeguro" fill className="object-contain" />
+                    </div>
+                  </div>
+
                   <FormField
                     control={form.control}
                     name="cardNumber"
@@ -550,6 +561,11 @@ export const SimplifiedCheckout = () => {
                       </FormItem>
                     )}
                   />
+
+                  <div className="flex items-center gap-2 text-[10px] text-muted-foreground justify-center pt-2 border-t">
+                    <ShieldCheck className="h-3 w-3 text-green-600" />
+                    Pagamento 100% processado e protegido pelo PagSeguro
+                  </div>
                 </div>
               )}
             </section>
@@ -577,24 +593,43 @@ export const SimplifiedCheckout = () => {
             </section>
 
             {/* Botão de Finalizar */}
-            <Button 
-              type="submit" 
-              className="w-full h-14 text-lg font-semibold"
-              disabled={isProcessing}
-            >
-              {isProcessing ? (
-                <>
-                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                  Processando...
-                </>
-              ) : (
-                <>
-                  Pagar {formatCurrency(total)}
-                </>
-              )}
-            </Button>
+            <div className="space-y-4">
+              <Button 
+                type="submit" 
+                className="w-full h-14 text-lg font-bold shadow-lg shadow-primary/20"
+                disabled={isProcessing}
+              >
+                {isProcessing ? (
+                  <>
+                    <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                    Processando...
+                  </>
+                ) : (
+                  <>
+                    Finalizar Pedido • {formatCurrency(total)}
+                  </>
+                )}
+              </Button>
 
-            {/* Trust Badges */}
+              {/* Trust Badges and Security Seals */}
+              <div className="grid grid-cols-1 gap-4 pt-4">
+                <div className="flex items-center justify-center gap-6">
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="relative h-8 w-24 grayscale opacity-70">
+                      <Image src="/images/pagseguro-logo-new.png" alt="PagSeguro Secure" fill className="object-contain" />
+                    </div>
+                    <span className="text-[9px] uppercase font-bold text-muted-foreground">Ambiente Seguro</span>
+                  </div>
+                  <Separator orientation="vertical" className="h-8" />
+                  <div className="flex flex-col items-center gap-1">
+                    <ShieldCheck className="h-5 w-5 text-green-600" />
+                    <span className="text-[9px] uppercase font-bold text-muted-foreground">SSL Criptografado</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Support Info */}
             <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
               <div className="flex items-center gap-1">
                 <ShieldCheck className="h-4 w-4" />
