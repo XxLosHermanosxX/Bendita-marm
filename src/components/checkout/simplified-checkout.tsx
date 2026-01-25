@@ -248,11 +248,11 @@ export const SimplifiedCheckout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-12">
       {/* Header Fixo */}
-      <header className="sticky top-0 z-50 bg-background border-b">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <Button variant="ghost" size="sm" onClick={() => router.back()} className="gap-2">
+      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between max-w-2xl">
+          <Button variant="ghost" size="sm" onClick={() => router.back()} className="gap-2 h-9">
             <ChevronLeft className="h-4 w-4" /> Voltar
           </Button>
           <h1 className="font-bold text-lg">Finalizar Pedido</h1>
@@ -260,25 +260,31 @@ export const SimplifiedCheckout = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-6 max-w-2xl">
+      <main className="container mx-auto px-4 py-8 max-w-[500px]">
+        {/* Banner de Segurança no Topo */}
+        <div className="mb-8 flex items-center justify-center gap-3 bg-green-500/10 text-green-700 p-3 rounded-xl border border-green-500/20">
+          <ShieldCheck className="h-5 w-5 shrink-0" />
+          <span className="text-xs font-bold uppercase tracking-wide">Checkout 100% Seguro & Criptografado</span>
+        </div>
+
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             {/* Seção: Dados Pessoais */}
             <section className="space-y-4">
-              <h2 className="font-semibold text-lg flex items-center gap-2">
-                <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm">1</span>
-                Seus Dados
-              </h2>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="bg-primary text-primary-foreground rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold shadow-sm">1</span>
+                <h2 className="font-bold text-xl">Seus Dados</h2>
+              </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 <FormField
                   control={form.control}
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Nome</FormLabel>
+                      <FormLabel className="text-xs font-bold uppercase text-muted-foreground">Nome Completo</FormLabel>
                       <FormControl>
-                        <Input placeholder="Seu nome completo" {...field} />
+                        <Input placeholder="Como no seu documento" className="h-12 border-2 focus-visible:ring-primary" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -289,10 +295,11 @@ export const SimplifiedCheckout = () => {
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>WhatsApp</FormLabel>
+                      <FormLabel className="text-xs font-bold uppercase text-muted-foreground">WhatsApp para Contato</FormLabel>
                       <FormControl>
                         <Input 
                           placeholder="(45) 99999-9999" 
+                          className="h-12 border-2 focus-visible:ring-primary"
                           {...field}
                           onChange={(e) => field.onChange(formatPhone(e.target.value))}
                         />
@@ -304,24 +311,25 @@ export const SimplifiedCheckout = () => {
               </div>
             </section>
 
-            <Separator />
+            <Separator className="opacity-50" />
 
             {/* Seção: Endereço */}
             <section className="space-y-4">
-              <h2 className="font-semibold text-lg flex items-center gap-2">
-                <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm">2</span>
-                <MapPin className="h-4 w-4" /> Endereço de Entrega
-              </h2>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="bg-primary text-primary-foreground rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold shadow-sm">2</span>
+                <h2 className="font-bold text-xl">Onde Entregamos?</h2>
+              </div>
 
               <FormField
                 control={form.control}
                 name="cep"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>CEP</FormLabel>
+                    <FormLabel className="text-xs font-bold uppercase text-muted-foreground">CEP da Residência</FormLabel>
                     <FormControl>
                       <Input 
                         placeholder="85850-000" 
+                        className="h-12 border-2 focus-visible:ring-primary font-medium"
                         {...field}
                         maxLength={9}
                         onChange={(e) => {
@@ -337,51 +345,36 @@ export const SimplifiedCheckout = () => {
               />
 
               {isLoading && (
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Loader2 className="h-4 w-4 animate-spin" /> Buscando endereço...
+                <div className="flex items-center gap-2 text-sm text-primary font-medium animate-pulse">
+                  <Loader2 className="h-4 w-4 animate-spin" /> Localizando endereço...
                 </div>
               )}
 
               {showAddressFields && (
                 <div className="space-y-4 animate-in fade-in slide-in-from-top-2">
-                  <div className="grid grid-cols-3 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="street"
-                      render={({ field }) => (
-                        <FormItem className="col-span-2">
-                          <FormLabel>Rua</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                  <FormField
+                    control={form.control}
+                    name="street"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs font-bold uppercase text-muted-foreground">Rua/Avenida</FormLabel>
+                        <FormControl>
+                          <Input className="h-12 border-2" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <div className="grid grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
                       name="number"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Nº</FormLabel>
+                          <FormLabel className="text-xs font-bold uppercase text-muted-foreground">Número</FormLabel>
                           <FormControl>
-                            <Input placeholder="123" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="complement"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Complemento <span className="text-muted-foreground">(opcional)</span></FormLabel>
-                          <FormControl>
-                            <Input placeholder="Apto, bloco..." {...field} />
+                            <Input placeholder="Ex: 123" className="h-12 border-2" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -392,9 +385,9 @@ export const SimplifiedCheckout = () => {
                       name="neighborhood"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Bairro</FormLabel>
+                          <FormLabel className="text-xs font-bold uppercase text-muted-foreground">Bairro</FormLabel>
                           <FormControl>
-                            <Input {...field} />
+                            <Input className="h-12 border-2" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -402,43 +395,60 @@ export const SimplifiedCheckout = () => {
                     />
                   </div>
 
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground bg-secondary/50 p-3 rounded-lg">
-                    <Truck className="h-4 w-4 text-primary" />
-                    <span>Foz do Iguaçu - PR</span>
-                    <span className="ml-auto text-green-600 font-medium">Frete Grátis</span>
+                  <FormField
+                    control={form.control}
+                    name="complement"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs font-bold uppercase text-muted-foreground">Complemento (opcional)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Ex: Apto 202, Bloco B" className="h-12 border-2" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="flex items-center gap-3 text-sm font-bold text-green-700 bg-green-50 p-4 rounded-xl border border-green-200">
+                    <Truck className="h-5 w-5" />
+                    <div className="flex flex-col">
+                      <span>Foz do Iguaçu - PR</span>
+                      <span className="text-[10px] uppercase tracking-tighter opacity-70">Entrega Expressa Grátis</span>
+                    </div>
+                    <CheckCircle2 className="ml-auto h-5 w-5" />
                   </div>
                 </div>
               )}
             </section>
 
-            <Separator />
+            <Separator className="opacity-50" />
 
             {/* Seção: Pagamento */}
-            <section className="space-y-4">
-              <h2 className="font-semibold text-lg flex items-center gap-2">
-                <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm">3</span>
-                <CreditCard className="h-4 w-4" /> Pagamento
-              </h2>
+            <section className="space-y-6">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="bg-primary text-primary-foreground rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold shadow-sm">3</span>
+                <h2 className="font-bold text-xl">Pagamento Seguro</h2>
+              </div>
 
-              {/* Express Checkout moved here and updated */}
-              <div className="space-y-3 pt-2">
-                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Pagamento expresso</p>
-                <div className="flex gap-3">
-                  <Button variant="outline" className="flex-1 h-12 p-0 overflow-hidden border-2 hover:bg-secondary/50" disabled>
-                    <div className="relative h-6 w-16">
+              {/* Express Checkout - Unified for both */}
+              <div className="space-y-3">
+                <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest text-center">Pagamento Rápido</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <Button variant="outline" className="h-14 p-0 overflow-hidden border-2 rounded-xl hover:bg-secondary/80 transition-all hover:scale-[1.02]" disabled>
+                    <div className="relative h-7 w-20">
                       <Image src="/images/apple-pay-logo.png" alt="Apple Pay" fill className="object-contain" />
                     </div>
                   </Button>
-                  <Button variant="outline" className="flex-1 h-12 p-0 overflow-hidden border-2 hover:bg-secondary/50" disabled>
-                    <div className="relative h-6 w-16">
+                  <Button variant="outline" className="h-14 p-0 overflow-hidden border-2 rounded-xl hover:bg-secondary/80 transition-all hover:scale-[1.02]" disabled>
+                    <div className="relative h-7 w-20">
                       <Image src="/images/google-pay-logo.png" alt="Google Pay" fill className="object-contain" />
                     </div>
                   </Button>
                 </div>
-                <div className="relative py-2">
+                <div className="relative py-4">
                   <Separator />
-                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-3 text-[10px] text-muted-foreground uppercase font-bold">
-                    Ou selecione abaixo
+                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-4 text-[9px] text-muted-foreground uppercase font-black tracking-widest">
+                    Ou selecione
                   </span>
                 </div>
               </div>
@@ -454,18 +464,18 @@ export const SimplifiedCheckout = () => {
                         defaultValue={field.value}
                         className="grid grid-cols-2 gap-4"
                       >
-                        <label className={`flex flex-col items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all ${field.value === 'pix' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'}`}>
+                        <label className={`flex flex-col items-center justify-center p-5 border-2 rounded-2xl cursor-pointer transition-all ${field.value === 'pix' ? 'border-primary bg-primary/5 shadow-inner' : 'border-border hover:border-primary/50'}`}>
                           <RadioGroupItem value="pix" className="sr-only" />
-                          <QrCode className={`h-8 w-8 mb-2 ${field.value === 'pix' ? 'text-primary' : 'text-muted-foreground'}`} />
-                          <span className="font-medium">PIX</span>
-                          <span className="text-xs text-muted-foreground">Aprovação imediata</span>
+                          <QrCode className={`h-10 w-10 mb-2 ${field.value === 'pix' ? 'text-primary' : 'text-muted-foreground'}`} />
+                          <span className="font-bold">PIX</span>
+                          <span className="text-[10px] text-green-600 font-bold uppercase">Desconto Online</span>
                         </label>
                         
-                        <label className={`flex flex-col items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all ${field.value === 'credit_card' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'}`}>
+                        <label className={`flex flex-col items-center justify-center p-5 border-2 rounded-2xl cursor-pointer transition-all ${field.value === 'credit_card' ? 'border-primary bg-primary/5 shadow-inner' : 'border-border hover:border-primary/50'}`}>
                           <RadioGroupItem value="credit_card" className="sr-only" />
-                          <CreditCard className={`h-8 w-8 mb-2 ${field.value === 'credit_card' ? 'text-primary' : 'text-muted-foreground'}`} />
-                          <span className="font-medium">Cartão</span>
-                          <span className="text-xs text-muted-foreground">Crédito ou débito</span>
+                          <CreditCard className={`h-10 w-10 mb-2 ${field.value === 'credit_card' ? 'text-primary' : 'text-muted-foreground'}`} />
+                          <span className="font-bold">CARTÃO</span>
+                          <span className="text-[10px] text-muted-foreground uppercase">Até 12x</span>
                         </label>
                       </RadioGroup>
                     </FormControl>
@@ -474,11 +484,11 @@ export const SimplifiedCheckout = () => {
               />
 
               {paymentType === "credit_card" && (
-                <div className="space-y-4 p-4 border-2 rounded-xl bg-card animate-in fade-in slide-in-from-top-2">
+                <div className="space-y-5 p-6 border-2 rounded-2xl bg-card shadow-sm animate-in zoom-in-95 duration-200">
                   <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-sm font-bold">Dados do Cartão</h4>
-                    <div className="relative h-5 w-24">
-                      <Image src="/images/pagseguro-logo-new.png" alt="PagSeguro" fill className="object-contain" />
+                    <h4 className="text-sm font-black uppercase tracking-tight">Dados do Cartão</h4>
+                    <div className="relative h-6 w-24">
+                      <Image src="/images/pagseguro-logo-new.png" alt="PagSeguro Secure" fill className="object-contain" />
                     </div>
                   </div>
 
@@ -487,11 +497,12 @@ export const SimplifiedCheckout = () => {
                     name="cardNumber"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Número do Cartão</FormLabel>
+                        <FormLabel className="text-[10px] font-bold uppercase text-muted-foreground">Número do Cartão</FormLabel>
                         <div className="relative">
                           <FormControl>
                             <Input 
                               placeholder="0000 0000 0000 0000" 
+                              className="h-12 border-2 text-lg" 
                               {...field}
                               maxLength={19}
                               onChange={(e) => field.onChange(formatCardNumber(e.target.value))}
@@ -520,14 +531,9 @@ export const SimplifiedCheckout = () => {
                       name="expiryDate"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Validade</FormLabel>
+                          <FormLabel className="text-[10px] font-bold uppercase text-muted-foreground">Validade</FormLabel>
                           <FormControl>
-                            <Input 
-                              placeholder="MM/AA" 
-                              {...field}
-                              maxLength={5}
-                              onChange={(e) => field.onChange(formatExpiryDate(e.target.value))}
-                            />
+                            <Input placeholder="MM/AA" className="h-12 border-2" {...field} maxLength={5} onChange={(e) => field.onChange(formatExpiryDate(e.target.value))} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -538,9 +544,9 @@ export const SimplifiedCheckout = () => {
                       name="cvv"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>CVV</FormLabel>
+                          <FormLabel className="text-[10px] font-bold uppercase text-muted-foreground">CVV</FormLabel>
                           <FormControl>
-                            <Input placeholder="123" type="password" maxLength={4} {...field} />
+                            <Input placeholder="123" type="password" maxLength={4} className="h-12 border-2" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -553,91 +559,77 @@ export const SimplifiedCheckout = () => {
                     name="cardholderName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nome no Cartão</FormLabel>
+                        <FormLabel className="text-[10px] font-bold uppercase text-muted-foreground">Nome no Cartão</FormLabel>
                         <FormControl>
-                          <Input placeholder="Como está impresso no cartão" {...field} />
+                          <Input placeholder="NOME IMPRESSO" className="h-12 border-2 uppercase" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-
-                  <div className="flex items-center gap-2 text-[10px] text-muted-foreground justify-center pt-2 border-t">
-                    <ShieldCheck className="h-3 w-3 text-green-600" />
-                    Pagamento 100% processado e protegido pelo PagSeguro
+                  
+                  <div className="flex items-center gap-2 text-[10px] text-green-600 font-bold justify-center pt-3 border-t">
+                    <ShieldCheck className="h-4 w-4" />
+                    PAGAMENTO PROCESSADO COM SEGURANÇA PELO PAGSEGURO
                   </div>
                 </div>
               )}
             </section>
 
-            <Separator />
+            <Separator className="opacity-50" />
 
-            {/* Resumo do Pedido */}
-            <section className="space-y-3 bg-secondary/30 p-4 rounded-xl">
-              <h3 className="font-semibold">Resumo</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">{items.length} item(s)</span>
+            {/* Resumo Financeiro */}
+            <section className="space-y-4 bg-secondary/20 p-6 rounded-2xl border-2 border-dashed">
+              <h3 className="font-bold text-lg">Resumo Financeiro</h3>
+              <div className="space-y-3 text-sm">
+                <div className="flex justify-between font-medium">
+                  <span className="text-muted-foreground">{items.length} Marmita(s)</span>
                   <span>{formatCurrency(subtotal)}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Entrega</span>
-                  <span className="text-green-600 font-medium">Grátis</span>
+                <div className="flex justify-between font-medium">
+                  <span className="text-muted-foreground">Taxa de Entrega</span>
+                  <span className="text-green-600 font-bold">GRÁTIS</span>
                 </div>
                 <Separator />
-                <div className="flex justify-between text-lg font-bold">
-                  <span>Total</span>
-                  <span className="text-primary">{formatCurrency(total)}</span>
+                <div className="flex justify-between text-xl font-black text-primary">
+                  <span>TOTAL À PAGAR</span>
+                  <span>{formatCurrency(total)}</span>
                 </div>
               </div>
             </section>
 
             {/* Botão de Finalizar */}
-            <div className="space-y-4">
+            <div className="space-y-6">
               <Button 
                 type="submit" 
-                className="w-full h-14 text-lg font-bold shadow-lg shadow-primary/20"
+                className="w-full h-16 text-xl font-black shadow-[0_10px_20px_rgba(0,0,0,0.1)] hover:shadow-primary/30 transition-all active:scale-95"
                 disabled={isProcessing}
               >
                 {isProcessing ? (
                   <>
-                    <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                    Processando...
+                    <Loader2 className="h-6 w-6 mr-2 animate-spin" />
+                    PROCESSANDO...
                   </>
                 ) : (
                   <>
-                    Finalizar Pedido • {formatCurrency(total)}
+                    CONFIRMAR E PAGAR AGORA
                   </>
                 )}
               </Button>
 
-              {/* Trust Badges and Security Seals */}
-              <div className="grid grid-cols-1 gap-4 pt-4">
-                <div className="flex items-center justify-center gap-6">
-                  <div className="flex flex-col items-center gap-1">
-                    <div className="relative h-8 w-24 grayscale opacity-70">
-                      <Image src="/images/pagseguro-logo-new.png" alt="PagSeguro Secure" fill className="object-contain" />
-                    </div>
-                    <span className="text-[9px] uppercase font-bold text-muted-foreground">Ambiente Seguro</span>
-                  </div>
-                  <Separator orientation="vertical" className="h-8" />
-                  <div className="flex flex-col items-center gap-1">
+              {/* Trust Badges - Final */}
+              <div className="flex flex-col items-center gap-6">
+                <div className="flex items-center justify-center gap-8 grayscale opacity-60">
+                  <Image src="/images/pagseguro-logo-new.png" alt="PagSeguro Secure" width={100} height={40} className="object-contain" />
+                  <Separator orientation="vertical" className="h-6" />
+                  <div className="flex items-center gap-1">
                     <ShieldCheck className="h-5 w-5 text-green-600" />
-                    <span className="text-[9px] uppercase font-bold text-muted-foreground">SSL Criptografado</span>
+                    <span className="text-[10px] font-black uppercase tracking-tighter">Site Blindado</span>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            {/* Support Info */}
-            <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <ShieldCheck className="h-4 w-4" />
-                <span>Pagamento Seguro</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Clock className="h-4 w-4" />
-                <span>30-45 min</span>
+                <p className="text-[9px] text-center text-muted-foreground max-w-[280px] leading-relaxed uppercase font-bold">
+                  Sua privacidade é nossa prioridade. Todos os dados são criptografados de ponta a ponta.
+                </p>
               </div>
             </div>
           </form>
