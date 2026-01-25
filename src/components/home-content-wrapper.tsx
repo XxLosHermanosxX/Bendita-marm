@@ -77,8 +77,8 @@ export const HomeContentWrapper = () => {
       title: "Kit Reanimação",
       price: "R$ 85,00",
       desc: "Perfeito para o pós-prova! 2 Duplos Eletro-Choque, 2 Residentes, fritas, anéis e coxinhas.",
-      img: "/images/banner_kit_reanimacao_promo.png",
-      color: "bg-[#005A8D]"
+      img: "/images/plantao_kit_reanimacao_box.png",
+      color: "bg-[#005A8D]/90 backdrop-blur-md"
     },
     {
       id: "p2",
@@ -185,25 +185,29 @@ export const HomeContentWrapper = () => {
             <p className="text-xl text-muted-foreground">As promoções que vão salvar o seu dia (e sua carteira).</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-12">
             {mainPromos.map((promo, idx) => (
               <motion.div 
                 key={idx}
                 whileHover={{ y: -10, scale: 1.02 }}
-                className={`group relative overflow-hidden rounded-[2.5rem] p-8 text-white ${promo.color} shadow-2xl h-[500px] flex flex-col justify-between`}
+                className={`group relative overflow-hidden rounded-[3rem] p-10 text-white ${promo.color} border border-white/20 shadow-2xl h-[550px] flex flex-col justify-between`}
               >
                 <div className="space-y-4 relative z-10">
-                  <span className="bg-white/20 backdrop-blur-md px-4 py-1 rounded-full text-sm font-bold uppercase">{promo.title}</span>
-                  <h3 className="text-4xl font-black leading-none">{promo.price}</h3>
-                  <p className="text-lg opacity-90 leading-tight">{promo.desc}</p>
+                  <span className="bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">{promo.title}</span>
+                  <h3 className="text-5xl font-black leading-none">{promo.price}</h3>
+                  <p className="text-sm opacity-90 leading-relaxed font-medium">{promo.desc}</p>
                 </div>
                 
-                <div className="relative h-64 w-full mt-auto transition-transform group-hover:scale-110 duration-500">
-                  <Image src={promo.img} alt={promo.title} fill className="object-contain drop-shadow-2xl" />
+                <div className="absolute -right-10 top-1/2 -translate-y-1/2 h-80 w-80 transition-transform group-hover:scale-110 group-hover:rotate-12 duration-500 opacity-20 pointer-events-none">
+                  <Image src={promo.img} alt={promo.title} fill className="object-contain grayscale" />
+                </div>
+
+                <div className="relative h-64 w-full mt-auto transition-transform group-hover:scale-110 duration-500 z-10">
+                  <Image src={promo.img} alt={promo.title} fill className="object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]" />
                 </div>
                 
-                <Button className="w-full bg-white text-[#005A8D] hover:bg-white/90 font-black h-14 rounded-2xl relative z-10">
-                  ADICIONAR AO PRONTUÁRIO
+                <Button className="w-full bg-[#FF6B00] hover:bg-[#FF6B00]/90 text-white font-black h-16 rounded-2xl relative z-10 text-sm uppercase tracking-widest shadow-xl">
+                  ADICIONAR AO CARRINHO
                 </Button>
               </motion.div>
             ))}

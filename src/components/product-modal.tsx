@@ -167,8 +167,8 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
             />
           </div>
           
-          <div className="flex items-center justify-between pt-4 sticky bottom-0 bg-white pb-2">
-            <div className="flex items-center gap-4 bg-secondary/30 p-2 rounded-2xl">
+          <div className="flex items-center justify-between pt-4 sticky bottom-0 bg-white/80 backdrop-blur-md pb-2 mt-4">
+            <div className="flex items-center gap-4 bg-[#005A8D]/5 p-2 rounded-2xl border border-[#005A8D]/10">
               <Button 
                 variant="ghost" 
                 size="icon" 
@@ -191,9 +191,9 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
             
             <Button 
               onClick={handleContinue}
-              className="bg-[#FF6B00] hover:bg-[#FF6B00]/90 text-white font-black text-lg px-12 py-7 rounded-2xl shadow-[0_10px_20px_rgba(255,107,0,0.3)] transition-all hover:scale-105 active:scale-95"
+              className="bg-[#FF6B00] hover:bg-[#FF6B00]/90 text-white font-black text-lg px-8 py-7 rounded-2xl shadow-[0_10px_20px_rgba(255,107,0,0.3)] transition-all hover:scale-105 active:scale-95"
             >
-              PRESCREVER NO CARRINHO
+              ADICIONAR AO CARRINHO
             </Button>
           </div>
         </div>
