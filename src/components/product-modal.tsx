@@ -77,8 +77,8 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden max-h-[95vh] flex flex-col rounded-[2.5rem] border-none shadow-2xl">
-        <div className="relative h-[400px] w-full bg-[#f8f9fa] flex flex-center items-center overflow-hidden">
+      <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden max-h-[95vh] flex flex-col rounded-[3rem] border-4 border-[#005A8D] shadow-2xl bg-white/90 backdrop-blur-xl">
+        <div className="relative h-[450px] w-full bg-gradient-to-b from-[#005A8D]/10 to-transparent flex flex-center items-center overflow-hidden">
           {/* Background Decorative */}
           <div className="absolute inset-0 bg-[#005A8D]/5 pointer-events-none" />
           
@@ -191,9 +191,9 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
             
             <Button 
               onClick={handleContinue}
-              className="bg-[#FF6B00] hover:bg-[#FF6B00]/90 text-white font-black text-lg px-8 py-7 rounded-2xl shadow-[0_10px_20px_rgba(255,107,0,0.3)] transition-all hover:scale-105 active:scale-95"
+              className="bg-[#FF6B00] hover:bg-[#005A8D] text-white font-black text-lg px-10 py-8 rounded-2xl shadow-[0_15px_30px_rgba(255,107,0,0.3)] transition-all hover:scale-105 active:scale-95 uppercase tracking-widest"
             >
-              ADICIONAR AO CARRINHO
+              Adicionar ao Carrinho
             </Button>
           </div>
         </div>

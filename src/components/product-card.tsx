@@ -18,51 +18,55 @@ export const ProductCard = ({ product }: { product: Product }) => {
       whileHover={{ y: -8, scale: 1.02 }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      className="group relative flex flex-col bg-white/40 backdrop-blur-md border border-white/20 rounded-[2.5rem] overflow-hidden shadow-xl hover:shadow-[#005A8D]/20 transition-all duration-300 h-full"
+      className="group relative mt-12 flex flex-col bg-white/40 backdrop-blur-md border border-white/30 rounded-[2.5rem] overflow-visible shadow-xl hover:shadow-[#005A8D]/20 transition-all duration-300 h-full"
       onClick={() => openModal(product)}
     >
-      <div className="relative h-56 w-full overflow-visible">
+      <div className="relative h-48 w-full overflow-visible flex justify-center">
         <motion.div 
-          animate={{ y: isHovered ? -10 : 0 }}
-          className="absolute inset-0 z-10 -mt-8 px-4"
+          animate={{ 
+            y: isHovered ? -20 : -35,
+            scale: isHovered ? 1.1 : 1 
+          }}
+          transition={{ type: "spring", stiffness: 300, damping: 15 }}
+          className="absolute -top-4 w-52 h-52 z-10"
         >
           <Image
             src={product.imageUrl}
             alt={product.name}
             fill
-            className="object-contain drop-shadow-[0_20px_30px_rgba(0,0,0,0.3)]"
+            className="object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.4)]"
             quality={100}
           />
         </motion.div>
-        <div className="absolute top-10 left-6 z-20">
-          <span className="bg-[#005A8D]/80 backdrop-blur-sm text-white text-[9px] font-black uppercase px-3 py-1 rounded-full shadow-lg">
+        <div className="absolute top-16 left-6 z-20">
+          <span className="bg-[#005A8D] text-white text-[9px] font-black uppercase px-3 py-1 rounded-full shadow-lg">
             {product.category}
           </span>
         </div>
       </div>
 
       <div className="flex flex-col flex-1 p-6 pt-0 space-y-4 relative z-0">
-        <div className="space-y-2">
-          <h3 className="text-xl font-black text-[#005A8D] uppercase leading-tight">
+        <div className="space-y-1">
+          <h3 className="text-xl font-black text-[#005A8D] uppercase leading-tight tracking-tighter">
             {product.name}
           </h3>
-          <p className="text-xs text-muted-foreground font-medium line-clamp-2 min-h-[32px]">
+          <p className="text-[11px] text-[#005A8D]/70 font-bold line-clamp-2 min-h-[32px] leading-tight">
             {product.description}
           </p>
         </div>
 
         <div className="flex items-center justify-between pt-2">
           <div className="flex flex-col">
-            <span className="text-[10px] font-black text-[#005A8D]/40 uppercase leading-none mb-1">Valor Unitário</span>
-            <span className="text-2xl font-black text-[#FF6B00]">
+            <span className="text-[9px] font-black text-[#FF6B00] uppercase tracking-widest mb-1">Prescrição</span>
+            <span className="text-2xl font-black text-[#005A8D]">
               {formatCurrency(product.price)}
             </span>
           </div>
           <Button 
             size="icon" 
-            className="h-12 w-12 rounded-2xl bg-[#005A8D] hover:bg-[#FF6B00] transition-all shadow-lg shadow-[#005A8D]/20"
+            className="h-12 w-12 rounded-2xl bg-[#FF6B00] hover:bg-[#005A8D] text-white transition-all shadow-lg shadow-[#FF6B00]/20 active:scale-90"
           >
-            <Plus className="h-6 w-6 text-white" />
+            <Plus className="h-6 w-6" />
           </Button>
         </div>
       </div>

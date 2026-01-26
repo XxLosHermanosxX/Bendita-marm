@@ -221,9 +221,13 @@ export const HomeContentWrapper = () => {
           <div className="flex flex-col md:flex-row items-center justify-between mb-12 gap-8">
             <h2 className="text-4xl font-black text-[#005A8D] uppercase tracking-tighter">Cardápio de Plantão</h2>
             
-            <div className="flex bg-white p-2 rounded-2xl shadow-sm border gap-2 overflow-x-auto no-scrollbar max-w-full">
+            <div className="flex bg-[#005A8D] p-2 rounded-[2rem] shadow-2xl border border-white/20 gap-2 overflow-x-auto no-scrollbar max-w-full">
               {categories.map(cat => (
-                <Button key={cat} variant="ghost" className="rounded-xl whitespace-nowrap font-bold hover:bg-[#005A8D]/10 hover:text-[#005A8D]">
+                <Button 
+                  key={cat} 
+                  variant="ghost" 
+                  className="rounded-2xl px-6 py-6 whitespace-nowrap font-black text-xs uppercase tracking-widest text-white hover:bg-[#FF6B00] hover:text-white transition-all duration-300 border border-transparent hover:border-white/20"
+                >
                   {cat}
                 </Button>
               ))}
@@ -281,7 +285,10 @@ export const HomeContentWrapper = () => {
 
       {/* Chat Bubble */}
       <div className="fixed bottom-8 right-8 z-50">
-        <Button className="h-16 w-16 rounded-full bg-[#FF6B00] shadow-2xl hover:scale-110 transition-transform">
+        <Button 
+          className="h-16 w-16 rounded-full bg-[#FF6B00] shadow-2xl hover:scale-110 transition-transform flex items-center justify-center p-0 overflow-hidden group border-4 border-white"
+          onClick={() => window.open('https://wa.me/5500000000000', '_blank')}
+        >
           <MessageCircle className="h-8 w-8 text-white" />
         </Button>
       </div>

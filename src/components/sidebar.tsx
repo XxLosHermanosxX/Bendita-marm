@@ -27,14 +27,14 @@ export const Sidebar = () => {
   const filteredCategories = categories;
 
   return (
-    <div className="h-full flex flex-col p-6 bg-[#005A8D] text-white overflow-y-auto">
-      <div className="mb-10 text-center">
-        <div className="relative h-16 w-32 mx-auto mb-4">
+    <div className="h-full flex flex-col p-8 bg-[#005A8D] text-white overflow-y-auto border-r-4 border-[#FF6B00]">
+      <div className="mb-12 text-center">
+        <div className="relative h-20 w-40 mx-auto mb-6">
           <Image src="/images/logo_plantao_smash.png" alt="Logo" fill className="object-contain brightness-0 invert" />
         </div>
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full border border-white/20">
-          <MapPin className="h-3 w-3 text-[#FF6B00]" />
-          <span className="text-[10px] font-black uppercase tracking-widest">Ciudad del Este, PY</span>
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#FF6B00] rounded-full shadow-lg border-2 border-white">
+          <MapPin className="h-4 w-4 text-white" />
+          <span className="text-[11px] font-black uppercase tracking-widest">Ciudad del Este, PY</span>
         </div>
       </div>
 
