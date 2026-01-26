@@ -1,10 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-// @ts-expect-error - use-sound does not export types correctly in some Next.js environments
-import useSound from 'use-sound';
 import { motion } from 'framer-motion';
 import { IMAGES } from '@/config/images';
 
@@ -14,29 +12,35 @@ interface SplashScreenProps {
 
 export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
   const [isVisible, setIsVisible] = useState(true);
-  const [play] = useSound('/sounds/sword-slice-2.mp3', { volume: 0.5 });
+  const hasPlayed = useRef(false);
 
   useEffect(() => {
-    play();
+    // Só executa uma vez
+    if (hasPlayed.current) return;
+    hasPlayed.current = true;
+
     const animationTimeout = setTimeout(() => setIsVisible(false), 1500);
-    const hideTimeout = setTimeout(() => onFinish(), 3000);
+    const hideTimeout = setTimeout(() => onFinish(), 2500);
+    
     return () => {
       clearTimeout(animationTimeout);
       clearTimeout(hideTimeout);
     };
-  }, [onFinish, play]);
+  }, [onFinish]);
+
+  if (!isVisible) return null;
 
   return (
     <div
       className={cn(
-        "fixed inset-0 z-[999] flex items-center justify-center bg-[#005A8D] transition-all duration-1500 ease-in-out",
-        isVisible ? "opacity-100" : "opacity-0"
+        "fixed inset-0 z-[999] flex items-center justify-center bg-[#005A8D] transition-opacity duration-500",
+        isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
       )}
     >
       <motion.div
         initial={{ scale: 0.5, rotate: -10 }}
-        animate={{ scale: isVisible ? 1 : 1.5, rotate: 0 }}
-        transition={{ duration: 1 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ duration: 0.8 }}
         className="relative h-48 w-48"
       >
         <Image
