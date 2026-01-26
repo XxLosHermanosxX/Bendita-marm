@@ -77,7 +77,7 @@ export const HomeContentWrapper = () => {
       title: "Kit Reanimação",
       price: "R$ 85,00",
       desc: "Perfeito para o pós-prova! 2 Duplos Eletro-Choque, 2 Residentes, fritas, anéis e coxinhas.",
-      img: "/images/plantao_kit_reanimacao_box.png",
+      img: "/images/temaki_salmao.jpg",
       color: "bg-[#005A8D]/90 backdrop-blur-md"
     },
     {
@@ -85,7 +85,7 @@ export const HomeContentWrapper = () => {
       title: "Combo Plantão",
       price: "A partir de R$ 39,90",
       desc: "Seu Duplo Eletro-Choque com fritas e refri. A energia que você precisa para o plantão.",
-      img: "/images/banner_combo_duplo_promo.png",
+      img: "/images/temaki_filadelfia.jpg",
       color: "bg-[#FF6B00]"
     },
     {
@@ -93,7 +93,7 @@ export const HomeContentWrapper = () => {
       title: "O Especialista",
       price: "R$ 42,90",
       desc: "Todo mês um burger novo criado por especialistas. Este mês: Bacon-Cardíaco + Fritas.",
-      img: "/images/plantao_bacon_cardiaco.png",
+      img: "/images/temaki_atum.jpg",
       color: "bg-[#D90429]"
     }
   ];
@@ -133,7 +133,7 @@ export const HomeContentWrapper = () => {
             className="flex-1 relative h-[300px] w-full md:h-[500px]"
           >
             <Image 
-              src="/images/plantao_duplo_eletrochoque.png" 
+              src="/images/temaki_salmao.jpg" 
               alt="Hambúrguer Principal" 
               fill 
               className="object-contain drop-shadow-[0_35px_35px_rgba(0,0,0,0.5)]"
@@ -153,7 +153,7 @@ export const HomeContentWrapper = () => {
           <div className="sticky top-32 h-[400px]">
             <motion.div style={{ opacity: burgerOpacity }} className="relative h-full w-full">
               <Image 
-                src="/images/plantao_duplo_eletrochoque.png" 
+                src="/images/temaki_salmao.jpg" 
                 alt="Detalhes do Burger" 
                 fill 
                 className="object-contain"
