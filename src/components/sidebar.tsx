@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { IMAGES } from "@/config/images";
 
 // Map categories to Lucide icons (using available icons)
 const categoryIcons: { [key: string]: React.ElementType } = {
@@ -30,7 +31,7 @@ export const Sidebar = () => {
     <div className="h-full flex flex-col p-8 bg-[#005A8D] text-white overflow-y-auto border-r-4 border-[#FF6B00]">
       <div className="mb-12 text-center">
         <div className="relative h-20 w-40 mx-auto mb-6">
-          <Image src="/images/logo_plantao_smash.png" alt="Logo" fill className="object-contain brightness-0 invert" />
+          <Image src={IMAGES.logo} alt="Logo" fill className="object-contain brightness-0 invert" unoptimized />
         </div>
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#FF6B00] rounded-full shadow-lg border-2 border-white">
           <MapPin className="h-4 w-4 text-white" />

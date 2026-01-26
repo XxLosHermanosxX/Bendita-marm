@@ -36,6 +36,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
             fill
             className="object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.4)]"
             quality={100}
+            unoptimized
           />
         </motion.div>
         <div className="absolute top-16 left-6 z-20">
