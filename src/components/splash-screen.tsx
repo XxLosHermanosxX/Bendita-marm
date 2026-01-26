@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 // @ts-expect-error - use-sound does not export types correctly in some Next.js environments
 import useSound from 'use-sound';
 import { motion } from 'framer-motion';
+import { IMAGES } from '@/config/images';
 
 interface SplashScreenProps {
   onFinish: () => void;
@@ -39,11 +40,12 @@ export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
         className="relative h-48 w-48"
       >
         <Image
-          src="/images/logo_plantao_smash.png"
+          src={IMAGES.logo}
           alt="Plantão do Smash"
           fill
           className="object-contain"
           priority
+          unoptimized
         />
       </motion.div>
     </div>

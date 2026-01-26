@@ -3,12 +3,13 @@
 import React from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { IMAGES } from '@/config/images';
 
 const PARTNER_LOGOS = [
-    { src: '/images/ifood-logo.png', alt: 'iFood', width: 80, height: 40 },
-    { src: '/images/rappi-logo.png', alt: 'Rappi', width: 100, height: 40 },
-    { src: '/images/99food-logo.png', alt: '99Food', width: 100, height: 40 },
-    { src: '/images/pagseguro-logo.png', alt: 'PagSeguro', width: 120, height: 40 },
+    { src: IMAGES.parceiros.ifood, alt: 'iFood', width: 80, height: 40 },
+    { src: IMAGES.parceiros.rappi, alt: 'Rappi', width: 100, height: 40 },
+    { src: IMAGES.parceiros.food99, alt: '99Food', width: 100, height: 40 },
+    { src: IMAGES.pagamentos.pagseguro, alt: 'PagSeguro', width: 120, height: 40 },
 ];
 
 export const PartnerLogosScroll = () => {
@@ -31,6 +32,7 @@ export const PartnerLogosScroll = () => {
               width={logo.width}
               height={logo.height}
               className="object-contain max-h-full"
+              unoptimized
             />
           </div>
         ))}
