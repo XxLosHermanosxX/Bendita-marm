@@ -108,10 +108,10 @@ export const ProductModal = ({ product, isOpen, onClose }: ProductModalProps) =>
                   exit={{ opacity: 0 }}
                   className="relative w-full h-full flex flex-col items-center justify-center space-y-[-60px]"
                 >
-                  <motion.div initial={{ y: -50 }} animate={{ y: 0 }} transition={{ delay: 0.1 }} className="relative h-24 w-48"><Image src="/images/temaki_salmao.jpg" alt="Bread Top" fill className="object-contain opacity-50" /></motion.div>
+                  <motion.div initial={{ y: -50 }} animate={{ y: 0 }} transition={{ delay: 0.1 }} className="relative h-24 w-48"><Image src="/images/plantao_residente.png" alt="Bread Top" fill className="object-contain opacity-50" /></motion.div>
                   <motion.div initial={{ y: -30 }} animate={{ y: 0 }} transition={{ delay: 0.2 }} className="relative h-20 w-44"><div className="bg-orange-400/30 w-full h-4 rounded-full" /></motion.div>
-                  <motion.div initial={{ y: -10 }} animate={{ y: 0 }} transition={{ delay: 0.3 }} className="relative h-24 w-48"><Image src="/images/temaki_filadelfia.jpg" alt="Meat" fill className="object-contain" /></motion.div>
-                  <motion.div initial={{ y: 30 }} animate={{ y: 0 }} transition={{ delay: 0.4 }} className="relative h-24 w-48"><Image src="/images/temaki_salmao.jpg" alt="Bread Bottom" fill className="object-contain opacity-50" /></motion.div>
+                  <motion.div initial={{ y: -10 }} animate={{ y: 0 }} transition={{ delay: 0.3 }} className="relative h-24 w-48"><Image src="/images/plantao_duplo_eletrochoque.png" alt="Meat" fill className="object-contain" /></motion.div>
+                  <motion.div initial={{ y: 30 }} animate={{ y: 0 }} transition={{ delay: 0.4 }} className="relative h-24 w-48"><Image src="/images/plantao_residente.png" alt="Bread Bottom" fill className="object-contain opacity-50" /></motion.div>
                   
                   <div className="absolute inset-0 flex flex-col justify-between py-10 pointer-events-none">
                     <div className="flex justify-between w-full px-10">
