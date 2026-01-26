@@ -67,9 +67,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Suspense fallback={<div>Carregando...</div>}>
-            <RootLayoutWrapper>{children}</RootLayoutWrapper>
-          </Suspense>
+          <RootLayoutWrapper>
+            <Suspense fallback={<div className="min-h-screen flex items-center justify-center font-black uppercase text-[#005A8D] animate-pulse">Carregando Plantão...</div>}>
+              {children}
+            </Suspense>
+          </RootLayoutWrapper>
           <ProductModalProvider />
           <AddonsModal />
         </ThemeProvider>
