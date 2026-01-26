@@ -15,6 +15,7 @@ import { MapPin, CheckCircle2, XCircle, Clock, Star, ShieldCheck, MessageCircle,
 import { toast } from "sonner";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { IMAGES } from "@/config/images";
 
 // Elements for Floating Elements background
 const FloatingElements = () => {
@@ -77,7 +78,7 @@ export const HomeContentWrapper = () => {
       title: "Kit Reanimação",
       price: "R$ 85,00",
       desc: "Perfeito para o pós-prova! 2 Duplos Eletro-Choque, 2 Residentes, fritas, anéis e coxinhas.",
-      img: "/images/plantao_kit_reanimacao_box.png",
+      img: IMAGES.produtos.kitReanimacaoBox,
       color: "bg-[#005A8D]/90 backdrop-blur-md"
     },
     {
@@ -85,7 +86,7 @@ export const HomeContentWrapper = () => {
       title: "Combo Plantão",
       price: "A partir de R$ 39,90",
       desc: "Seu Duplo Eletro-Choque com fritas e refri. A energia que você precisa para o plantão.",
-      img: "/images/banner_combo_duplo_promo.png",
+      img: IMAGES.produtos.comboPlantaoDuplo,
       color: "bg-[#FF6B00]"
     },
     {
@@ -93,7 +94,7 @@ export const HomeContentWrapper = () => {
       title: "O Especialista",
       price: "R$ 42,90",
       desc: "Todo mês um burger novo criado por especialistas. Este mês: Bacon-Cardíaco + Fritas.",
-      img: "/images/plantao_bacon_cardiaco.png",
+      img: IMAGES.produtos.baconCardiaco,
       color: "bg-[#D90429]"
     }
   ];
@@ -133,10 +134,11 @@ export const HomeContentWrapper = () => {
             className="flex-1 relative h-[300px] w-full md:h-[500px]"
           >
             <Image 
-              src="/images/plantao_duplo_eletrochoque.png" 
+              src={IMAGES.produtos.duploEletroChoque} 
               alt="Hambúrguer Principal" 
               fill 
               className="object-contain drop-shadow-[0_35px_35px_rgba(0,0,0,0.5)]"
+              unoptimized
             />
           </motion.div>
         </div>
