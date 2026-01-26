@@ -36,7 +36,7 @@ export default function ProductsPage() {
     let filtered = products;
 
     // Filtrar por Categoria (usando o parâmetro de URL)
-    if (activeCategory && activeCategory !== "Todos") {
+    if (activeCategory && activeCategory !== "Todos" && categories.includes(activeCategory as any)) {
       filtered = filtered.filter(p => p.category === activeCategory);
     }
 
