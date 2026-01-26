@@ -155,10 +155,11 @@ export const HomeContentWrapper = () => {
           <div className="sticky top-32 h-[400px]">
             <motion.div style={{ opacity: burgerOpacity }} className="relative h-full w-full">
               <Image 
-                src="/images/plantao_duplo_eletrochoque.png" 
+                src={IMAGES.produtos.duploEletroChoque} 
                 alt="Detalhes do Burger" 
                 fill 
                 className="object-contain"
+                unoptimized
               />
             </motion.div>
           </div>
@@ -201,11 +202,11 @@ export const HomeContentWrapper = () => {
                 </div>
                 
                 <div className="absolute -right-10 top-1/2 -translate-y-1/2 h-80 w-80 transition-transform group-hover:scale-110 group-hover:rotate-12 duration-500 opacity-20 pointer-events-none">
-                  <Image src={promo.img} alt={promo.title} fill className="object-contain grayscale" />
+                  <Image src={promo.img} alt={promo.title} fill className="object-contain grayscale" unoptimized />
                 </div>
 
                 <div className="relative h-64 w-full mt-auto transition-transform group-hover:scale-110 duration-500 z-10">
-                  <Image src={promo.img} alt={promo.title} fill className="object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]" />
+                  <Image src={promo.img} alt={promo.title} fill className="object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]" unoptimized />
                 </div>
                 
                 <Button className="w-full bg-[#FF6B00] hover:bg-[#FF6B00]/90 text-white font-black h-16 rounded-2xl relative z-10 text-sm uppercase tracking-widest shadow-xl">
