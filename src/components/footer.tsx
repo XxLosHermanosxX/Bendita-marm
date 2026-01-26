@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ShieldCheck, MapPin, Instagram, Facebook, Twitter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { IMAGES } from "@/config/images";
 
 export const Footer = () => {
   return (
@@ -15,10 +16,11 @@ export const Footer = () => {
           <div className="col-span-1 md:col-span-1 space-y-6">
             <div className="relative h-20 w-44">
               <Image 
-                src="/images/logo_plantao_smash.png" 
+                src={IMAGES.logoFooter} 
                 alt="Plantão do Smash" 
                 fill 
-                className="object-contain brightness-0 invert" 
+                className="object-contain brightness-0 invert"
+                unoptimized
               />
             </div>
             <p className="text-white/60 text-sm leading-relaxed font-medium">
@@ -55,15 +57,15 @@ export const Footer = () => {
             <h4 className="text-lg font-black uppercase tracking-widest">Pagamentos</h4>
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-white/10 p-2 rounded-xl border border-white/5 flex items-center justify-center">
-                <Image src="/images/pix-logo.png" alt="Pix" width={50} height={20} className="object-contain brightness-0 invert opacity-60" />
+                <Image src={IMAGES.pagamentos.pix} alt="Pix" width={50} height={20} className="object-contain brightness-0 invert opacity-60" unoptimized />
               </div>
               <div className="bg-white/10 p-2 rounded-xl border border-white/5 flex items-center justify-center">
-                <Image src="/images/pagseguro-logo-new.png" alt="PagSeguro" width={80} height={20} className="object-contain brightness-0 invert opacity-60" />
+                <Image src={IMAGES.pagamentos.pagseguro} alt="PagSeguro" width={80} height={20} className="object-contain brightness-0 invert opacity-60" unoptimized />
               </div>
               <div className="bg-white/10 p-2 rounded-xl border border-white/5 flex items-center justify-center col-span-2">
                 <div className="flex gap-2">
-                  <Image src="/images/visa-logo.png" alt="Visa" width={30} height={15} className="object-contain brightness-0 invert opacity-60" />
-                  <Image src="/images/mastercard-logo.png" alt="Mastercard" width={30} height={15} className="object-contain brightness-0 invert opacity-60" />
+                  <Image src={IMAGES.pagamentos.visa} alt="Visa" width={30} height={15} className="object-contain brightness-0 invert opacity-60" unoptimized />
+                  <Image src={IMAGES.pagamentos.mastercard} alt="Mastercard" width={30} height={15} className="object-contain brightness-0 invert opacity-60" unoptimized />
                 </div>
               </div>
             </div>

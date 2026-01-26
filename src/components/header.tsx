@@ -7,6 +7,7 @@ import { useCartStore } from "@/store/use-cart-store";
 import { useSidebarToggle } from "@/hooks/use-sidebar-toggle";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { IMAGES } from "@/config/images";
 
 export const Header = () => {
   const { openSidebar } = useSidebarToggle();
@@ -23,11 +24,12 @@ export const Header = () => {
           <Link href="/" className="flex items-center gap-2">
             <div className="relative h-14 w-32 md:h-16 md:w-40 transition-transform hover:scale-105">
               <Image
-                src="/images/logo_plantao_smash.png"
+                src={IMAGES.logo}
                 alt="Plantão do Smash Logo"
                 fill
                 className="object-contain"
                 priority
+                unoptimized
               />
             </div>
           </Link>
