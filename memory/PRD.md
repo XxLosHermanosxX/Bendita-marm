@@ -1,68 +1,86 @@
-# PRD - Bendita Marm (Plantão do Smash) Delivery Site
+# PRD - Plantão do Smash - Delivery Site
 
 ## Data de Criação
 27 de Janeiro de 2026
 
 ## Original Problem Statement
-Trazer site de delivery "Bendita Marm" do repositório GitHub (https://github.com/XxLosHermanosxX/Bendita-marm) para a IDE/preview e corrigir bugs de UX/design. O site travava o navegador ao entrar (ficava piscando).
+Reconstruir o site de delivery "Plantão do Smash" como Template Base de Alta Performance focado em:
+- Mobile-first (80% mobile)
+- Ciudad del Este, Paraguay (estudantes de medicina)
+- Geolocalização automática via navegador
+- Checkout simplificado em 3 etapas
+- Design moderno com glassmorphism e animações
 
 ## Arquitetura
-- **Frontend**: Next.js 15.3.6 com React 19
-- **Estilização**: TailwindCSS + shadcn/ui components
-- **State Management**: Zustand (cart, modals, location)
-- **Animações**: Framer Motion
-- **Formulários**: React Hook Form + Zod
-- **Integração**: Supabase (opcional para transações)
+- **Frontend**: Next.js 14 (App Router) + TypeScript
+- **Estilização**: TailwindCSS + Mobile-first approach
+- **State Management**: Zustand (persist)
+- **Animações**: CSS custom + Framer Motion
+- **APIs**: Geolocation API (browser) + Nominatim (reverse geocoding)
 
 ## User Personas
-1. **Estudantes de Medicina**: Público principal em Ciudad del Este
-2. **Usuários de Delivery**: Pessoas que querem pedir comida online
+1. **Estudantes de Medicina**: UPAP e outras universidades em Ciudad del Este
+2. **Residentes/Médicos**: Hospital Regional, Sanatorios
+3. **Público Geral**: Ciudad del Este e região
 
 ## Core Requirements (Estáticos)
-- [x] Site carrega sem travar o navegador
-- [x] Splash screen funcional
-- [x] Navegação entre páginas (Home, Produtos, Checkout)
-- [x] Cards de produtos com visualização
-- [x] Carrinho de compras funcional
-- [x] Modal de promoções
-- [x] Integração WhatsApp para suporte
-- [x] Checkout com PIX/Cartão de crédito
+- [x] Site 100% mobile-first
+- [x] Geolocalização automática pelo navegador
+- [x] Verificação de área de entrega (bounds de Ciudad del Este)
+- [x] Cardápio com categorias e filtros
+- [x] Carrinho com barra de progresso para frete grátis
+- [x] Checkout simplificado (3 etapas: Endereço → Dados → Pagamento)
+- [x] Preços em Guaraníes (PYG)
+- [x] Textos em espanhol
 
-## O que foi Implementado
+## O que foi Implementado (27/01/2026)
 
-### Correções de Bugs (27/01/2026)
-1. **Bug crítico resolvido**: Loop infinito no splash-screen causava travamento do navegador
-   - Causa: `onFinish` callback no useEffect criava re-renders infinitos
-   - Solução: Usado `useRef` para armazenar a função e `useCallback` no layout.tsx
+### Fase 1: Migração e Bug Fix
+- Corrigido loop infinito no splash-screen (useEffect)
+- Corrigido botão invisível no hero
 
-2. **Bug de UX corrigido**: Botão "Cardápio" tinha texto invisível
-   - Causa: Cor branca sobre fundo transparente sem contraste
-   - Solução: Adicionado `bg-white/10`, `border-2` e `!text-white` para garantir visibilidade
+### Fase 2: Reconstrução Completa
+- **Header**: Fixo com glassmorphism, botão de localização, carrinho com contador
+- **Hero Section**: Imagem floating com animação, stats, CTAs
+- **Promoções**: 3 cards destacados com scroll horizontal no mobile
+- **Cardápio**: Grid 2 colunas mobile, categorias com scroll horizontal
+- **Cards de Produto**: Imagens arredondadas, botão + flutuante, animação fly-to-cart
+- **Modal de Produto**: Full-screen mobile, ingredientes em pills, contador de quantidade
+- **Carrinho (Drawer)**: Full-screen mobile, barra de frete grátis, totais em Guaraníes
+- **Checkout**: 3 etapas simplificadas, mobile-optimized
+- **Testimonios**: Depoimentos de médicos e estudantes de Ciudad del Este
+- **Footer**: FAQ, contatos, redes sociais
 
-### Estrutura do Projeto
-- Migrado repositório para estrutura compatível com Emergent IDE
-- Configurado build Next.js na porta 3000
-- Todas as páginas funcionando: Home, Products, Checkout, Pix Payment, Order Confirmation
+### Features Técnicas
+- Geolocalização via navigator.geolocation
+- Reverse geocoding via Nominatim API
+- Validação de área de entrega por bounds geográficos
+- Formatação de moeda PYG (Guaraníes)
+- Safe area support para iPhone notch
+- Scroll horizontal snap para mobile
 
 ## Prioritized Backlog
 
 ### P0 (Concluído)
-- [x] Corrigir travamento do navegador
-- [x] Corrigir visibilidade do botão Cardápio
+- [x] Site mobile-first funcional
+- [x] Geolocalização automática
+- [x] Botão de adicionar ao carrinho funcionando
+- [x] Checkout simplificado
 
 ### P1 (Pendente)
-- [ ] Adicionar logo real (atualmente usando placeholder)
-- [ ] Configurar imagens reais dos produtos
-- [ ] Integrar backend real para processamento de pedidos
+- [ ] Integração com WhatsApp Business API para confirmação de pedidos
+- [ ] Backend real com MongoDB para persistência
+- [ ] Gateway de pagamento (PIX/Transferencia)
 
 ### P2 (Futuro)
-- [ ] Sistema de autenticação de usuários
+- [ ] Sistema de autenticação
 - [ ] Histórico de pedidos
-- [ ] Sistema de notificações push
-- [ ] Integração com gateway de pagamento real (Stripe/PagSeguro)
+- [ ] Push notifications
+- [ ] Programa de fidelidade
+- [ ] Dark mode
 
 ## Next Tasks
-1. Personalizar logo e branding
-2. Configurar imagens reais dos produtos
-3. Testar fluxo completo de checkout com itens no carrinho
-4. Implementar backend para persistência de pedidos
+1. Integrar WhatsApp Business para recebimento de pedidos
+2. Implementar backend com MongoDB
+3. Adicionar mais produtos ao cardápio
+4. Implementar sistema de cupons de desconto
