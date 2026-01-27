@@ -7,7 +7,7 @@ export const products: Product[] = [
     id: "duplo-eletrochoque",
     name: "Duplo Eletro-Choque",
     description: "2 smash de 80g, cheddar, bacon crocante, cebola caramelizada e molho especial.",
-    price: 34.90, // BRL
+    price: 34.90,
     category: "Smash Burgers",
     imageUrl: ASSETS.products.duploEletroChoque,
     ingredients: ["Pão brioche", "2x Smash 80g", "Cheddar", "Bacon", "Cebola caramelizada", "Molho especial"]
@@ -32,7 +32,7 @@ export const products: Product[] = [
   },
   {
     id: "salada-plantao",
-    name: "Salada do Plantão",
+    name: "Salada Fit",
     description: "Smash 100g, mix de folhas, tomate seco, queijo cottage e molho verde.",
     price: 28.90,
     category: "Smash Burgers",
@@ -53,7 +53,7 @@ export const products: Product[] = [
   {
     id: "kit-reanimacao",
     name: "Kit Reanimação",
-    description: "2 Duplos + 2 Residentes + Fritas Grande + Onion Rings + 4 Bebidas. Ideal para grupo de estudo!",
+    description: "2 Duplos + 2 Residentes + Fritas Grande + Onion Rings + 4 Bebidas. Perfeito para reunir os amigos!",
     price: 129.90,
     category: "Boxes",
     imageUrl: ASSETS.products.kitReanimacao,
@@ -63,7 +63,7 @@ export const products: Product[] = [
   // Combos
   {
     id: "combo-plantao",
-    name: "Combo Plantão",
+    name: "Combo Smash",
     description: "Qualquer Smash + Fritas Médias + Bebida 350ml.",
     price: 39.90,
     category: "Combos",
@@ -82,7 +82,7 @@ export const products: Product[] = [
   },
   {
     id: "aneis-adrenalina",
-    name: "Anéis de Adrenalina",
+    name: "Anéis de Cebola",
     description: "Onion rings empanados e ultra crocantes.",
     price: 18.90,
     category: "Extras",
