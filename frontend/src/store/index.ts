@@ -43,8 +43,8 @@ interface StoreState {
   getFreeDeliveryProgress: () => number;
 }
 
-const FREE_DELIVERY_THRESHOLD = 100; // PYG threshold equivalent
-const DELIVERY_FEE = 15000; // 15.000 PYG
+const FREE_DELIVERY_THRESHOLD = 80; // R$ 80
+const DELIVERY_FEE = 8.90; // R$ 8,90
 
 // Ciudad del Este coordinates bounds
 const CIUDAD_DEL_ESTE_BOUNDS = {
@@ -140,7 +140,7 @@ export const useStore = create<StoreState>()(
           
           if (!inDeliveryArea) {
             set({ 
-              locationError: "Lo sentimos, no hacemos entregas en tu zona todavía" 
+              locationError: "Infelizmente não atendemos sua região ainda" 
             });
           }
           
@@ -150,17 +150,17 @@ export const useStore = create<StoreState>()(
           if (geoError.code === 1) {
             set({ 
               locationStatus: "denied", 
-              locationError: "Permiso de ubicación denegado" 
+              locationError: "Permissão de localização negada" 
             });
           } else if (geoError.code === 2) {
             set({ 
               locationStatus: "error", 
-              locationError: "Ubicación no disponible" 
+              locationError: "Localização não disponível" 
             });
           } else {
             set({ 
               locationStatus: "error", 
-              locationError: "Error al obtener ubicación" 
+              locationError: "Erro ao obter localização" 
             });
           }
         }
