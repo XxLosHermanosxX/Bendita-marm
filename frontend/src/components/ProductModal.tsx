@@ -48,11 +48,14 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
       />
       
       {/* Modal - Full screen mobile, centered desktop */}
-      <div className="fixed inset-0 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-md md:w-[calc(100%-2rem)] md:max-h-[90vh] bg-white z-50 md:rounded-3xl shadow-2xl animate-in slide-in-from-bottom md:zoom-in-95 overflow-hidden flex flex-col">
+      <div 
+        className="fixed inset-0 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-md md:w-[calc(100%-2rem)] md:max-h-[90vh] bg-white z-[60] md:rounded-3xl shadow-2xl animate-in slide-in-from-bottom md:zoom-in-95 overflow-hidden flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Close Button */}
         <button
-          onClick={onClose}
-          className="absolute top-4 right-4 z-10 h-10 w-10 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center text-white active:scale-90 transition-transform safe-area-top"
+          onClick={(e) => { e.stopPropagation(); onClose(); }}
+          className="absolute top-4 right-4 z-[70] h-10 w-10 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center text-white active:scale-90 transition-transform safe-area-top"
         >
           <X className="h-5 w-5" />
         </button>
@@ -109,16 +112,16 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
         <div className="border-t p-5 bg-white shrink-0 safe-area-bottom">
           <div className="flex items-center gap-4">
             {/* Quantity */}
-            <div className="flex items-center gap-2 bg-gray-100 rounded-xl p-1">
+            <div className="flex items-center gap-2 bg-gray-100 rounded-xl p-1 relative z-[70]">
               <button
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                onClick={(e) => { e.stopPropagation(); setQuantity(Math.max(1, quantity - 1)); }}
                 className="h-10 w-10 rounded-lg bg-white shadow-sm flex items-center justify-center active:scale-90 transition-transform"
               >
                 <Minus className="h-4 w-4" />
               </button>
               <span className="font-bold text-lg w-8 text-center">{quantity}</span>
               <button
-                onClick={() => setQuantity(quantity + 1)}
+                onClick={(e) => { e.stopPropagation(); setQuantity(quantity + 1); }}
                 className="h-10 w-10 rounded-lg bg-white shadow-sm flex items-center justify-center active:scale-90 transition-transform"
               >
                 <Plus className="h-4 w-4" />
