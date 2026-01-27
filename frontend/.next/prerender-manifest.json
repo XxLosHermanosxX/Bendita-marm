@@ -1,6 +1,30 @@
 {
   "version": 4,
   "routes": {
+    "/order-confirmation": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/order-confirmation",
+      "dataRoute": "/order-confirmation.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/checkout": {
       "experimentalBypassFor": [
         {
@@ -96,37 +120,13 @@
         "x-next-revalidated-tags",
         "x-next-revalidate-tag-token"
       ]
-    },
-    "/order-confirmation": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "Next-Action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/order-confirmation",
-      "dataRoute": "/order-confirmation.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
     }
   },
   "dynamicRoutes": {},
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "e40dfdf353f81e7e92f0dfe89023f3be",
-    "previewModeSigningKey": "7cffb270ca08c55dfeebc8b87801cc1685077affff0542d11561ede364fe2dff",
-    "previewModeEncryptionKey": "4eb06b5db643fcde650c1b8426d25c5ba6e55c515029620f524c93e8bbf9ecc3"
+    "previewModeId": "5474f138f325e4dc8c37a6d139f48fd3",
+    "previewModeSigningKey": "6cd4d0e5b2df9937a95d911f3360f61b8b64440eaa3ec9e86673419aca50ed7f",
+    "previewModeEncryptionKey": "389fbdfe903bfb154d876e563646580c143380e6b095015e65429e1845f0e441"
   }
 }
