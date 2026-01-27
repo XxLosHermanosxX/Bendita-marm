@@ -6,85 +6,85 @@ export const products: Product[] = [
   {
     id: "duplo-eletrochoque",
     name: "Duplo Eletro-Choque",
-    description: "2 smash de 80g, cheddar, bacon crocante, cebolla caramelizada y salsa especial.",
-    price: 45000, // PYG
+    description: "2 smash de 80g, cheddar, bacon crocante, cebola caramelizada e molho especial.",
+    price: 34.90, // BRL
     category: "Smash Burgers",
     imageUrl: ASSETS.products.duploEletroChoque,
-    ingredients: ["Pan brioche", "2x Smash 80g", "Cheddar", "Bacon", "Cebolla caramelizada", "Salsa especial"]
+    ingredients: ["Pão brioche", "2x Smash 80g", "Cheddar", "Bacon", "Cebola caramelizada", "Molho especial"]
   },
   {
     id: "residente",
-    name: "El Residente",
-    description: "Smash clásico de 100g, queso, lechuga, tomate y mayonesa de la casa.",
-    price: 32000,
+    name: "O Residente",
+    description: "Smash clássico de 100g, queijo, alface, tomate e maionese da casa.",
+    price: 24.90,
     category: "Smash Burgers",
     imageUrl: ASSETS.products.residente,
-    ingredients: ["Pan brioche", "Smash 100g", "Queso", "Lechuga", "Tomate", "Mayonesa"]
+    ingredients: ["Pão brioche", "Smash 100g", "Queijo", "Alface", "Tomate", "Maionese"]
   },
   {
     id: "bacon-cardiaco",
     name: "Bacon-Cardíaco",
-    description: "Smash 120g, mucho bacon, cheddar derretido, cebolla crispy y BBQ.",
-    price: 42000,
+    description: "Smash 120g, muito bacon, cheddar derretido, cebola crispy e BBQ.",
+    price: 32.90,
     category: "Smash Burgers",
     imageUrl: ASSETS.products.baconCardiaco,
-    ingredients: ["Pan brioche", "Smash 120g", "Bacon extra", "Cheddar", "Cebolla crispy", "BBQ"]
+    ingredients: ["Pão brioche", "Smash 120g", "Bacon extra", "Cheddar", "Cebola crispy", "BBQ"]
   },
   {
     id: "salada-plantao",
-    name: "Ensalada del Turno",
-    description: "Smash 100g, mix de hojas, tomate seco, queso cottage y salsa verde.",
-    price: 38000,
+    name: "Salada do Plantão",
+    description: "Smash 100g, mix de folhas, tomate seco, queijo cottage e molho verde.",
+    price: 28.90,
     category: "Smash Burgers",
     imageUrl: ASSETS.products.saladaPlantao,
-    ingredients: ["Pan integral", "Smash 100g", "Mix de hojas", "Tomate seco", "Queso cottage", "Salsa verde"]
+    ingredients: ["Pão integral", "Smash 100g", "Mix de folhas", "Tomate seco", "Queijo cottage", "Molho verde"]
   },
   {
     id: "frango-tecnico",
-    name: "Pollo Técnico",
-    description: "Smash de pollo grillado, cream cheese, rúcula y crispy de ajo.",
-    price: 35000,
+    name: "Frango Técnico",
+    description: "Smash de frango grelhado, cream cheese, rúcula e crispy de alho.",
+    price: 26.90,
     category: "Smash Burgers",
     imageUrl: ASSETS.products.frangoTecnico,
-    ingredients: ["Pan brioche", "Pollo grillado", "Cream cheese", "Rúcula", "Crispy de ajo"]
+    ingredients: ["Pão brioche", "Frango grelhado", "Cream cheese", "Rúcula", "Crispy de alho"]
   },
   
   // Boxes
   {
     id: "kit-reanimacao",
-    name: "Kit Reanimación",
-    description: "2 Duplos + 2 Residentes + Papas Grande + Onion Rings + 4 Bebidas. Ideal para grupo de estudio!",
-    price: 180000,
+    name: "Kit Reanimação",
+    description: "2 Duplos + 2 Residentes + Fritas Grande + Onion Rings + 4 Bebidas. Ideal para grupo de estudo!",
+    price: 129.90,
     category: "Boxes",
     imageUrl: ASSETS.products.kitReanimacao,
-    ingredients: ["2x Duplo Eletro-Choque", "2x Residente", "Papas Grande", "Onion Rings", "4x Bebida"]
+    ingredients: ["2x Duplo Eletro-Choque", "2x Residente", "Fritas Grande", "Onion Rings", "4x Bebida"]
   },
   
   // Combos
   {
     id: "combo-plantao",
-    name: "Combo Turno",
-    description: "Cualquier Smash + Papas Medianas + Bebida 350ml.",
-    price: 52000,
+    name: "Combo Plantão",
+    description: "Qualquer Smash + Fritas Médias + Bebida 350ml.",
+    price: 39.90,
     category: "Combos",
     imageUrl: ASSETS.products.duploEletroChoque,
-    ingredients: ["1x Smash a elección", "Papas medianas", "Bebida 350ml"]
+    ingredients: ["1x Smash à escolha", "Fritas médias", "Bebida 350ml"]
   },
   
-  // Acompañamientos
+  // Acompanhamentos
   {
     id: "dose-fritas",
-    name: "Papas Fritas",
-    description: "Papas fritas crocantes con sal y condimento especial.",
-    price: 18000,
+    name: "Dose de Fritas",
+    description: "Batatas fritas crocantes com sal e tempero especial.",
+    price: 14.90,
     category: "Extras",
     imageUrl: ASSETS.products.doseFritas,
   },
   {
     id: "aneis-adrenalina",
-    name: "Aros de Adrenalina",
-    description: "Onion rings empanados y ultra crocantes.",
-    price: 22000,
+    name: "Anéis de Adrenalina",
+    description: "Onion rings empanados e ultra crocantes.",
+    price: 18.90,
     category: "Extras",
     imageUrl: ASSETS.products.aneisAdrenalina,
   },
@@ -93,16 +93,16 @@ export const products: Product[] = [
   {
     id: "coca-cola",
     name: "Coca-Cola 350ml",
-    description: "Gaseosa bien helada.",
-    price: 8000,
+    description: "Refrigerante gelado.",
+    price: 7.90,
     category: "Bebidas",
     imageUrl: "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=200&q=80",
   },
   {
     id: "agua",
-    name: "Agua Mineral 500ml",
-    description: "Agua mineral sin gas.",
-    price: 6000,
+    name: "Água Mineral 500ml",
+    description: "Água mineral sem gás.",
+    price: 5.90,
     category: "Bebidas",
     imageUrl: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=200&q=80",
   },
