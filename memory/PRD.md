@@ -4,72 +4,71 @@
 27 de Janeiro de 2026
 
 ## Original Problem Statement
-Reconstruir o site de delivery "Plantão do Smash" como Template Base de Alta Performance focado em:
+Reconstruir o site de delivery "Plantão do Smash" com:
 - Mobile-first (80% mobile)
-- Ciudad del Este, Paraguay (estudantes de medicina)
+- Ciudad del Este, Paraguay (estudantes de medicina brasileiros)
 - Geolocalização automática via navegador
+- Sistema bilíngue (PT/ES) com padrão português
+- Preços duais (BRL maior em cima, PYG menor embaixo)
 - Checkout simplificado em 3 etapas
-- Design moderno com glassmorphism e animações
 
 ## Arquitetura
 - **Frontend**: Next.js 14 (App Router) + TypeScript
 - **Estilização**: TailwindCSS + Mobile-first approach
 - **State Management**: Zustand (persist)
-- **Animações**: CSS custom + Framer Motion
+- **i18n**: Sistema customizado com traduções PT/ES
 - **APIs**: Geolocation API (browser) + Nominatim (reverse geocoding)
 
 ## User Personas
-1. **Estudantes de Medicina**: UPAP e outras universidades em Ciudad del Este
-2. **Residentes/Médicos**: Hospital Regional, Sanatorios
-3. **Público Geral**: Ciudad del Este e região
+1. **Estudantes Brasileiros de Medicina**: Maioria do público em Ciudad del Este
+2. **Estudantes Paraguaios**: Público secundário
+3. **Residentes/Médicos**: Hospital Regional, Sanatorios
 
 ## Core Requirements (Estáticos)
 - [x] Site 100% mobile-first
 - [x] Geolocalização automática pelo navegador
-- [x] Verificação de área de entrega (bounds de Ciudad del Este)
+- [x] Sistema de idiomas PT/ES (padrão português)
+- [x] Preços duais: BRL (grande) + PYG (pequeno)
 - [x] Cardápio com categorias e filtros
 - [x] Carrinho com barra de progresso para frete grátis
-- [x] Checkout simplificado (3 etapas: Endereço → Dados → Pagamento)
-- [x] Preços em Guaraníes (PYG)
-- [x] Textos em espanhol
+- [x] Checkout simplificado (3 etapas)
 
 ## O que foi Implementado (27/01/2026)
 
-### Fase 1: Migração e Bug Fix
-- Corrigido loop infinito no splash-screen (useEffect)
-- Corrigido botão invisível no hero
+### Sistema de Idiomas
+- Toggle PT/ES no header
+- Padrão: Português brasileiro
+- Todas as strings traduzidas para ambos idiomas
+- Persistência via localStorage
 
-### Fase 2: Reconstrução Completa
-- **Header**: Fixo com glassmorphism, botão de localização, carrinho com contador
-- **Hero Section**: Imagem floating com animação, stats, CTAs
-- **Promoções**: 3 cards destacados com scroll horizontal no mobile
-- **Cardápio**: Grid 2 colunas mobile, categorias com scroll horizontal
-- **Cards de Produto**: Imagens arredondadas, botão + flutuante, animação fly-to-cart
-- **Modal de Produto**: Full-screen mobile, ingredientes em pills, contador de quantidade
-- **Carrinho (Drawer)**: Full-screen mobile, barra de frete grátis, totais em Guaraníes
-- **Checkout**: 3 etapas simplificadas, mobile-optimized
-- **Testimonios**: Depoimentos de médicos e estudantes de Ciudad del Este
-- **Footer**: FAQ, contatos, redes sociais
+### Sistema de Preços Duais
+- Preço em Real (BRL) em fonte maior e cor laranja (#FF8C00)
+- Preço em Guarani (PYG) em fonte menor e cor cinza
+- Taxa de conversão: 1 BRL = ~1400 PYG
+- Componente DualPrice reutilizável
 
-### Features Técnicas
-- Geolocalização via navigator.geolocation
-- Reverse geocoding via Nominatim API
-- Validação de área de entrega por bounds geográficos
-- Formatação de moeda PYG (Guaraníes)
-- Safe area support para iPhone notch
-- Scroll horizontal snap para mobile
+### Componentes
+- **Header**: Logo, localização, toggle idioma, carrinho
+- **Hero**: Animação floating, stats, CTAs traduzidos
+- **Promoções**: 3 cards com preços duais
+- **Cardápio**: Grid 2 colunas mobile, categorias scroll
+- **Cards de Produto**: Preços BRL/PYG, botão +
+- **Modal de Produto**: Ingredientes, contador, preços duais
+- **Carrinho**: Totais em ambas moedas, frete grátis
+- **Testimonios**: Depoimentos bilíngues
+- **Footer**: FAQ traduzido
 
 ## Prioritized Backlog
 
 ### P0 (Concluído)
 - [x] Site mobile-first funcional
+- [x] Sistema de idiomas PT/ES
+- [x] Preços duais BRL/PYG
 - [x] Geolocalização automática
-- [x] Botão de adicionar ao carrinho funcionando
-- [x] Checkout simplificado
 
 ### P1 (Pendente)
-- [ ] Integração com WhatsApp Business API para confirmação de pedidos
-- [ ] Backend real com MongoDB para persistência
+- [ ] Backend com MongoDB
+- [ ] Integração WhatsApp Business API
 - [ ] Gateway de pagamento (PIX/Transferencia)
 
 ### P2 (Futuro)
@@ -80,7 +79,7 @@ Reconstruir o site de delivery "Plantão do Smash" como Template Base de Alta Pe
 - [ ] Dark mode
 
 ## Next Tasks
-1. Integrar WhatsApp Business para recebimento de pedidos
-2. Implementar backend com MongoDB
+1. Implementar backend real com MongoDB
+2. Integrar WhatsApp Business para pedidos
 3. Adicionar mais produtos ao cardápio
-4. Implementar sistema de cupons de desconto
+4. Sistema de cupons de desconto
