@@ -236,7 +236,7 @@ export function useTranslation() {
   const { language } = useLanguage();
   
   const t = (key: TranslationKey, params?: Record<string, string>): string => {
-    let text = translations[language][key] || translations.pt[key] || key;
+    let text: string = translations[language][key] || translations.pt[key] || key;
     
     if (params) {
       Object.entries(params).forEach(([k, v]) => {
