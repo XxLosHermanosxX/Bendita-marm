@@ -2,35 +2,26 @@
 
 import Image from "next/image";
 import { ASSETS } from "@/data/assets";
+import { useTranslation } from "@/lib/i18n";
 import { MapPin, Clock, Phone, Instagram, MessageCircle } from "lucide-react";
 
-const faqs = [
-  {
-    q: "¿Hacen delivery a hospitales?",
-    a: "¡Sí! Hacemos entregas en todos los hospitales y clínicas de Ciudad del Este.",
-  },
-  {
-    q: "¿Cuánto demora el delivery?",
-    a: "Entre 25-40 minutos, dependiendo de tu ubicación y el horario del pedido.",
-  },
-  {
-    q: "¿Aceptan tarjeta en la entrega?",
-    a: "Aceptamos efectivo, transferencia y tarjeta de débito/crédito en la entrega.",
-  },
-  {
-    q: "¿El Kit Reanimación para cuántos rinde?",
-    a: "El Kit es ideal para 4-6 personas, ¡perfecto para equipos de guardia!",
-  },
-];
-
 export function Footer() {
+  const { t } = useTranslation();
+  
+  const faqs = [
+    { q: t("faq1q"), a: t("faq1a") },
+    { q: t("faq2q"), a: t("faq2a") },
+    { q: t("faq3q"), a: t("faq3a") },
+    { q: t("faq4q"), a: t("faq4a") },
+  ];
+
   return (
     <footer className="bg-[#002244] text-white">
       {/* FAQ Section */}
       <div className="border-b border-white/10">
         <div className="container mx-auto px-4 py-8">
           <h3 className="text-xl font-black text-center mb-6">
-            Preguntas <span className="text-[#FF8C00]">Frecuentes</span>
+            {t("faq")} <span className="text-[#FF8C00]">{t("faqHighlight")}</span>
           </h3>
           
           <div className="grid md:grid-cols-2 gap-3 max-w-4xl mx-auto">
@@ -61,8 +52,7 @@ export function Footer() {
               />
             </div>
             <p className="text-white/60 text-xs max-w-sm mx-auto md:mx-0">
-              El mejor smash burger de Ciudad del Este. Delivery rápido para hospitales, 
-              universidades y tu casa. ¡El combustible para tu guardia!
+              {t("footerDesc")}
             </p>
             
             {/* Social */}
@@ -88,7 +78,7 @@ export function Footer() {
 
           {/* Contact */}
           <div className="text-center md:text-left">
-            <h4 className="font-bold mb-3">Contacto</h4>
+            <h4 className="font-bold mb-3">{t("contact")}</h4>
             <div className="space-y-2 text-white/60 text-xs">
               <div className="flex items-center gap-2 justify-center md:justify-start">
                 <Phone className="h-4 w-4 text-[#FF8C00]" />
@@ -96,7 +86,7 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-2 justify-center md:justify-start">
                 <Clock className="h-4 w-4 text-[#FF8C00]" />
-                <span>18h - 23h (Lun-Dom)</span>
+                <span>18h - 23h (Seg-Dom)</span>
               </div>
               <div className="flex items-start gap-2 justify-center md:justify-start">
                 <MapPin className="h-4 w-4 text-[#FF8C00] shrink-0 mt-0.5" />
@@ -107,16 +97,16 @@ export function Footer() {
 
           {/* Links */}
           <div className="text-center md:text-left">
-            <h4 className="font-bold mb-3">Links</h4>
+            <h4 className="font-bold mb-3">{t("links")}</h4>
             <div className="space-y-1 text-white/60 text-xs">
               <a href="#" className="block hover:text-[#FF8C00] transition-colors">
-                Política de Privacidad
+                {t("privacy")}
               </a>
               <a href="#" className="block hover:text-[#FF8C00] transition-colors">
-                Términos de Uso
+                {t("terms")}
               </a>
               <a href="#" className="block hover:text-[#FF8C00] transition-colors">
-                Trabajá con Nosotros
+                {t("careers")}
               </a>
             </div>
           </div>
@@ -124,7 +114,7 @@ export function Footer() {
 
         {/* Copyright */}
         <div className="border-t border-white/10 mt-6 pt-6 text-center text-white/40 text-xs">
-          <p>© {new Date().getFullYear()} Plantão do Smash. Todos los derechos reservados.</p>
+          <p>© {new Date().getFullYear()} Plantão do Smash. {t("allRights")}</p>
         </div>
       </div>
     </footer>
