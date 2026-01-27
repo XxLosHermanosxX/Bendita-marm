@@ -22,16 +22,9 @@ export function ProductCard({ product, onOpenModal }: ProductCardProps) {
     // Se não tem localização ainda, pedir permissão
     if (locationStatus === "idle") {
       requestLocation();
-      return;
     }
     
-    // Se não está na área de entrega, mostrar aviso
-    if (!isDeliveryAvailable) {
-      alert("Por favor, habilita tu ubicación para verificar si hacemos entregas en tu zona.");
-      return;
-    }
-    
-    // Adicionar ao carrinho com feedback visual
+    // Adicionar ao carrinho com feedback visual (mesmo sem localização para UX)
     setIsAdding(true);
     addItem(product, 1);
     
@@ -59,7 +52,7 @@ export function ProductCard({ product, onOpenModal }: ProductCardProps) {
     }
     
     setTimeout(() => setIsAdding(false), 800);
-  }, [addItem, isDeliveryAvailable, locationStatus, product, requestLocation]);
+  }, [addItem, locationStatus, product, requestLocation]);
 
   return (
     <div
