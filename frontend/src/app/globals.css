@@ -12,54 +12,63 @@
 
 * {
   scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+/* Safe area for mobile */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
 }
 
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
-::-webkit-scrollbar-thumb {
-  background: #003366;
-  border-radius: 4px;
+/* Custom scrollbar - hide on mobile */
+@media (min-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #003366;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #FF8C00;
+  }
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #FF8C00;
+/* Hide scrollbar for horizontal scroll */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Animation utilities */
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(2deg); }
 }
 
 .animate-float {
   animation: float 4s ease-in-out infinite;
-}
-
-/* Glassmorphism utility */
-.glass {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-}
-
-.glass-dark {
-  background: rgba(0, 51, 102, 0.9);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Line clamp */
@@ -77,7 +86,36 @@ body {
   -webkit-line-clamp: 2;
 }
 
+.line-clamp-4 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+
 /* Scroll margin for anchors */
-.scroll-mt-20 {
-  scroll-margin-top: 5rem;
+.scroll-mt-16 {
+  scroll-margin-top: 4rem;
+}
+
+/* Mobile viewport height fix */
+.min-h-\[100svh\] {
+  min-height: 100svh;
+  min-height: -webkit-fill-available;
+}
+
+/* Active state for touch */
+button:active, a:active {
+  transform: scale(0.98);
+}
+
+/* Input zoom fix on iOS */
+input, select, textarea {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
 }
