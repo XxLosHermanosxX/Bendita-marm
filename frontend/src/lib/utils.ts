@@ -5,13 +5,30 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatCurrency(value: number): string {
+// Taxa de conversão aproximada (1 BRL = ~1400 PYG)
+const BRL_TO_PYG_RATE = 1400;
+
+// Preços base são em BRL
+export function formatBRL(value: number): string {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(value);
+}
+
+export function formatPYG(value: number): string {
+  const pygValue = value * BRL_TO_PYG_RATE;
   return new Intl.NumberFormat("es-PY", {
     style: "currency",
     currency: "PYG",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(value);
+  }).format(pygValue);
+}
+
+// Para uso legado - retorna BRL
+export function formatCurrency(value: number): string {
+  return formatBRL(value);
 }
 
 export function formatPhone(value: string): string {
