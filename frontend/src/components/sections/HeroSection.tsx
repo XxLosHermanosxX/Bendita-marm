@@ -4,9 +4,11 @@ import Image from "next/image";
 import { ASSETS } from "@/data/assets";
 import { ChevronDown, MapPin } from "lucide-react";
 import { useStore } from "@/store";
+import { useTranslation } from "@/lib/i18n";
 
 export function HeroSection() {
-  const { requestLocation, locationStatus, isDeliveryAvailable } = useStore();
+  const { requestLocation, locationStatus } = useStore();
+  const { t } = useTranslation();
   
   const scrollToMenu = () => {
     const menu = document.getElementById("cardapio");
@@ -38,17 +40,17 @@ export function HeroSection() {
             <div className="inline-block mb-4">
               <span className="px-3 py-1.5 rounded-full bg-[#FF8C00]/20 text-[#FF8C00] text-xs font-bold uppercase tracking-wider border border-[#FF8C00]/30 flex items-center gap-2">
                 <MapPin className="h-3 w-3" />
-                Ciudad del Este, Paraguay
+                {t("heroTag")}
               </span>
             </div>
             
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-black leading-tight mb-4">
-              El Combustible para tu{" "}
-              <span className="text-[#FF8C00]">Guardia.</span>
+              {t("heroTitle")}{" "}
+              <span className="text-[#FF8C00]">{t("heroTitleHighlight")}</span>
             </h1>
             
             <p className="text-base md:text-lg text-white/80 max-w-md mx-auto lg:mx-0 mb-6">
-              Smash Burgers, Combos y Boxes. Delivery rápido para estudiantes de medicina y hospitales.
+              {t("heroSubtitle")}
             </p>
             
             <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
@@ -56,7 +58,7 @@ export function HeroSection() {
                 onClick={handleLocationRequest}
                 className="h-14 px-8 rounded-2xl bg-[#FF8C00] text-white font-bold text-lg hover:bg-[#FF7000] active:scale-95 transition-all shadow-lg shadow-[#FF8C00]/30"
               >
-                {locationStatus === "idle" ? "Pedir Ahora" : "Ver Menú"}
+                {locationStatus === "idle" ? t("orderNow") : t("viewMenu")}
               </button>
             </div>
 
@@ -64,15 +66,15 @@ export function HeroSection() {
             <div className="flex flex-wrap gap-6 justify-center lg:justify-start mt-8">
               <div className="text-center">
                 <p className="text-2xl md:text-3xl font-black text-[#7CFC00]">10k+</p>
-                <p className="text-xs text-white/60">Pedidos</p>
+                <p className="text-xs text-white/60">{t("orders")}</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl md:text-3xl font-black text-[#FF8C00]">25min</p>
-                <p className="text-xs text-white/60">Promedio</p>
+                <p className="text-xs text-white/60">{t("average")}</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl md:text-3xl font-black text-white">4.9★</p>
-                <p className="text-xs text-white/60">Rating</p>
+                <p className="text-xs text-white/60">{t("rating")}</p>
               </div>
             </div>
           </div>
@@ -101,7 +103,7 @@ export function HeroSection() {
         onClick={scrollToMenu}
         className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/60 hover:text-white transition-colors animate-bounce"
       >
-        <span className="text-[10px] uppercase tracking-wider">Ver Menú</span>
+        <span className="text-[10px] uppercase tracking-wider">{t("viewMenu")}</span>
         <ChevronDown className="h-4 w-4" />
       </button>
 
