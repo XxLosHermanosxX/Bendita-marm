@@ -68,7 +68,7 @@ export const HomeContentWrapper = () => {
                 </Button>
               </Link>
               <Link href="/products">
-                <Button size="lg" variant="outline" className="border-2 border-white text-white bg-white/10 hover:bg-white hover:text-[#005A8D] text-lg py-6 px-8 rounded-xl backdrop-blur-sm">
+                <Button size="lg" variant="outline" className="border-2 border-white !text-white bg-white/10 hover:bg-white hover:!text-[#005A8D] text-lg py-6 px-8 rounded-xl backdrop-blur-sm">
                   Cardápio
                 </Button>
               </Link>
