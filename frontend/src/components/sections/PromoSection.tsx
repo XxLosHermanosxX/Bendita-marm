@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { formatCurrency } from "@/lib/utils";
+import { formatBRL, formatPYG } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n";
 import { featuredProducts } from "@/data/products";
 import { ArrowRight, Zap, Package, Star } from "lucide-react";
 
@@ -14,6 +15,8 @@ const promoColors = [
 const promoIcons = [Package, Zap, Star];
 
 export function PromoSection() {
+  const { t } = useTranslation();
+  
   const scrollToMenu = () => {
     const menu = document.getElementById("cardapio");
     if (menu) {
@@ -27,10 +30,10 @@ export function PromoSection() {
         {/* Section Header */}
         <div className="text-center mb-6">
           <span className="px-3 py-1.5 rounded-full bg-[#FF8C00]/10 text-[#FF8C00] text-xs font-bold uppercase tracking-wider">
-            Promociones
+            {t("promos")}
           </span>
           <h2 className="text-2xl md:text-3xl font-black text-[#003366] mt-3">
-            Destacados
+            {t("highlights")}
           </h2>
         </div>
 
@@ -66,9 +69,12 @@ export function PromoSection() {
 
                   <div className="flex items-end justify-between">
                     <div>
-                      <span className="text-[10px] text-white/60 uppercase">Desde</span>
-                      <p className="text-2xl font-black">
-                        {formatCurrency(product.price)}
+                      <span className="text-[10px] text-white/60 uppercase">{t("from")}</span>
+                      <p className="text-xl font-black">
+                        {formatBRL(product.price)}
+                      </p>
+                      <p className="text-[10px] text-white/60">
+                        {formatPYG(product.price)}
                       </p>
                     </div>
                     
