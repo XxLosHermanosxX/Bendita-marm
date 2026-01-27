@@ -27,10 +27,10 @@ export const translations = {
     outOfZone: "Fora da área",
     
     // Hero
-    heroTag: "Entrega Rápida em Hospitais",
+    heroTag: "Entrega Rápida em Ciudad del Este",
     heroTitle: "O Combustível para o seu",
-    heroTitleHighlight: "Plantão.",
-    heroSubtitle: "Smash Burgers, Combos e Boxes. Entrega Rápida para estudantes de medicina e hospitais.",
+    heroTitleHighlight: "Dia.",
+    heroSubtitle: "Smash Burgers, Combos e Boxes. Entrega rápida para você onde estiver.",
     orderNow: "Pedir Agora",
     viewMenu: "Ver Cardápio",
     orders: "Pedidos",
@@ -64,7 +64,7 @@ export const translations = {
     // Testimonials
     testimonials: "Depoimentos",
     ourPatients: "Nossos",
-    patientsHighlight: "Pacientes",
+    patientsHighlight: "Clientes",
     recommend: "Recomendam",
     
     // Footer
@@ -75,7 +75,7 @@ export const translations = {
     privacy: "Política de Privacidade",
     terms: "Termos de Uso",
     careers: "Trabalhe Conosco",
-    footerDesc: "O melhor smash burger de Ciudad del Este. Entrega rápida para hospitais, universidades e sua casa. O combustível para o seu plantão!",
+    footerDesc: "O melhor smash burger de Ciudad del Este. Entrega rápida onde você estiver. O combustível para o seu dia!",
     allRights: "Todos os direitos reservados.",
     
     // Checkout
@@ -89,15 +89,32 @@ export const translations = {
     yourData: "Seus dados",
     contactInfo: "Para entrarmos em contato",
     fullName: "Nome completo",
+    
+    // Payment
     paymentMethod: "Método de Pagamento",
     howPay: "Como você vai pagar?",
-    transfer: "Transferência",
-    instantPayment: "Pagamento instantâneo",
-    cashCard: "Dinheiro/Cartão",
-    atDelivery: "Na entrega",
+    chooseCurrency: "Escolha a moeda",
+    payInBRL: "Pagar em Real (R$)",
+    payInPYG: "Pagar em Guarani (Gs.)",
+    pix: "PIX",
+    pixDesc: "Pagamento instantâneo",
+    creditCard: "Cartão de Crédito",
+    creditCardDesc: "Visa, Master, Elo",
+    qrTransfer: "Transferência QR",
+    qrTransferDesc: "Escaneie e pague",
+    
     orderSummary: "Resumo do Pedido",
     securePayment: "Pagamento 100% seguro",
     confirm: "Confirmar",
+    
+    // Address Confirmation
+    addressConfirmation: "Confirmação de Endereço",
+    isAddressCorrect: "Este endereço está correto?",
+    editAddress: "Editar Endereço",
+    confirmAndPay: "Confirmar e Pagar",
+    street: "Rua",
+    neighborhood: "Bairro",
+    city: "Cidade",
     
     // Success
     orderConfirmed: "Pedido Confirmado!",
@@ -108,14 +125,14 @@ export const translations = {
     backHome: "Voltar ao Início",
     
     // FAQ
-    faq1q: "Vocês entregam em hospitais?",
-    faq1a: "Sim! Fazemos entregas em todos os hospitais e clínicas de Ciudad del Este.",
+    faq1q: "Vocês entregam em toda Ciudad del Este?",
+    faq1a: "Sim! Fazemos entregas em toda Ciudad del Este e região.",
     faq2q: "Qual o tempo médio de entrega?",
     faq2a: "Entre 25-40 minutos, dependendo da sua localização e do horário do pedido.",
-    faq3q: "Aceitam cartão na entrega?",
-    faq3a: "Aceitamos dinheiro, transferência e cartão de débito/crédito na entrega.",
+    faq3q: "Quais formas de pagamento aceitam?",
+    faq3a: "Aceitamos PIX, cartão de crédito (Real) e transferência QR ou cartão (Guarani).",
     faq4q: "O Kit Reanimação serve quantas pessoas?",
-    faq4a: "O Kit é ideal para 4-6 pessoas, perfeito para equipes de plantão!",
+    faq4a: "O Kit é ideal para 4-6 pessoas, perfeito para reunir os amigos!",
     
     // Location errors
     locationDenied: "Permissão de localização negada",
@@ -131,10 +148,10 @@ export const translations = {
     outOfZone: "Fuera de zona",
     
     // Hero
-    heroTag: "Delivery Rápido a Hospitales",
+    heroTag: "Delivery Rápido en Ciudad del Este",
     heroTitle: "El Combustible para tu",
-    heroTitleHighlight: "Guardia.",
-    heroSubtitle: "Smash Burgers, Combos y Boxes. Delivery rápido para estudiantes de medicina y hospitales.",
+    heroTitleHighlight: "Día.",
+    heroSubtitle: "Smash Burgers, Combos y Boxes. Delivery rápido donde estés.",
     orderNow: "Pedir Ahora",
     viewMenu: "Ver Menú",
     orders: "Pedidos",
@@ -168,7 +185,7 @@ export const translations = {
     // Testimonials
     testimonials: "Testimonios",
     ourPatients: "Nuestros",
-    patientsHighlight: "Pacientes",
+    patientsHighlight: "Clientes",
     recommend: "Recomiendan",
     
     // Footer
@@ -179,7 +196,7 @@ export const translations = {
     privacy: "Política de Privacidad",
     terms: "Términos de Uso",
     careers: "Trabajá con Nosotros",
-    footerDesc: "El mejor smash burger de Ciudad del Este. Delivery rápido para hospitales, universidades y tu casa. ¡El combustible para tu guardia!",
+    footerDesc: "El mejor smash burger de Ciudad del Este. Delivery rápido donde estés. ¡El combustible para tu día!",
     allRights: "Todos los derechos reservados.",
     
     // Checkout
@@ -193,15 +210,32 @@ export const translations = {
     yourData: "Tus datos",
     contactInfo: "Para contactarte sobre tu pedido",
     fullName: "Nombre completo",
+    
+    // Payment
     paymentMethod: "Método de Pago",
     howPay: "¿Cómo vas a pagar?",
-    transfer: "Transferencia",
-    instantPayment: "Pago instantáneo",
-    cashCard: "Efectivo/Tarjeta",
-    atDelivery: "En la entrega",
+    chooseCurrency: "Elige la moneda",
+    payInBRL: "Pagar en Real (R$)",
+    payInPYG: "Pagar en Guaraní (Gs.)",
+    pix: "PIX",
+    pixDesc: "Pago instantáneo",
+    creditCard: "Tarjeta de Crédito",
+    creditCardDesc: "Visa, Master, Elo",
+    qrTransfer: "Transferencia QR",
+    qrTransferDesc: "Escanea y paga",
+    
     orderSummary: "Resumen del Pedido",
     securePayment: "Pago 100% seguro",
     confirm: "Confirmar",
+    
+    // Address Confirmation
+    addressConfirmation: "Confirmación de Dirección",
+    isAddressCorrect: "¿Esta dirección es correcta?",
+    editAddress: "Editar Dirección",
+    confirmAndPay: "Confirmar y Pagar",
+    street: "Calle",
+    neighborhood: "Barrio",
+    city: "Ciudad",
     
     // Success
     orderConfirmed: "¡Pedido Confirmado!",
@@ -212,14 +246,14 @@ export const translations = {
     backHome: "Volver al Inicio",
     
     // FAQ
-    faq1q: "¿Hacen delivery a hospitales?",
-    faq1a: "¡Sí! Hacemos entregas en todos los hospitales y clínicas de Ciudad del Este.",
+    faq1q: "¿Hacen delivery a toda Ciudad del Este?",
+    faq1a: "¡Sí! Hacemos entregas en toda Ciudad del Este y alrededores.",
     faq2q: "¿Cuánto demora el delivery?",
     faq2a: "Entre 25-40 minutos, dependiendo de tu ubicación y el horario del pedido.",
-    faq3q: "¿Aceptan tarjeta en la entrega?",
-    faq3a: "Aceptamos efectivo, transferencia y tarjeta de débito/crédito en la entrega.",
+    faq3q: "¿Qué formas de pago aceptan?",
+    faq3a: "Aceptamos PIX, tarjeta de crédito (Real) y transferencia QR o tarjeta (Guaraní).",
     faq4q: "¿El Kit Reanimación para cuántos rinde?",
-    faq4a: "El Kit es ideal para 4-6 personas, ¡perfecto para equipos de guardia!",
+    faq4a: "El Kit es ideal para 4-6 personas, ¡perfecto para juntarse con amigos!",
     
     // Location errors
     locationDenied: "Permiso de ubicación denegado",
