@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { useStore } from "@/store";
-import { formatCurrency } from "@/lib/utils";
+import { formatBRL, formatPYG } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n";
 import { X, Plus, Minus, Trash2, Truck, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 
@@ -10,6 +11,8 @@ interface CartDrawerProps {
   open: boolean;
   onClose: () => void;
 }
+
+const FREE_DELIVERY_THRESHOLD = 80; // R$ 80
 
 export function CartDrawer({ open, onClose }: CartDrawerProps) {
   const { 
@@ -22,12 +25,14 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
     getFreeDeliveryProgress,
     isDeliveryAvailable 
   } = useStore();
+  
+  const { t } = useTranslation();
 
   const subtotal = getSubtotal();
   const deliveryFee = getDeliveryFee();
   const total = getTotal();
   const freeDeliveryProgress = getFreeDeliveryProgress();
-  const remainingForFreeDelivery = Math.max(0, 100000 - subtotal); // 100.000 PYG
+  const remainingForFreeDelivery = Math.max(0, FREE_DELIVERY_THRESHOLD - subtotal);
 
   if (!open) return null;
 
@@ -46,7 +51,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
           <div className="flex items-center justify-between p-4 border-b bg-[#003366] text-white safe-area-top">
             <div className="flex items-center gap-2">
               <ShoppingBag className="h-5 w-5" />
-              <h2 className="font-bold text-lg">Tu Pedido</h2>
+              <h2 className="font-bold text-lg">{t("yourOrder")}</h2>
             </div>
             <button
               onClick={onClose}
@@ -63,11 +68,11 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                 <Truck className="h-4 w-4 text-[#003366]" />
                 {freeDeliveryProgress >= 100 ? (
                   <span className="text-sm font-bold text-[#003366]">
-                    ¡Delivery GRATIS!
+                    {t("freeDelivery")}
                   </span>
                 ) : (
                   <span className="text-sm text-[#003366]">
-                    Faltan <strong>{formatCurrency(remainingForFreeDelivery)}</strong> para delivery gratis
+                    {t("missingForFree", { value: formatBRL(remainingForFreeDelivery) })}
                   </span>
                 )}
               </div>
@@ -85,13 +90,13 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
             {items.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center">
                 <ShoppingBag className="h-16 w-16 text-gray-300 mb-4" />
-                <p className="text-gray-500 font-medium">Tu carrito está vacío</p>
-                <p className="text-sm text-gray-400 mt-1">Agrega items del menú</p>
+                <p className="text-gray-500 font-medium">{t("emptyCart")}</p>
+                <p className="text-sm text-gray-400 mt-1">{t("addItems")}</p>
                 <button
                   onClick={onClose}
                   className="mt-6 px-6 py-3 rounded-xl bg-[#FF8C00] text-white font-bold active:scale-95 transition-transform"
                 >
-                  Ver Menú
+                  {t("viewMenu")}
                 </button>
               </div>
             ) : (
@@ -114,9 +119,14 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                       <h3 className="font-bold text-sm text-[#003366] line-clamp-1">
                         {item.product.name}
                       </h3>
-                      <p className="text-[#FF8C00] font-bold text-sm mt-1">
-                        {formatCurrency(item.product.price * item.quantity)}
-                      </p>
+                      <div className="mt-1">
+                        <p className="text-[#FF8C00] font-bold text-sm">
+                          {formatBRL(item.product.price * item.quantity)}
+                        </p>
+                        <p className="text-gray-400 text-[10px]">
+                          {formatPYG(item.product.price * item.quantity)}
+                        </p>
+                      </div>
                       
                       <div className="flex items-center gap-2 mt-2">
                         <button
@@ -154,37 +164,43 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
             <div className="border-t p-4 space-y-4 bg-white safe-area-bottom">
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Subtotal</span>
-                  <span className="font-medium">{formatCurrency(subtotal)}</span>
+                  <span className="text-gray-500">{t("subtotal")}</span>
+                  <div className="text-right">
+                    <span className="font-medium">{formatBRL(subtotal)}</span>
+                    <p className="text-[10px] text-gray-400">{formatPYG(subtotal)}</p>
+                  </div>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Delivery</span>
+                  <span className="text-gray-500">{t("delivery")}</span>
                   <span className={`font-medium ${deliveryFee === 0 ? "text-[#7CFC00]" : ""}`}>
-                    {deliveryFee === 0 ? "GRATIS" : formatCurrency(deliveryFee)}
+                    {deliveryFee === 0 ? t("free") : formatBRL(deliveryFee)}
                   </span>
                 </div>
                 <div className="flex justify-between text-lg font-bold text-[#003366] pt-2 border-t">
-                  <span>Total</span>
-                  <span>{formatCurrency(total)}</span>
+                  <span>{t("total")}</span>
+                  <div className="text-right">
+                    <span>{formatBRL(total)}</span>
+                    <p className="text-xs text-gray-400 font-normal">{formatPYG(total)}</p>
+                  </div>
                 </div>
               </div>
 
               {isDeliveryAvailable ? (
                 <Link href="/checkout" onClick={onClose}>
                   <button className="w-full h-14 rounded-2xl bg-[#FF8C00] text-white font-bold text-lg active:scale-[0.98] transition-all">
-                    Finalizar Pedido
+                    {t("checkout")}
                   </button>
                 </Link>
               ) : (
                 <div className="text-center">
                   <p className="text-sm text-gray-500 mb-2">
-                    Habilita tu ubicación para continuar
+                    {t("enableLocation")}
                   </p>
                   <button 
                     onClick={onClose}
                     className="w-full h-14 rounded-2xl bg-gray-200 text-gray-600 font-bold text-lg"
                   >
-                    Verificar Ubicación
+                    {t("verifyLocation")}
                   </button>
                 </div>
               )}
