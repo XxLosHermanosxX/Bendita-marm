@@ -13,7 +13,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, onOpenModal }: ProductCardProps) {
-  const { addItem, isDeliveryAvailable, requestLocation, locationStatus } = useStore();
+  const { addItem, requestLocation, locationStatus } = useStore();
   const [isAdding, setIsAdding] = useState(false);
 
   const handleAddToCart = useCallback((e: React.MouseEvent) => {
