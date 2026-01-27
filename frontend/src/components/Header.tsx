@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useStore } from "@/store";
-import { MapPin, Loader2, CheckCircle, XCircle, ShoppingCart, Navigation } from "lucide-react";
+import { useLanguage, useTranslation } from "@/lib/i18n";
+import { MapPin, Loader2, CheckCircle, XCircle, ShoppingCart, Navigation, Globe } from "lucide-react";
 import { ASSETS } from "@/data/assets";
 import { CartDrawer } from "./CartDrawer";
 
@@ -18,7 +19,11 @@ export function Header() {
     getTotalItems 
   } = useStore();
   
+  const { language, setLanguage } = useLanguage();
+  const { t } = useTranslation();
+  
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [showLangMenu, setShowLangMenu] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -31,15 +36,20 @@ export function Header() {
     requestLocation();
   };
 
+  const toggleLanguage = () => {
+    setLanguage(language === "pt" ? "es" : "pt");
+    setShowLangMenu(false);
+  };
+
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50">
         {/* Main Header - Glassmorphism */}
         <div className="bg-[#003366]/95 backdrop-blur-xl border-b border-white/10">
           <div className="container mx-auto px-4 py-3">
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center justify-between gap-2">
               {/* Logo */}
-              <div className="relative h-10 w-24 md:h-12 md:w-32 shrink-0">
+              <div className="relative h-10 w-20 md:h-12 md:w-28 shrink-0">
                 <Image
                   src={ASSETS.logo}
                   alt="Plantão do Smash"
@@ -53,7 +63,7 @@ export function Header() {
               <button
                 onClick={handleRequestLocation}
                 disabled={locationStatus === "loading"}
-                className={`flex-1 max-w-xs h-10 px-3 rounded-full flex items-center gap-2 text-sm transition-all ${
+                className={`flex-1 max-w-[180px] h-9 px-2.5 rounded-full flex items-center gap-1.5 text-xs transition-all ${
                   locationStatus === "success" && isDeliveryAvailable
                     ? "bg-[#7CFC00]/20 border border-[#7CFC00]/50 text-[#7CFC00]"
                     : locationStatus === "error" || locationStatus === "denied" || (locationStatus === "success" && !isDeliveryAvailable)
@@ -63,38 +73,47 @@ export function Header() {
               >
                 {locationStatus === "loading" ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin shrink-0" />
-                    <span className="truncate text-xs">Ubicando...</span>
+                    <Loader2 className="h-3.5 w-3.5 animate-spin shrink-0" />
+                    <span className="truncate">{t("locating")}</span>
                   </>
                 ) : locationStatus === "success" && isDeliveryAvailable ? (
                   <>
-                    <CheckCircle className="h-4 w-4 shrink-0" />
-                    <span className="truncate text-xs font-medium">
+                    <CheckCircle className="h-3.5 w-3.5 shrink-0" />
+                    <span className="truncate">
                       {deliveryAddress?.neighborhood || "Ciudad del Este"}
                     </span>
                   </>
                 ) : locationStatus === "error" || locationStatus === "denied" || (locationStatus === "success" && !isDeliveryAvailable) ? (
                   <>
-                    <XCircle className="h-4 w-4 shrink-0" />
-                    <span className="truncate text-xs">Fuera de zona</span>
+                    <XCircle className="h-3.5 w-3.5 shrink-0" />
+                    <span className="truncate">{t("outOfZone")}</span>
                   </>
                 ) : (
                   <>
-                    <Navigation className="h-4 w-4 shrink-0" />
-                    <span className="truncate text-xs">Mi ubicación</span>
+                    <Navigation className="h-3.5 w-3.5 shrink-0" />
+                    <span className="truncate">{t("myLocation")}</span>
                   </>
                 )}
+              </button>
+
+              {/* Language Toggle */}
+              <button
+                onClick={toggleLanguage}
+                className="h-9 px-2.5 rounded-full bg-white/10 border border-white/20 text-white flex items-center gap-1.5 text-xs font-bold hover:bg-white/20 transition-all shrink-0"
+              >
+                <Globe className="h-3.5 w-3.5" />
+                <span>{language.toUpperCase()}</span>
               </button>
 
               {/* Cart Button */}
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative h-10 w-10 rounded-full bg-[#FF8C00] flex items-center justify-center hover:scale-105 active:scale-95 transition-transform shrink-0"
+                className="relative h-9 w-9 rounded-full bg-[#FF8C00] flex items-center justify-center hover:scale-105 active:scale-95 transition-transform shrink-0"
                 data-testid="cart-button"
               >
-                <ShoppingCart className="h-5 w-5 text-white" />
+                <ShoppingCart className="h-4 w-4 text-white" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-[#7CFC00] text-[#003366] text-xs font-bold flex items-center justify-center animate-in zoom-in">
+                  <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[#7CFC00] text-[#003366] text-[10px] font-bold flex items-center justify-center animate-in zoom-in">
                     {totalItems}
                   </span>
                 )}
