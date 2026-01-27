@@ -1,12 +1,10 @@
 "use client";
 
-// import type { Metadata } from "next"; // Removed as metadata is now in a separate file
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
-// import { Toaster } from "@/components/ui/sonner"; // Removed Toaster import
 import { SplashScreen } from "@/components/splash-screen";
-import React, { Suspense, useEffect, useState } from "react"; // Importando React e Suspense
+import React, { Suspense, useEffect, useState, useCallback } from "react";
 import { ProductModalProvider } from "@/components/product-modal-provider";
 import { AddonsModal } from "@/components/addons-modal";
 
@@ -20,15 +18,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// metadata is now defined in src/app/metadata.ts
-// export const metadata: Metadata = {
-//   title: "Sushiaki Delivery",
-//   description: "O melhor sushi da cidade, entregue na sua porta!",
-//   icons: {
-//     icon: '/sushiaki-logo.png',
-//   },
-// };
-
 // Componente Wrapper para gerenciar o estado do splash screen
 const RootLayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const [showSplash, setShowSplash] = useState(true);
@@ -38,11 +27,16 @@ const RootLayoutWrapper = ({ children }: { children: React.ReactNode }) => {
     setMounted(true);
   }, []);
 
+  // useCallback para evitar recriação da função a cada render
+  const handleSplashFinish = useCallback(() => {
+    setShowSplash(false);
+  }, []);
+
   if (!mounted) return null;
 
   return (
     <>
-      {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
+      {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
       <div style={{ display: showSplash ? 'none' : 'block' }}>
         {children}
       </div>

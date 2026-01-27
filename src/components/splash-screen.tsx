@@ -13,20 +13,26 @@ interface SplashScreenProps {
 export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
   const [isVisible, setIsVisible] = useState(true);
   const hasPlayed = useRef(false);
+  const onFinishRef = useRef(onFinish);
+  
+  // Atualiza a ref quando onFinish muda
+  useEffect(() => {
+    onFinishRef.current = onFinish;
+  }, [onFinish]);
 
   useEffect(() => {
-    // Só executa uma vez
+    // Só executa uma vez usando ref
     if (hasPlayed.current) return;
     hasPlayed.current = true;
 
     const animationTimeout = setTimeout(() => setIsVisible(false), 1500);
-    const hideTimeout = setTimeout(() => onFinish(), 2500);
+    const hideTimeout = setTimeout(() => onFinishRef.current(), 2500);
     
     return () => {
       clearTimeout(animationTimeout);
       clearTimeout(hideTimeout);
     };
-  }, [onFinish]);
+  }, []); // Array de dependências vazio - executa apenas uma vez
 
   if (!isVisible) return null;
 
