@@ -13,7 +13,7 @@ interface ProductModalProps {
 }
 
 export function ProductModal({ product, onClose }: ProductModalProps) {
-  const { addItem, isDeliveryAvailable, requestLocation, locationStatus } = useStore();
+  const { addItem, requestLocation, locationStatus } = useStore();
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
 
@@ -22,12 +22,6 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
   const handleAddToCart = () => {
     if (locationStatus === "idle") {
       requestLocation();
-      return;
-    }
-    
-    if (!isDeliveryAvailable) {
-      alert("Por favor, habilita tu ubicación para verificar si hacemos entregas en tu zona.");
-      return;
     }
 
     setIsAdding(true);
