@@ -1,30 +1,6 @@
 {
   "version": 4,
   "routes": {
-    "/order-confirmation": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "Next-Action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/order-confirmation",
-      "dataRoute": "/order-confirmation.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
     "/checkout": {
       "experimentalBypassFor": [
         {
@@ -73,6 +49,30 @@
         "x-next-revalidate-tag-token"
       ]
     },
+    "/pix-payment": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/pix-payment",
+      "dataRoute": "/pix-payment.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/products": {
       "experimentalBypassFor": [
         {
@@ -97,7 +97,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/pix-payment": {
+    "/order-confirmation": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -110,8 +110,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/pix-payment",
-      "dataRoute": "/pix-payment.rsc",
+      "srcRoute": "/order-confirmation",
+      "dataRoute": "/order-confirmation.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -125,8 +125,8 @@
   "dynamicRoutes": {},
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "b57ed56c4c8fdc2e6a724bdeccb6d361",
-    "previewModeSigningKey": "f5d70b13751b0853274fb9f3a4a55ed80df0d9d5cbd69db10978129c78a70fe1",
-    "previewModeEncryptionKey": "5108e3ebfed2b9d879a39d9e4c79c46d6233ee68bb5fb33f34868d9c39c7fa9a"
+    "previewModeId": "e40dfdf353f81e7e92f0dfe89023f3be",
+    "previewModeSigningKey": "7cffb270ca08c55dfeebc8b87801cc1685077affff0542d11561ede364fe2dff",
+    "previewModeEncryptionKey": "4eb06b5db643fcde650c1b8426d25c5ba6e55c515029620f524c93e8bbf9ecc3"
   }
 }
