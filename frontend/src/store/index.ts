@@ -3,10 +3,14 @@ import { persist } from "zustand/middleware";
 import { CartItem, Product, DeliveryAddress, CustomerInfo } from "@/types";
 
 interface StoreState {
-  // CEP Verification
-  cep: string;
-  isDeliveryAvailable: boolean;
+  // Location
+  location: { lat: number; lng: number } | null;
+  locationStatus: "idle" | "loading" | "success" | "error" | "denied";
+  locationError: string;
+  
+  // Delivery
   deliveryAddress: DeliveryAddress | null;
+  isDeliveryAvailable: boolean;
   
   // Cart
   items: CartItem[];
@@ -14,10 +18,13 @@ interface StoreState {
   // Customer
   customer: CustomerInfo | null;
   
-  // Actions - CEP
-  setCep: (cep: string) => void;
-  setDeliveryAvailable: (available: boolean) => void;
+  // Actions - Location
+  requestLocation: () => Promise<void>;
+  setLocationStatus: (status: "idle" | "loading" | "success" | "error" | "denied") => void;
+  
+  // Actions - Delivery
   setDeliveryAddress: (address: DeliveryAddress | null) => void;
+  setDeliveryAvailable: (available: boolean) => void;
   
   // Actions - Cart
   addItem: (product: Product, quantity?: number) => void;
@@ -36,23 +43,134 @@ interface StoreState {
   getFreeDeliveryProgress: () => number;
 }
 
-const FREE_DELIVERY_THRESHOLD = 80;
-const DELIVERY_FEE = 8.90;
+const FREE_DELIVERY_THRESHOLD = 100; // PYG threshold equivalent
+const DELIVERY_FEE = 15000; // 15.000 PYG
+
+// Ciudad del Este coordinates bounds
+const CIUDAD_DEL_ESTE_BOUNDS = {
+  north: -25.45,
+  south: -25.55,
+  east: -54.55,
+  west: -54.70,
+};
+
+const isInCiudadDelEste = (lat: number, lng: number): boolean => {
+  return (
+    lat >= CIUDAD_DEL_ESTE_BOUNDS.south &&
+    lat <= CIUDAD_DEL_ESTE_BOUNDS.north &&
+    lng >= CIUDAD_DEL_ESTE_BOUNDS.west &&
+    lng <= CIUDAD_DEL_ESTE_BOUNDS.east
+  );
+};
 
 export const useStore = create<StoreState>()(
   persist(
     (set, get) => ({
       // Initial state
-      cep: "",
-      isDeliveryAvailable: false,
+      location: null,
+      locationStatus: "idle",
+      locationError: "",
       deliveryAddress: null,
+      isDeliveryAvailable: false,
       items: [],
       customer: null,
       
-      // CEP Actions
-      setCep: (cep) => set({ cep }),
-      setDeliveryAvailable: (available) => set({ isDeliveryAvailable: available }),
+      // Location Actions
+      requestLocation: async () => {
+        set({ locationStatus: "loading", locationError: "" });
+        
+        if (!navigator.geolocation) {
+          set({ 
+            locationStatus: "error", 
+            locationError: "Geolocalização não suportada pelo navegador" 
+          });
+          return;
+        }
+        
+        try {
+          const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+              enableHighAccuracy: true,
+              timeout: 10000,
+              maximumAge: 0,
+            });
+          });
+          
+          const { latitude, longitude } = position.coords;
+          const inDeliveryArea = isInCiudadDelEste(latitude, longitude);
+          
+          set({
+            location: { lat: latitude, lng: longitude },
+            locationStatus: "success",
+            isDeliveryAvailable: inDeliveryArea,
+          });
+          
+          // Get address from coordinates (reverse geocoding)
+          try {
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`
+            );
+            const data = await response.json();
+            
+            if (data.address) {
+              set({
+                deliveryAddress: {
+                  cep: data.address.postcode || "",
+                  street: data.address.road || data.address.street || "",
+                  number: data.address.house_number || "",
+                  neighborhood: data.address.suburb || data.address.neighbourhood || "",
+                  city: data.address.city || data.address.town || "Ciudad del Este",
+                  state: data.address.state || "Alto Paraná",
+                },
+              });
+            }
+          } catch {
+            // If reverse geocoding fails, still allow delivery if in area
+            set({
+              deliveryAddress: {
+                cep: "",
+                street: "",
+                number: "",
+                neighborhood: "",
+                city: "Ciudad del Este",
+                state: "Alto Paraná",
+              },
+            });
+          }
+          
+          if (!inDeliveryArea) {
+            set({ 
+              locationError: "Lo sentimos, no hacemos entregas en tu zona todavía" 
+            });
+          }
+          
+        } catch (error) {
+          const geoError = error as GeolocationPositionError;
+          
+          if (geoError.code === 1) {
+            set({ 
+              locationStatus: "denied", 
+              locationError: "Permiso de ubicación denegado" 
+            });
+          } else if (geoError.code === 2) {
+            set({ 
+              locationStatus: "error", 
+              locationError: "Ubicación no disponible" 
+            });
+          } else {
+            set({ 
+              locationStatus: "error", 
+              locationError: "Error al obtener ubicación" 
+            });
+          }
+        }
+      },
+      
+      setLocationStatus: (status) => set({ locationStatus: status }),
+      
+      // Delivery Actions
       setDeliveryAddress: (address) => set({ deliveryAddress: address }),
+      setDeliveryAvailable: (available) => set({ isDeliveryAvailable: available }),
       
       // Cart Actions
       addItem: (product, quantity = 1) => {
