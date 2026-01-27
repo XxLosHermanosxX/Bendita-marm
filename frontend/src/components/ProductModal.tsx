@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { useStore } from "@/store";
-import { formatCurrency } from "@/lib/utils";
+import { formatBRL, formatPYG } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n";
 import { X, Plus, Minus, ShoppingCart } from "lucide-react";
 import { Product } from "@/types";
 import { useState } from "react";
@@ -14,6 +15,7 @@ interface ProductModalProps {
 
 export function ProductModal({ product, onClose }: ProductModalProps) {
   const { addItem, requestLocation, locationStatus } = useStore();
+  const { t } = useTranslation();
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
 
@@ -32,6 +34,8 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
       onClose();
     }, 500);
   };
+
+  const totalPrice = product.price * quantity;
 
   return (
     <>
@@ -85,7 +89,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
             {product.ingredients && product.ingredients.length > 0 && (
               <div className="pt-4 border-t">
                 <h3 className="text-xs font-bold text-[#003366] uppercase tracking-wider mb-3">
-                  Ingredientes
+                  {t("ingredients")}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {product.ingredients.map((ingredient, index) => (
@@ -126,14 +130,17 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
             <button
               onClick={handleAddToCart}
               disabled={isAdding}
-              className={`flex-1 h-14 rounded-xl font-bold text-base flex items-center justify-center gap-2 active:scale-[0.98] transition-all ${
+              className={`flex-1 h-14 rounded-xl font-bold flex flex-col items-center justify-center active:scale-[0.98] transition-all ${
                 isAdding
                   ? "bg-[#7CFC00] text-[#003366]"
                   : "bg-[#FF8C00] text-white"
               }`}
             >
-              <ShoppingCart className="h-5 w-5" />
-              <span>{formatCurrency(product.price * quantity)}</span>
+              <div className="flex items-center gap-2">
+                <ShoppingCart className="h-4 w-4" />
+                <span className="text-base">{formatBRL(totalPrice)}</span>
+              </div>
+              <span className="text-[10px] opacity-80 font-normal">{formatPYG(totalPrice)}</span>
             </button>
           </div>
         </div>
